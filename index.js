@@ -1,16 +1,20 @@
 const { Console } = require("console");
-const { application } = require("express");
 const express = require("express");
 const fs = require("fs");
 var app = express();
 const PORT = 8080;
 var userData = null;
-//const eventoData = fs.readFile(`${__dirname}/jsonData/eventos.json`);
 
-// middlewares
-application.use(
-    
-);
+// middleware
+app.use('/user',(req, res, next) => {
+    userData = fs.readFileSync(`${__dirname}/jsonData/users.json`);
+    next();
+});
+
+app.use('/evento',(req, res, next) => {
+    //implement
+});
+
 app.use(express.json());
 // end middlewares
 
@@ -20,9 +24,8 @@ app.listen(
     () => console.log(`Running on http://localhost:${PORT}`)
 );
 
-app.get("/users", (req, res) => {
-    // implement
-    res.send(userData());
+app.get("/user", (req, res) => {
+    res.status(200).send(userData);
 });
 
 /* app.get("/users/:nombre", (req, res) => {
