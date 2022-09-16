@@ -2,7 +2,7 @@ const express = require("express");
 const fs = require("fs");
 var app = express();
 const PORT = 8080;
-var userData = null;
+var userData = null; 
 
 // middleware
 app.use('/user',(req, res, next) => {
