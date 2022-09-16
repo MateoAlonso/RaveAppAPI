@@ -1,4 +1,3 @@
-const { Console } = require("console");
 const express = require("express");
 const fs = require("fs");
 var app = express();
@@ -28,9 +27,10 @@ app.get("/user", (req, res) => {
     res.status(200).send(userData);
 });
 
-/* app.get("/users/:nombre", (req, res) => {
+app.get("/users/:nombre", (req, res) => {
+    const {nombre} = req.params;
     
-}); */
+});
 
 app.post("/user/:id", (req, res) => {
     const {id} = req.params;
