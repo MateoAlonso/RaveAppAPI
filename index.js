@@ -6,14 +6,14 @@ const PORT = 8080;
 var userData = null;
 
 // middleware
-app.use('/user',(req, res, next) => {
+/* app.use('/user',(req, res, next) => {
     userData = fs.readFileSync(`${__dirname}/jsonData/users.json`);
     next();
-});
+}); */
 
-app.use('/evento',(req, res, next) => {
+/* app.use('/evento',(req, res, next) => {
     //implement
-});
+}); */
 
 app.use(express.json());
 // end middlewares
@@ -25,14 +25,20 @@ app.listen(
 );
 
 app.get("/user", (req, res) => {
-    res.status(200).send(userData);
+    //res.status(200).send(userData);
+    fs.readFile(`${__dirname}/jsonData/users.json`, (data, err) =>{
+        if (!data) {
+            res.status(418).send(err);
+        }
+        res.send(data);
+    });
 });
 
-/* app.get("/users/:nombre", (req, res) => {
-    
-}); */
+app.get("/users/:nombre", (req, res) => {
+    //implement
+});
 
-app.post("/user/:id", (req, res) => {
+/* app.post("/user/:id", (req, res) => {
     const {id} = req.params;
     const {usuario} = req.body;
     const {pass} = req.body;
@@ -46,4 +52,4 @@ app.post("/user/:id", (req, res) => {
     res.send({
         usuario: `usuario ${usuario} con id ${id} y pass ${pass}`
     });
-});
+}); */
