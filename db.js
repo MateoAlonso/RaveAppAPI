@@ -3,45 +3,58 @@ const { get } = require("http");
 const _ = require("lodash");
 
 function getUsers() {
-    return fs.readFileSync(`${__dirname}/jsonData/users.json`);
+    var data = fs.readFileSync(`${__dirname}/jsonData/users.json`);
+    return JSON.parse(data);
 }
 
 function getUsersByIsOrg(option) {
-    return _.filter(getUsers(),{'is_organizador': option});
+    var data = _.filter(getUsers(),{'is_organizador': option});
+    return data;
 }
 
 function getUserByNombre(nombre) {
-    return _.filter(getUsers(), {'nombre': option});    
+    var data = _.filter(getUsers(), {'nombre': nombre});
+    return data;
 }
 
 function getEventos() {
-    return fs.readFileSync(`${__dirname}/json/eventos.json`);
+    var data = fs.readFileSync(`${__dirname}/jsonData/eventos.json`);
+    return JSON.parse(data);
 }
 
 function getEventoByNombre(nombre) {
-    return _.filter(getEventos(), {'nombre': nombre});
+    var data = _.filter(getEventos(), {'nombre': nombre});
+    return data
 }
 
 function getEventoByGenero(genero) {
-    return _.filter(getEventos(), {'genero': genero})
+    var data = _.filter(getEventos(), {'genero': genero})
+    return data
 }
 
 function getEventoByIsLgbt(option) {
-    return _.filter(getEventos(), {'is_lgbt': option})
+    var data = _.filter(getEventos(), {'is_lgbt': option})
+    return data
 }
 
 function getEventoByIsAfter(option) {
-    return _.filter(getEventos(), {'is_after': option})
+    var data = _.filter(getEventos(), {'is_after': option})
+    return data
 }
 
 function getEventoByIsValidado(option) {
-    return _.filter(getEventos(), {'is_validado': option})
+    var data = _.filter(getEventos(), {'is_validado': option})
+    return data
 }
 
 function getEventoByIsCancelado(option) {
-    return _.filter(getEventos(), {'is_cancelado': option})
+    var data = _.filter(getEventos(), {'is_cancelado': option})
+    return data
 }
 
-function getEventoByRecPagada(option) {
-    return _.filter(getEventos(), {'is_recaudacion_paga': option})
+function getEventoByIsRecPagada(option) {
+    var data = _.filter(getEventos(), {'is_recaudacion_paga': option})
+    return data
 }
+
+module.exports = {getUsers, getEventos, getEventoByIsLgbt, getEventoByGenero, getEventoByIsCancelado, getEventoByIsAfter, getUserByNombre, getUsersByIsOrg, getEventoByNombre, getEventoByIsValidado, getEventoByIsRecPagada}
