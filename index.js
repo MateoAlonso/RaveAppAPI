@@ -31,11 +31,6 @@ app.get("/users/nombre", (req, res) => {
     var {nombre} = req.body;
     console.log(nombre);
     var data = db.getUserByNombre(nombre);
-    /*  if (!data) {
-        res.status(418).send({
-            message: "ERROR FETCHING DATA"
-        });
-    } */
     res.send({
         data
     });
@@ -145,7 +140,7 @@ app.get("/eventos/recPagada", (req, res) => {
     });
 });
 
-app.post("/user/:id", (req, res) => {
+/* app.post("/user/:id", (req, res) => {
     const {id} = req.params;
     const {usuario} = req.body;
     const {pass} = req.body;
@@ -159,4 +154,4 @@ app.post("/user/:id", (req, res) => {
     res.send({
         usuario: `usuario ${usuario} con id ${id} y pass ${pass}`
     });
-});
+}); */
