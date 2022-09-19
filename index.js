@@ -2,7 +2,7 @@ const express = require("express");
 const fs = require("fs");
 var app = express();
 const PORT = 8080;
-var db = require("./db")
+var db = require("./db");
 
 // middleware
 app.use(express.json());
@@ -49,6 +49,7 @@ app.get("/users/org", (req, res) => {
     });
 });
 
+//GET requests eventos
 app.get('/eventos',(req, res) => {
     //implement
     var data = db.getEventos();
@@ -137,6 +138,27 @@ app.get("/eventos/recPagada", (req, res) => {
     }
     res.send({
         data
+    });
+});
+
+//POST request Users
+app.post("/users/postUser", (req, res)=>{
+    var{nombre} = req.body;
+    var{tel} = req.body;
+    var{dni} = req.body;
+    var{isOrganizador} = req.body;
+    var{cbu} = req.body;
+    var{pass} = req.body;
+    console.log(`BEFORE TRY INDEX = nombre: ${nombre} - tel: ${tel} - dni: ${dni} - isOrg: ${isOrganizador} - cbu: ${cbu} - pass: ${pass}`)
+    console.log("enter try");
+    var newUser = db.postUsuario(nombre, tel, dni, cbu, isOrganizador, pass);
+    console.log(`INSIDE TRY INDEX = newUser: ${newUser}`);
+    res.send({
+        newUser
+    });
+    console.log("enter catch");
+    res.status(418).send({
+        message: `Failed to append data ${error}`
     });
 });
 
