@@ -1,10 +1,12 @@
 const fs = require("fs");
 const { get } = require("http");
 const _ = require("lodash");
-
+const userData = require("./jsonData/users.json");
+const eventoData = require("./jsonData/eventos.json");
+const User = require("./User")
+// GET requests
 function getUsers() {
-    var data = fs.readFileSync(`${__dirname}/jsonData/users.json`);
-    return JSON.parse(data);
+    return userData;
 }
 
 function getUsersByIsOrg(option) {
@@ -18,8 +20,7 @@ function getUserByNombre(nombre) {
 }
 
 function getEventos() {
-    var data = fs.readFileSync(`${__dirname}/jsonData/eventos.json`);
-    return JSON.parse(data);
+    return eventoData;
 }
 
 function getEventoByNombre(nombre) {
@@ -56,5 +57,18 @@ function getEventoByIsRecPagada(option) {
     var data = _.filter(getEventos(), {'is_recaudacion_paga': option})
     return data
 }
+
+// POST requests
+
+function postUsuario(nombre, tel, dni, cbu, isOrganizador, pass) {
+    User = new User(nombre, tel, dni, cbu, isOrganizador, pass);
+}
+
+
+
+
+
+
+
 
 module.exports = {getUsers, getEventos, getEventoByIsLgbt, getEventoByGenero, getEventoByIsCancelado, getEventoByIsAfter, getUserByNombre, getUsersByIsOrg, getEventoByNombre, getEventoByIsValidado, getEventoByIsRecPagada}

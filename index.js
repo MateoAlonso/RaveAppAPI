@@ -14,6 +14,7 @@ app.listen(
     () => console.log(`Running on http://localhost:${PORT}`)
 );
 
+// GET request users
 app.get("/users", (req, res) => {
     var data = db.getUsers();
     if (!data) {
@@ -21,7 +22,6 @@ app.get("/users", (req, res) => {
             message: "ERROR FETCHING DATA"
         });
     }
-    console.log(data);
     res.send({
         data
     });
