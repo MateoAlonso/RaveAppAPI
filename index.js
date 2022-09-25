@@ -149,17 +149,16 @@ app.post("/users/postUser", (req, res)=>{
     var{isOrganizador} = req.body;
     var{cbu} = req.body;
     var{pass} = req.body;
-    console.log(`BEFORE TRY INDEX = nombre: ${nombre} - tel: ${tel} - dni: ${dni} - isOrg: ${isOrganizador} - cbu: ${cbu} - pass: ${pass}`)
-    console.log("enter try");
-    var newUser = db.postUsuario(nombre, tel, dni, cbu, isOrganizador, pass);
-    console.log(`INSIDE TRY INDEX = newUser: ${newUser}`);
-    res.send({
-        newUser
-    });
-    console.log("enter catch");
-    res.status(418).send({
-        message: `Failed to append data ${error}`
-    });
+    try {
+        var newUser = db.postUsuario(nombre, tel, dni, cbu, isOrganizador, pass);
+        res.send({
+            newUser
+        });
+    } catch (error) {
+        res.status(418).send({
+            message: `${error}`
+        });
+    }
 });
 
 /* app.post("/user/:id", (req, res) => {
