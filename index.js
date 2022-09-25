@@ -160,19 +160,3 @@ app.post("/users/postUser", (req, res)=>{
         });
     }
 });
-
-/* app.post("/user/:id", (req, res) => {
-    const {id} = req.params;
-    const {usuario} = req.body;
-    const {pass} = req.body;
-
-    if (!pass | !usuario) {
-        res.status(418).send({
-            message: "need user and pass"
-        });
-    }
-
-    res.send({
-        usuario: `usuario ${usuario} con id ${id} y pass ${pass}`
-    });
-}); */
