@@ -3,6 +3,7 @@ const fs = require("fs");
 var app = express();
 const PORT = 8080;
 var db = require("./db");
+require("./User");
 
 // middleware
 app.use(express.json());

@@ -66,14 +66,14 @@ function postUsuario(nombre, tel, dni, cbu, isOrganizador, pass) {
     console.log("ENTER postUsuario");
     var id = userData.length;
     console.log("CREATE new User");
-    User = new User(nombre, tel, dni, cbu, isOrganizador, pass, id);
+    var newUser = new User(nombre, tel, dni, cbu, isOrganizador, pass, id);
     console.log(`INSIDE postUsuario() = id: ${id} - User: ${User}`);
-    userData.push(User);
+    userData.push(newUser);
     console.log(`INSIDE postUsuario() = new lenght (should be > previous id): ${userData.length}`);
     if (id == userData.length) {
         throw error = "Failed to append data";
     }
-    return User;
+    return newUser;
 }
 
 
