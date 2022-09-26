@@ -1,10 +1,9 @@
 const fs = require("fs");
-const { get } = require("http");
 const _ = require("lodash");
 const userData = require("./jsonData/users.json");
 const eventoData = require("./jsonData/eventos.json");
-require("./User");
-const { error } = require("console");
+const User = require('./User');
+const { functions } = require("lodash");
 
 // GET requests
 function getUsers() {
@@ -63,17 +62,14 @@ function getEventoByIsRecPagada(option) {
 
 // POST requests
 function postUsuario(nombre, tel, dni, cbu, isOrganizador, pass) {
-    console.log("ENTER postUsuario");
     var id = userData.length;
-    console.log("CREATE new User");
-    var newUser = new User(nombre, tel, dni, cbu, isOrganizador, pass, id);
-    console.log(`INSIDE postUsuario() = id: ${id} - User: ${User}`);
-    userData.push(newUser);
-    console.log(`INSIDE postUsuario() = new lenght (should be > previous id): ${userData.length}`);
+    let user = new User(nombre, tel, dni, cbu, isOrganizador, pass, id);
+    userData.push(user);
+    fs.writeFileSync("./jsonData/users.json",JSON.stringify(userData));
     if (id == userData.length) {
         throw error = "Failed to append data";
     }
-    return newUser;
+    return user;
 }
 
 
