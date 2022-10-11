@@ -2,8 +2,8 @@ const fs = require("fs");
 const _ = require("lodash");
 const userData = require("./jsonData/users.json");
 const eventoData = require("./jsonData/eventos.json");
-const User = require('./User');
-const { functions } = require("lodash");
+const User = require('./model/User');
+const Evento = require('./model/Evento');
 
 // GET requests
 function getUsers() {
@@ -72,11 +72,20 @@ function postUsuario(nombre, tel, dni, cbu, isOrganizador, pass) {
     return user;
 }
 
-
+function postEvento(nombre, genero, desc, isLgbt, isAfter, isValidado, isCancelado, isRecPaga, fechaInicio, fechaFin, fechaFinVenta, totalRec) {
+    var id = eventoData.length;
+    let evento = new Evento(nombre, genero, desc, isLgbt, isAfter, isValidado, isCancelado, isRecPaga, fechaInicio, fechaFin, fechaFinVenta, totalRec);
+    eventoData.push(evento);
+    fs.writeFileSync("./jsonData/eventos.json",JSON.stringify(eventoData));
+    if (id == eventoData.length) {
+        throw error = "Failed to append data";
+    }
+    return evento;
+}
 
 
 
 
 
 // Exports
-module.exports = {getUsers, getEventos, getEventoByIsLgbt, getEventoByGenero, getEventoByIsCancelado, getEventoByIsAfter, getUserByNombre, getUsersByIsOrg, getEventoByNombre, getEventoByIsValidado, getEventoByIsRecPagada, postUsuario};
+module.exports = {getUsers, getEventos, getEventoByIsLgbt, getEventoByGenero, getEventoByIsCancelado, getEventoByIsAfter, getUserByNombre, getUsersByIsOrg, getEventoByNombre, getEventoByIsValidado, getEventoByIsRecPagada, postUsuario, postEvento};

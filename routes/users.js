@@ -1,0 +1,59 @@
+const express = require("express");
+const router = express.Router();
+var db = require("../db");
+
+
+router.get("/", (req, res) => {
+    var data = db.getUsers();
+    if (!data) {
+        res.status(418).send({
+            message: "ERROR FETCHING DATA"
+        });
+    }
+    res.send({
+        data
+    });
+});
+
+router.get("/nombre", (req, res) => {
+    var {nombre} = req.body;
+    console.log(nombre);
+    var data = db.getUserByNombre(nombre);
+    res.send({
+        data
+    });
+});
+
+router.get("/org", (req, res) => {
+    var {org} = req.body;
+    var data = db.getUsersByIsOrg(org);
+    if (!data) {
+        res.status(418).send({
+            message: "ERROR FETCHING DATA"
+        });
+    }
+    res.send({
+        data
+    });
+});
+
+//Register user
+router.post("/post", (req, res)=>{
+    var{nombre} = req.body;
+    var{tel} = req.body;
+    var{dni} = req.body;
+    var{isOrganizador} = req.body;
+    var{cbu} = req.body;
+    var{pass} = req.body;
+    try {
+        var newUser = db.postUsuario(nombre, tel, dni, cbu, isOrganizador, pass);
+        res.send({
+            newUser
+        });
+    } catch (error) {
+        res.status(418).send({
+            message: `${error}`
+        });
+    }
+});
+module.exports = router;
