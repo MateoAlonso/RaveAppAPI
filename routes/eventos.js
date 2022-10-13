@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-var db = require("../db");
+var db = require("../controller/db");
 
 router.get('/',(req, res) => {
     var data = db.getEventos();

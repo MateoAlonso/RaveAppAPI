@@ -1,4 +1,4 @@
-export class User{
+class User{
     constructor(nombre, tel, dni, cbu, isOrganizador, pass, id){
         this.nombre = nombre;
         this.tel = tel;

@@ -1,9 +1,9 @@
 const fs = require("fs");
 const _ = require("lodash");
-const userData = require("./jsonData/users.json");
-const eventoData = require("./jsonData/eventos.json");
-const User = require('./model/User');
-const Evento = require('./model/Evento');
+const userData = require("../jsonData/users.json");
+const eventoData = require("../jsonData/eventos.json");
+const User = require('../model/User');
+const Evento = require('../model/Evento');
 
 // GET requests
 function getUsers() {
