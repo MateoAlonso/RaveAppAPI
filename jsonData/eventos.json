@@ -1498,19 +1498,5 @@
         "fecha_fin_venta": "2021-02-08 17:56:14",
         "fecha_fin": "2021-11-13 20:12:21",
         "total_recaudado": "$9,925"
-    },
-    {
-        "id": "foo",
-        "nombre": "foo",
-        "genero": "foo",
-        "desc": 1,
-        "isLgbt": 1,
-        "isAfter": 1,
-        "isValidado": 1,
-        "isCancelado": 1,
-        "isRecPaga": "2020-05-10 13:54:43",
-        "fechaInicio": "2021-07-07 10:12:59",
-        "fechaFin": "2023-02-09 19:42:12",
-        "fechaFinVenta": "$6,775"
     }
 ]

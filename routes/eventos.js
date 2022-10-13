@@ -1,6 +1,16 @@
 const express = require("express");
 const router = express.Router();
 var db = require("../controller/db");
+const validation = require("../controller/validation");
+
+router.use('/post', (req, res, next) => {
+    const result = validation.eventoSchema.validate(req.body, {abortEarly: false});
+    if (!result.error) {
+        next();
+    } else {
+    res.status(400).send(result.error.message);
+    }
+});
 
 router.get('/',(req, res) => {
     var data = db.getEventos();
