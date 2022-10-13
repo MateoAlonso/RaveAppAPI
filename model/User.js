@@ -11,6 +11,7 @@ class User{
 
     get Data(){
         return [{
+            'id': this.id,
             'nombre': this.nombre,
             'tel': this.tel,
             'dni': this.dni,
