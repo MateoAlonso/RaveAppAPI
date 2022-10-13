@@ -1,6 +1,5 @@
 class Evento{
-    constructor(id, nombre, genero, desc, isLgbt, isAfter, isValidado, isCancelado, isRecPaga, fechaInicio, fechaFin, fechaFinVenta, totalRec){
-        this.id = id;
+    constructor(nombre, genero, desc, isLgbt, isAfter, isValidado, isCancelado, isRecPaga, fechaInicio, fechaFin, fechaFinVenta, totalRec){
         this.nombre = nombre;
         this.genero = genero;
         this.desc = desc;

@@ -74,7 +74,7 @@ function postUsuario(nombre, tel, dni, cbu, isOrganizador, pass) {
 
 function postEvento(nombre, genero, desc, isLgbt, isAfter, isValidado, isCancelado, isRecPaga, fechaInicio, fechaFin, fechaFinVenta, totalRec) {
     var id = eventoData.length;
-    let evento = new Evento(nombre, genero, desc, isLgbt, isAfter, isValidado, isCancelado, isRecPaga, fechaInicio, fechaFin, fechaFinVenta, totalRec);
+    let evento = new Evento(id, nombre, genero, desc, isLgbt, isAfter, isValidado, isCancelado, isRecPaga, fechaInicio, fechaFin, fechaFinVenta, totalRec);
     eventoData.push(evento);
     fs.writeFileSync("./jsonData/eventos.json",JSON.stringify(eventoData));
     if (id == eventoData.length) {
