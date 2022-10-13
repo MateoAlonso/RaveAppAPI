@@ -1,5 +1,6 @@
 const Joi = require('joi');
 
+// Schema validacion de usuario
 const userSchema = Joi.object({
     'nombre': Joi.string().min(3).max(10).required(),
     'pass': Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
@@ -9,6 +10,7 @@ const userSchema = Joi.object({
     'cbu': Joi.string(),
 });
 
+// Schema validacion de evento
 const eventoSchema = Joi.object({
     'nombre': Joi.string().min(3).max(30).required(),
     'genero': Joi.string().required(),

@@ -3,6 +3,7 @@ const router = express.Router();
 var db = require("../controller/db");
 const validation = require("../controller/validation");
 
+// middleware
 router.use('/post', (req, res, next) => {
     const result = validation.eventoSchema.validate(req.body, {abortEarly: false});
     if (!result.error) {
@@ -12,6 +13,7 @@ router.use('/post', (req, res, next) => {
     }
 });
 
+// get eventos
 router.get('/',(req, res) => {
     var data = db.getEventos();
     if (!data) {
@@ -24,6 +26,7 @@ router.get('/',(req, res) => {
     });
 });
 
+// get eventos por genero
 router.get("/genero", (req, res) => {
     var {genero} = req.body;
     var data = db.getEventoByGenero(genero);
@@ -37,6 +40,7 @@ router.get("/genero", (req, res) => {
     });
 });
 
+// get eventos por isLgbt
 router.get("/lgbt", (req, res) => {
     var {lgbt} = req.body;
     var data = db.getEventoByIsLgbt(lgbt);
@@ -50,6 +54,7 @@ router.get("/lgbt", (req, res) => {
     });
 });
 
+// get eventos por isAfter
 router.get("/after", (req, res) => {
     var {after} = req.body;
     var data = db.getEventoByIsAfter(after);
@@ -63,6 +68,7 @@ router.get("/after", (req, res) => {
     });
 });
 
+// get eventos por isValidado
 router.get("/validado", (req, res) => {
     var {validado} = req.body;
     var data = db.getEventoByIsValidado(validado);
@@ -76,6 +82,7 @@ router.get("/validado", (req, res) => {
     });
 });
 
+// get eventos por isCancelado
 router.get("/cancelado", (req, res) => {
     var {cancelado} = req.body;
     var data = db.getEventoByIsCancelado(cancelado);
@@ -89,6 +96,7 @@ router.get("/cancelado", (req, res) => {
     });
 });
 
+// get eventos por isRecPaga
 router.get("/recPagada", (req, res) => {
     var {recPagada} = req.body;
     var data = db.getEventoByIsRecPagada(recPagada);
@@ -102,6 +110,7 @@ router.get("/recPagada", (req, res) => {
     });
 });
 
+// post evento
 router.post("/post", (req, res)=>{
     var{nombre} = req.body;
     var{genero} = req.body;
@@ -126,4 +135,5 @@ router.post("/post", (req, res)=>{
         });
     }
 });
+
 module.exports = router;

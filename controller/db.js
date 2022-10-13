@@ -5,7 +5,7 @@ const eventoData = require("../jsonData/eventos.json");
 const User = require('../model/User');
 const Evento = require('../model/Evento');
 
-// GET requests
+// get requests
 function getUsers() {
     return userData;
 }
@@ -60,7 +60,7 @@ function getEventoByIsRecPagada(option) {
 }
 
 
-// POST requests
+// post requests
 function postUsuario(nombre, tel, dni, cbu, isOrganizador, pass) {
     var id = userData.length;
     let user = new User(nombre, tel, dni, cbu, isOrganizador, pass, id);

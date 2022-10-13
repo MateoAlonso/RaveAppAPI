@@ -2,18 +2,16 @@ const express = require("express");
 const app = express();
 const PORT = 8080;
 
-
 // routes
 const usersRoute = require('./routes/users');
 const eventosRoute = require('./routes/eventos');
-
 
 // middleware
 app.use(express.json());
 app.use('/users', usersRoute);
 app.use('/eventos', eventosRoute);
 
-// Puerto host
+// puerto host
 app.listen(
     PORT,
     () => console.log(`Running on http://localhost:${PORT}`)

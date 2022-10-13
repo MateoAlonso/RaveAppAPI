@@ -3,6 +3,7 @@ const router = express.Router();
 var db = require("../controller/db");
 const validation = require("../controller/validation");
 
+// middleware
 router.use('/post', (req, res, next) => {
     const result = validation.userSchema.validate(req.body, {abortEarly: false});
     if (!result.error) {
@@ -12,7 +13,7 @@ router.use('/post', (req, res, next) => {
     }
 });
 
-
+// get users
 router.get("/", (req, res) => {
     var data = db.getUsers();
     if (!data) {
@@ -25,6 +26,7 @@ router.get("/", (req, res) => {
     });
 });
 
+// get users por nombre
 router.get("/nombre", (req, res) => {
     var {nombre} = req.body;
     console.log(nombre);
@@ -34,6 +36,7 @@ router.get("/nombre", (req, res) => {
     });
 });
 
+// get users por isOrganizador
 router.get("/org", (req, res) => {
     var {org} = req.body;
     var data = db.getUsersByIsOrg(org);
@@ -47,7 +50,7 @@ router.get("/org", (req, res) => {
     });
 });
 
-//Register user
+// register user
 router.post("/post", (req, res)=>{
     var{nombre} = req.body;
     var{tel} = req.body;
