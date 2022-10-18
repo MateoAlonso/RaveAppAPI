@@ -3,8 +3,8 @@ const app = express();
 const PORT = 8080;
 
 // routes
-const usersRoute = require('./routes/users');
-const eventosRoute = require('./routes/eventos');
+const usersRoute = require('./repository/users');
+const eventosRoute = require('./repository/eventos');
 
 // middleware
 app.use(express.json());
