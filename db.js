@@ -2,7 +2,7 @@ const fs = require("fs");
 const _ = require("lodash");
 const userData = require("./jsonData/users.json");
 const eventoData = require("./jsonData/eventos.json");
-const User = require('./User');
+const User = require('./model/User');
 const { functions } = require("lodash");
 
 // GET requests
