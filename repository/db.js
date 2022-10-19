@@ -61,15 +61,15 @@ function getEventoByIsRecPagada(option) {
 
 
 // post requests
-function postUsuario(nombre, tel, dni, cbu, isOrganizador, pass) {
+function postUsuario(user) {
     var id = userData.length;
-    let user = new User(nombre, tel, dni, cbu, isOrganizador, pass, id);
-    userData.push(user);
+    let newUser = new User(user.nombre, user.tel, user.dni, user.cbu, user.isOrganizador, user.pass, id);
+    userData.push(newUser);
     fs.writeFileSync("./jsonData/users.json",JSON.stringify(userData));
     if (id == userData.length) {
         throw error = "Failed to append data";
     }
-    return user;
+    return newUser;
 }
 
 function postEvento(nombre, genero, desc, isLgbt, isAfter, isValidado, isCancelado, isRecPaga, fechaInicio, fechaFin, fechaFinVenta, totalRec) {

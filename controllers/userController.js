@@ -55,8 +55,9 @@ router.get("/org", (req, res) => {
 router.post("/post", (req, res)=>{
 
     var user = req.body;
-    userService.
-
+    userService.validateUserData(user);
+    userService.registerUser(user);
+    
     /*var{nombre} = req.body;
     var{tel} = req.body;
     var{dni} = req.body;
