@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-var db = require("../services/db");
-const validation = require("../services/validation");
+var db = require("../repository/db");
+const validation = require("../repository/validation");
 
 // middleware
 router.use('/post', (req, res, next) => {

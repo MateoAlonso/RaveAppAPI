@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
-var db = require("../services/db");
-const validation = require("../services/validation");
+var db = require("../repository/db");
+const validation = require("../repository/validation");
+const userService = require("../services/userService");
 
 // middleware
 router.use('/post', (req, res, next) => {
@@ -52,7 +53,11 @@ router.get("/org", (req, res) => {
 
 // register user
 router.post("/post", (req, res)=>{
-    var{nombre} = req.body;
+
+    var user = req.body;
+    userService.
+
+    /*var{nombre} = req.body;
     var{tel} = req.body;
     var{dni} = req.body;
     var{isOrganizador} = req.body;
@@ -67,7 +72,7 @@ router.post("/post", (req, res)=>{
         res.status(418).send({
             message: `${error}`
         });
-    }
+    } */
 });
 
 module.exports = router;
