@@ -1,12 +1,11 @@
 const express = require("express");
 const router = express.Router();
-var db = require("../repository/db");
-const validation = require("../repository/validation");
+var db = require("../repository/dbRepo");
 const userService = require("../services/userService");
 
 // middleware
 router.use('/post', (req, res, next) => {
-    const result = validation.userSchema.validate(req.body, {abortEarly: false});
+    const result = userService.validateUserData(req.body);
     if (!result.error) {
         next();
     } else {
@@ -55,8 +54,17 @@ router.get("/org", (req, res) => {
 router.post("/post", (req, res)=>{
 
     var user = req.body;
-    userService.validateUserData(user);
-    userService.registerUser(user);
+    try {
+        var newUser = userService.registerUser(user);
+        res.send({
+            newUser
+        })
+    } catch (error) {
+        res.status(418).send({
+            message: `${error}`
+        });
+    }
+    
     
     /*var{nombre} = req.body;
     var{tel} = req.body;
