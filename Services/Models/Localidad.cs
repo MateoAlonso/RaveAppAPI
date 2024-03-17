@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using RaveAppAPI.Services.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +10,14 @@ namespace RaveAppAPI.Services.Models
 {
     public class Localidad
     {
-        public string DsNombre { get;}
+        [ColumnName("dslocalidad")]
+        public string Nombre { get;}
         public Provincia Provincia { get;}
 
-        public Localidad(string dsNombre, string dsProvincia)
+        public Localidad(string nombre, string provincia)
         {
-            DsNombre = dsNombre;
-            Provincia = new Provincia(dsProvincia);
+            Nombre = nombre;
+            Provincia = new Provincia(provincia);
         }
 
         //public static ErrorOr<Localidad> Create(string dsNombre, string dsProvincia)

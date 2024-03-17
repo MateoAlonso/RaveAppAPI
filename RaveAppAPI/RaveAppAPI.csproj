@@ -7,6 +7,18 @@
     <UserSecretsId>fe3e5892-924c-48bd-9508-96c35173484c</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="ErrorOr" Version="1.10.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />

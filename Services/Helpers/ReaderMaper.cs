@@ -1,54 +1,38 @@
-﻿using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MySql.Data.MySqlClient;
-using FastMember;
-using ZstdSharp;
-using System.Data;
+﻿using System.Data;
+using System.Reflection;
 
 namespace RaveAppAPI.Services.Helpers
 {
     public static class ReaderMaper
     {
-        private static List<string> columns = new List<string>();
-        //recieves an sqldatareader and returns a list of T
-        public static IEnumerable<T> ConvertToObject<T>(MySqlDataReader rd) where T : class, new()
+        public static IEnumerable<T> ReaderToObject<T>(IDataReader rd) where T : class, new()
         {
-            bool isCheckedCols = columns.Count != 0;
+            IEnumerable<T> list = new List<T>();
+            Type type = typeof(T);
+            var attr = type.GetProperties()
+                .Where(p => Attribute.IsDefined(p, typeof(ColumnNameAttribute)))
+                .ToDictionary(p => ((ColumnNameAttribute)Attribute.GetCustomAttribute(p, typeof(ColumnNameAttribute))).Name, p => p);
             while (rd.Read())
             {
-                if (!isCheckedCols)
+                var t = new T();
+                for (int i = 0; i < rd.FieldCount; i++)
                 {
-                    for (int i = 0; i < rd.FieldCount; i++)
+                    if (!rd.IsDBNull(i))
                     {
-                        columns.Add(rd.GetName(i).ToLower());
-                    }
+                        string fieldName = rd.GetName(i).ToUpper();
+
+                        if (attr.ContainsKey(fieldName))
+                        {
+                            PropertyInfo propInfo = attr.GetValueOrDefault(fieldName);
+                            object value = rd.GetValue(i);
+                            propInfo.SetValue(t, value);
+                        }
+                    } 
+                    
+                    
                 }
+                yield return t;
             }
-
-
-            Type type = typeof(T);
-            var accessor = TypeAccessor.Create(type);
-            var members = accessor.GetMembers();
-            var t = new T();
-
-            for (int i = 0; i < rd.FieldCount; i++)
-            {
-                if (!rd.IsDBNull(i))
-                {
-                    string fieldName = rd.GetName(i);
-
-                    if (members.Any(m => string.Equals(m.Name, fieldName, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        accessor[t, fieldName] = rd.GetValue(i);
-                    }
-                }
-            }
-
-            throw new NotImplementedException();
         }
     }
 }

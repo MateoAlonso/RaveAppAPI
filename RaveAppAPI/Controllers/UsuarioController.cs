@@ -89,7 +89,7 @@ namespace RaveAppAPI.Controllers
         private static UsuarioResponse MapUsuarioResponse(Usuario usuario)
         {
             return new UsuarioResponse(
-                usuario.IdUsuario,usuario.DsNombre,usuario.DsApellido, usuario.DsCorreo,usuario.DsCBU,usuario.NmDni,usuario.NmTelefono,usuario.IsOrganizador,usuario.IsActivo,usuario.DtAlta, usuario.DtBaja
+                usuario.IdUsuario,usuario.Nombre,usuario.Apellido, usuario.Correo,usuario.CBU,usuario.Dni,usuario.Telefono,usuario.IsOrganizador,usuario.IsActivo,usuario.DtAlta, usuario.DtBaja
                 );
         }
 

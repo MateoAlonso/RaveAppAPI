@@ -4,6 +4,7 @@ using RaveAppAPI.Services.Repository.Contracts;
 using MySql.Data.MySqlClient;
 using Error = ErrorOr.Error;
 using Microsoft.Extensions.Configuration;
+using RaveAppAPI.Services.Helpers;
 
 namespace RaveAppAPI.Services.Repository
 {
@@ -22,17 +23,17 @@ namespace RaveAppAPI.Services.Repository
                     MySqlCommand cmd = new("PCD_USUARIOS_SetUsuario", dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.Parameters.AddRange(new MySqlParameter[] {
-                        new ("p_provincia", usuario.Domicilio.Localidad.Provincia.DsProvincia),
-                        new ("p_localidad", usuario.Domicilio.Localidad.DsNombre),
-                        new ("p_calle", usuario.Domicilio.DsCalle),
-                        new ("p_altura", usuario.Domicilio.NmAltura),
-                        new ("p_pisodepartamento", usuario.Domicilio.DsPisoDepartamento),
-                        new ("p_nombreusuario", usuario.DsNombre),
-                        new ("p_apellido", usuario.DsApellido),
-                        new ("p_correo", usuario.DsCorreo),
-                        new ("p_nmdni", usuario.NmDni),
-                        new ("p_nmtelefono", usuario.NmTelefono),
-                        new ("p_dscbu", usuario.DsCBU),
+                        new ("p_provincia", usuario.Domicilio.Localidad.Provincia.Nombre),
+                        new ("p_localidad", usuario.Domicilio.Localidad.Nombre),
+                        new ("p_calle", usuario.Domicilio.Calle),
+                        new ("p_altura", usuario.Domicilio.Altura),
+                        new ("p_pisodepartamento", usuario.Domicilio.PisoDepartamento),
+                        new ("p_nombreusuario", usuario.Nombre),
+                        new ("p_apellido", usuario.Apellido),
+                        new ("p_correo", usuario.Correo),
+                        new ("p_dni", usuario.Dni),
+                        new ("p_telefono", usuario.Telefono),
+                        new ("p_cbu", usuario.CBU),
                         new ("p_isorganizador", usuario.IsOrganizador),
                         new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                         new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output } }
@@ -119,14 +120,13 @@ namespace RaveAppAPI.Services.Repository
                     cmd.Parameters.Add(new MySqlParameter("p_correo", mail));
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
-                        while (reader.Read())
+                        if (reader.HasRows)
                         {
-                            if (reader.HasRows)
-                            {
-                                //TODO Data mapper
-                                //return Usuario.Devolver(reader.GetString("dsprovincia"), reader.GetString("dslocalidad"), reader.GetString("dscalle"), reader.GetString("nmaltura"), reader.GetString("dspisodepartamento"), reader.GetString("dsnombre"), reader.GetString("dsapellido"), reader.GetString("dscorreo"), reader.GetString("dscbu"), reader.GetString("nmdni"), reader.GetString("nmtelefono"), reader.GetInt32("isorganizador"), reader.GetInt32("isactivo"), reader.GetDateTime("dtalta"), reader.GetDateTime("dtbaja"));
-
-                            }
+                            List<Usuario> usuarios = ReaderMaper.ReaderToObject<Usuario>(reader).ToList();
+                        }
+                        else
+                        {
+                                return Error.NotFound();
                         }
                     }
                 }
@@ -150,17 +150,17 @@ namespace RaveAppAPI.Services.Repository
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.Parameters.AddRange(new MySqlParameter[] {
                         new ("p_idusuario", usuario.IdUsuario),
-                        new ("p_provincia", usuario.Domicilio.Localidad.Provincia.DsProvincia),
-                        new ("p_localidad", usuario.Domicilio.Localidad.DsNombre),
-                        new ("p_calle", usuario.Domicilio.DsCalle),
-                        new ("p_altura", usuario.Domicilio.NmAltura),
-                        new ("p_pisodepartamento", usuario.Domicilio.DsPisoDepartamento),
-                        new ("p_nombreusuario", usuario.DsNombre),
-                        new ("p_apellido", usuario.DsApellido),
-                        new ("p_correo", usuario.DsCorreo),
-                        new ("p_nmdni", usuario.NmDni),
-                        new ("p_nmtelefono", usuario.NmTelefono),
-                        new ("p_dscbu", usuario.DsCBU),
+                        new ("p_provincia", usuario.Domicilio.Localidad.Provincia.Nombre),
+                        new ("p_localidad", usuario.Domicilio.Localidad.Nombre),
+                        new ("p_calle", usuario.Domicilio.Calle),
+                        new ("p_altura", usuario.Domicilio.Altura),
+                        new ("p_pisodepartamento", usuario.Domicilio.PisoDepartamento),
+                        new ("p_nombreusuario", usuario.Nombre),
+                        new ("p_apellido", usuario.Apellido),
+                        new ("p_correo", usuario.Correo),
+                        new ("p_dni", usuario.Dni),
+                        new ("p_telefono", usuario.Telefono),
+                        new ("p_cbu", usuario.CBU),
                         new ("p_isorganizador", usuario.IsOrganizador),
                         new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                         new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output } }

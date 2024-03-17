@@ -7,10 +7,22 @@
     <UserSecretsId>a084c148-4873-40cc-8306-c2201824b1f1</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="NewFolder1\**" />
     <EmbeddedResource Remove="NewFolder1\**" />
     <None Remove="NewFolder1\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
   </ItemGroup>
 
   <ItemGroup>

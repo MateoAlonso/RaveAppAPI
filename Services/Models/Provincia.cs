@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RaveAppAPI.Services.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,11 +9,12 @@ namespace RaveAppAPI.Services.Models
 {
     public class Provincia
     {
-        public string DsProvincia { get;}
+        [ColumnName("dsprovincia")]
+        public string Nombre { get;}
 
-        public Provincia(string dsProvincia)
+        public Provincia(string nombre)
         {
-            DsProvincia = dsProvincia;
+            Nombre = nombre;
         }
     }
 }

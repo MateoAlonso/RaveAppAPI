@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using RaveAppAPI.Services.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,23 +11,26 @@ namespace RaveAppAPI.Services.Models
     public class Domicilio
     {
         public Localidad Localidad  { get;}
-        public string DsCalle { get;}
-        public string NmAltura { get;}
-        public string DsPisoDepartamento { get;}
+        [ColumnName("dscalle")]
+        public string Calle { get;}
+        [ColumnName("nmaltura")]
+        public string Altura { get;}
+        [ColumnName("dspisodepartamento")]
+        public string PisoDepartamento { get;}
 
-        private Domicilio(Localidad localidad, string dsCalle, string nmAltura, string dsPisoDepartamento) 
+        public Domicilio(Localidad localidad, string calle, string altura, string pisoDepartamento) 
         {
             Localidad = localidad;
-            DsCalle = dsCalle;
-            NmAltura = nmAltura;
-            DsPisoDepartamento = dsPisoDepartamento;
+            Calle = calle;
+            Altura = altura;
+            PisoDepartamento = pisoDepartamento;
         }
 
-        public static ErrorOr<Domicilio> Crear(string dsProvincia, string dsLocalidad, string dsCalle, string nmAltura, string dsPisoDepartamento)
+        public static ErrorOr<Domicilio> Crear(string provincia, string localidad, string calle, string altura, string pisoDepartamento)
         {
             
             List<Error> errors = new();
-            Localidad localidad = new Localidad(dsLocalidad, dsProvincia);
+            Localidad loc = new Localidad(localidad, provincia);
             // Validaciones
 
             if (errors.Count > 0)
@@ -34,13 +38,13 @@ namespace RaveAppAPI.Services.Models
                 return errors;
             }
 
-            return new Domicilio(localidad, dsCalle, nmAltura, dsPisoDepartamento);
+            return new Domicilio(loc, calle, altura, pisoDepartamento);
         }
         
-        public static Domicilio Devolver(string dsProvincia, string dsLocalidad, string dsCalle, string nmAltura, string dsPisoDepartamento)
+        public static Domicilio Devolver(string provincia, string localidad, string calle, string altura, string dsPisoDepartamento)
         {
-            Localidad localidad = new Localidad(dsLocalidad, dsProvincia);
-            return new Domicilio(localidad, dsCalle, nmAltura, dsPisoDepartamento);
+            Localidad loc = new Localidad(localidad, provincia);
+            return new Domicilio(loc, calle, altura, dsPisoDepartamento);
         }
     }
 }
