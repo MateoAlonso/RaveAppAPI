@@ -3,11 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using RaveAppAPI.Contracts.User;
 using RaveAppAPI.Models;
 using RaveAppAPI.Services.Repository.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RaveAppAPI.Controllers
 {
@@ -89,7 +84,7 @@ namespace RaveAppAPI.Controllers
         private static UsuarioResponse MapUsuarioResponse(Usuario usuario)
         {
             return new UsuarioResponse(
-                usuario.IdUsuario,usuario.Nombre,usuario.Apellido, usuario.Correo,usuario.CBU,usuario.Dni,usuario.Telefono,usuario.IsOrganizador,usuario.IsActivo,usuario.DtAlta, usuario.DtBaja
+                usuario.IdUsuario, usuario.Nombre, usuario.Apellido, usuario.Correo, usuario.CBU, usuario.Dni, usuario.Telefono, usuario.IsOrganizador, usuario.IsActivo, usuario.DtAlta, usuario.DtBaja
                 );
         }
 

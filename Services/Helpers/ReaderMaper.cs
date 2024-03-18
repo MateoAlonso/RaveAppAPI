@@ -27,9 +27,9 @@ namespace RaveAppAPI.Services.Helpers
                             object value = rd.GetValue(i);
                             propInfo.SetValue(t, value);
                         }
-                    } 
-                    
-                    
+                    }
+
+
                 }
                 yield return t;
             }

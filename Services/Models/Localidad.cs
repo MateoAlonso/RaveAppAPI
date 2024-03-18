@@ -1,18 +1,12 @@
-﻿using ErrorOr;
-using RaveAppAPI.Services.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using RaveAppAPI.Services.Helpers;
 
 namespace RaveAppAPI.Services.Models
 {
     public class Localidad
     {
         [ColumnName("dslocalidad")]
-        public string Nombre { get;}
-        public Provincia Provincia { get;}
+        public string Nombre { get; }
+        public Provincia Provincia { get; }
 
         public Localidad(string nombre, string provincia)
         {

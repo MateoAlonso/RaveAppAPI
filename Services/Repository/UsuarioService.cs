@@ -1,10 +1,10 @@
 ﻿using ErrorOr;
-using RaveAppAPI.Models;
-using RaveAppAPI.Services.Repository.Contracts;
-using MySql.Data.MySqlClient;
-using Error = ErrorOr.Error;
 using Microsoft.Extensions.Configuration;
+using MySql.Data.MySqlClient;
+using RaveAppAPI.Models;
 using RaveAppAPI.Services.Helpers;
+using RaveAppAPI.Services.Repository.Contracts;
+using Error = ErrorOr.Error;
 
 namespace RaveAppAPI.Services.Repository
 {
@@ -106,7 +106,7 @@ namespace RaveAppAPI.Services.Repository
                 }
             }
             return Error.NotFound();
-            
+
         }
         public ErrorOr<Usuario> GetUsuarioByMail(string mail)
         {
@@ -126,7 +126,7 @@ namespace RaveAppAPI.Services.Repository
                         }
                         else
                         {
-                                return Error.NotFound();
+                            return Error.NotFound();
                         }
                     }
                 }
@@ -136,7 +136,7 @@ namespace RaveAppAPI.Services.Repository
                 }
             }
             return Error.NotFound();
-            
+
         }
 
         public ErrorOr<Updated> UpdateUsuario(Usuario usuario)

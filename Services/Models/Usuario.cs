@@ -1,7 +1,7 @@
 ﻿using ErrorOr;
 using RaveAppAPI.Contracts.User;
-using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Helpers;
+using RaveAppAPI.Services.Models;
 
 namespace RaveAppAPI.Models
 {
@@ -11,25 +11,25 @@ namespace RaveAppAPI.Models
         public string IdUsuario { get; set; }
         public Domicilio Domicilio { get; set; }
         [ColumnName("dsnombre")]
-        public string Nombre { get; set;}
+        public string Nombre { get; set; }
         [ColumnName("dsapellido")]
-        public string Apellido { get; set;}
+        public string Apellido { get; set; }
         [ColumnName("dscorreo")]
-        public string Correo { get; set;}
+        public string Correo { get; set; }
         [ColumnName("nmcbu")]
-        public string CBU { get; set;}
+        public string CBU { get; set; }
         [ColumnName("nmdni")]
-        public string Dni { get; set;}
+        public string Dni { get; set; }
         [ColumnName("nmtelefono")]
-        public string Telefono { get; set;}
+        public string Telefono { get; set; }
         [ColumnName("isorganizador")]
-        public int IsOrganizador { get; set;}
+        public int IsOrganizador { get; set; }
         [ColumnName("isactivo")]
-        public int? IsActivo { get; set;}
+        public int? IsActivo { get; set; }
         [ColumnName("dtalta")]
-        public DateTime? DtAlta { get; set;}
+        public DateTime? DtAlta { get; set; }
         [ColumnName("dtbaja")]
-        public DateTime? DtBaja { get; set;}
+        public DateTime? DtBaja { get; set; }
 
         public Usuario(Domicilio domicilio, string nombre, string apellido, string correo, string cbu, string dni, string tel, int isOrganizador, int? isActivo, DateTime? dtAlta, DateTime? dtBaja, string idUsuario)
         {
@@ -78,7 +78,7 @@ namespace RaveAppAPI.Models
         {
             return Crear(request.Provincia, request.Localidad, request.Calle, request.Altura, request.PisoDepartamento, request.Nombre, request.Apellido, request.Correo, request.CBU, request.Dni, request.Telefono, request.IsOrganizador);
         }
-        
+
         public static ErrorOr<Usuario> From(string idUsuario, UpdateUsuarioRequest request)
         {
             return Crear(request.Provincia, request.Localidad, request.calle, request.Altura, request.PisoDepartamento, request.Nombre, request.Apellido, request.Correo, request.CBU, request.Dni, request.Telefono, request.IsOrganizador, idUsuario: request.IdUsuario);
