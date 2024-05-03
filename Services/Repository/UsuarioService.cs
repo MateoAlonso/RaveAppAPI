@@ -1,7 +1,9 @@
 ﻿using ErrorOr;
-using RaveAppAPI.Models;
-using RaveAppAPI.Services.Repository.Contracts;
+using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
+using RaveAppAPI.Models;
+using RaveAppAPI.Services.Helpers;
+using RaveAppAPI.Services.Repository.Contracts;
 using Error = ErrorOr.Error;
 using RaveAppAPI.Services.Helpers;
 using Microsoft.Extensions.Configuration;
@@ -136,7 +138,7 @@ namespace RaveAppAPI.Services.Repository
                         }
                         else
                         {
-                                return Error.NotFound();
+                            return Error.NotFound();
                         }
                     }
                 }
