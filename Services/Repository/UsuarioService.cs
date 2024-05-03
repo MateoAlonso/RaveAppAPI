@@ -3,16 +3,16 @@ using RaveAppAPI.Models;
 using RaveAppAPI.Services.Repository.Contracts;
 using MySql.Data.MySqlClient;
 using Error = ErrorOr.Error;
-using Microsoft.Extensions.Configuration;
 using RaveAppAPI.Services.Helpers;
+using Microsoft.Extensions.Configuration;
+using System.Configuration;
+//using ConfigurationManager = System.Configuration.ConfigurationManager;
 
 namespace RaveAppAPI.Services.Repository
 {
     public class UsuarioService : IUsuarioService
     {
-        private static readonly ConfigurationBuilder configurationBuilder = new();
-        private static readonly IConfiguration config = configurationBuilder.AddUserSecrets<UsuarioService>().Build();
-        private readonly string connectionString = config.GetConnectionString("Default");
+        private readonly string connectionString = Environment.GetEnvironmentVariable("dbcon", EnvironmentVariableTarget.Machine);
         public ErrorOr<Created> CreateUsuario(Usuario usuario)
         {
             using (MySqlConnection dbcon = new(connectionString))
@@ -55,7 +55,6 @@ namespace RaveAppAPI.Services.Repository
                 }
             }
         }
-
         public ErrorOr<Deleted> DeleteUsuario(string id)
         {
             using (MySqlConnection dbcon = new(connectionString))
@@ -97,7 +96,18 @@ namespace RaveAppAPI.Services.Repository
                     MySqlCommand cmd = new("PCD_Usuarios_GetUsuarioById", dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.Parameters.Add(new MySqlParameter("p_idusuario", id));
-                    MySqlDataReader datareader = cmd.ExecuteReader();
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            List<Usuario> usuarios = ReaderMaper.ReaderToObject<Usuario>(reader).ToList();
+                            return usuarios.FirstOrDefault();
+                        }
+                        else
+                        {
+                            return Error.NotFound();
+                        }
+                    }
 
                 }
                 catch (Exception)
@@ -105,7 +115,6 @@ namespace RaveAppAPI.Services.Repository
                     return Error.Unexpected();
                 }
             }
-            return Error.NotFound();
             
         }
         public ErrorOr<Usuario> GetUsuarioByMail(string mail)
@@ -123,6 +132,7 @@ namespace RaveAppAPI.Services.Repository
                         if (reader.HasRows)
                         {
                             List<Usuario> usuarios = ReaderMaper.ReaderToObject<Usuario>(reader).ToList();
+                            return usuarios.FirstOrDefault();
                         }
                         else
                         {
@@ -135,7 +145,6 @@ namespace RaveAppAPI.Services.Repository
                     return Error.Unexpected();
                 }
             }
-            return Error.NotFound();
             
         }
 

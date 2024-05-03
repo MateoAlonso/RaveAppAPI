@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaveAppAPI", "RaveAppAPI\Ra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaveAppAPI.Services", "Services\RaveAppAPI.Services.csproj", "{13B61C8E-38E6-45CE-AE18-4700A2741DCB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaveAppAPI.ServicesTests", "RaveAppAPI.ServicesTests\RaveAppAPI.ServicesTests.csproj", "{6F51386C-AFA1-437D-9405-A1B77C752C6E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{13B61C8E-38E6-45CE-AE18-4700A2741DCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13B61C8E-38E6-45CE-AE18-4700A2741DCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13B61C8E-38E6-45CE-AE18-4700A2741DCB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6F51386C-AFA1-437D-9405-A1B77C752C6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6F51386C-AFA1-437D-9405-A1B77C752C6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6F51386C-AFA1-437D-9405-A1B77C752C6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6F51386C-AFA1-437D-9405-A1B77C752C6E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
