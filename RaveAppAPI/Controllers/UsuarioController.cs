@@ -6,11 +6,11 @@ using RaveAppAPI.Services.Repository.Contracts;
 
 namespace RaveAppAPI.Controllers
 {
-    public class EventoController : ApiController
+    public class UsuarioController : ApiController
     {
         private readonly IUsuarioService _usuarioService;
 
-        public EventoController(IUsuarioService usuarioService)
+        public UsuarioController(IUsuarioService usuarioService)
         {
             _usuarioService = usuarioService;
         }

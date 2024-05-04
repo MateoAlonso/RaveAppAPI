@@ -93,7 +93,7 @@ namespace RaveAppAPI.Services.Repository
             return Error.NotFound();
 
         }
-        public ErrorOr<Evento> GetEventoByNombre(string mail)
+        public ErrorOr<List<Evento>> GetEventosByEstado(string estado)
         {
             using (MySqlConnection dbcon = new(connectionString))
             {

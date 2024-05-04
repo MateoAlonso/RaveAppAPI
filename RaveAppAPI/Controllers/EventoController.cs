@@ -1,99 +1,103 @@
 ﻿using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
-using RaveAppAPI.Contracts.User;
 using RaveAppAPI.Models;
+using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
+using RaveAppAPI.Services.RequestModel.Evento;
 
 namespace RaveAppAPI.Controllers
 {
     public class EventoController : ApiController
     {
-        private readonly IUsuarioService _usuarioService;
+        private readonly IEventoService _eventoService;
 
-        public EventoController(IUsuarioService usuarioService)
+        public EventoController(IEventoService eventoService)
         {
-            _usuarioService = usuarioService;
+            _eventoService = eventoService;
         }
 
         [HttpPost]
-        public IActionResult CreateUsuario(CreateUsuarioRequest request)
+        public IActionResult CreateEvento(CreateEventoRequest request)
         {
-            ErrorOr<Usuario> requestToUsuarioResult = Usuario.From(request);
+            ErrorOr<Evento> requestToEventoResult = Evento.From(request);
 
-            if (requestToUsuarioResult.IsError)
+            if (requestToEventoResult.IsError)
             {
-                return Problem(requestToUsuarioResult.Errors);
+                return Problem(requestToEventoResult.Errors);
             }
 
-            var usuario = requestToUsuarioResult.Value;
-            ErrorOr<Created> createUsuarioResult = _usuarioService.CreateUsuario(usuario);
+            var evento = requestToEventoResult.Value;
+            ErrorOr<Created> createEventoResult = _eventoService.CreateEvento(evento);
 
-            return createUsuarioResult.Match(
-                created => CreatedAtCreateUsuario(usuario),
+            return createEventoResult.Match(
+                created => CreatedAtCreateEvento(evento),
                 errors => Problem(errors));
         }
 
         [HttpGet("id/{id}")]
-        public IActionResult GetUsuarioById(string id)
+        public IActionResult GetEventoById(string id)
         {
-            ErrorOr<Usuario> getUsuarioResult = _usuarioService.GetUsuarioById(id);
+            ErrorOr<Evento> getEventoResult = _eventoService.GetEventoById(id);
 
-            return getUsuarioResult.Match(
-                usuario => Ok(MapUsuarioResponse(usuario)),
+            return getEventoResult.Match(
+                evento => Ok(MapCreateEventoResponse(evento)),
                 errors => Problem(errors));
         }
 
-        [HttpGet("mail/{mail}")]
-        public IActionResult GetUsuarioByMail(string mail)
+        [HttpGet("estado/{estado}")]
+        public IActionResult GetEventosByEstado(string estado)
         {
-            ErrorOr<Usuario> getUsuarioResult = _usuarioService.GetUsuarioByMail(mail);
+            ErrorOr<List<Evento>> getEventoResult = _eventoService.GetEventosByEstado(estado);
 
-            return getUsuarioResult.Match(
-                usuario => Ok(MapUsuarioResponse(usuario)),
+            return getEventoResult.Match(
+                eventos => Ok(MapEventoResponse(eventos)),
                 errors => Problem(errors));
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateUsuario(string id, UpdateUsuarioRequest request)
+        public IActionResult UpdateEvento(string id, UpdateEventoRequest request)
         {
-            ErrorOr<Usuario> requestToUsuarioResult = Usuario.From(id, request);
+            ErrorOr<Evento> requestToEventoResult = Evento.From(id, request);
 
-            if (requestToUsuarioResult.IsError)
+            if (requestToEventoResult.IsError)
             {
-                return Problem(requestToUsuarioResult.Errors);
+                return Problem(requestToEventoResult.Errors);
             }
 
-            var usuario = requestToUsuarioResult.Value;
-            ErrorOr<Updated> updateUsuarioResult = _usuarioService.UpdateUsuario(usuario);
+            var evento = requestToEventoResult.Value;
+            ErrorOr<Updated> updateEventoResult = _eventoService.UpdateEvento(evento);
 
-            return updateUsuarioResult.Match(
+            return updateEventoResult.Match(
                 updated => NoContent(),
                 errors => Problem(errors));
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteUsuario(string id)
+        public IActionResult DeleteEvento(string id)
         {
-            ErrorOr<Deleted> deleteUsuarioResult = _usuarioService.DeleteUsuario(id);
+            ErrorOr<Deleted> deleteEventoResult = _eventoService.DeleteEvento(id);
 
-            return deleteUsuarioResult.Match(
+            return deleteEventoResult.Match(
                 deleted => NoContent(),
                 errors => Problem(errors));
         }
 
-        private static UsuarioResponse MapUsuarioResponse(Usuario usuario)
+        private static EventoResponse MapEventoResponse(List<Evento> eventos)
         {
-            return new UsuarioResponse(
-                usuario.IdUsuario, usuario.Nombre, usuario.Apellido, usuario.Correo, usuario.CBU, usuario.Dni, usuario.Telefono, usuario.IsOrganizador, usuario.IsActivo, usuario.DtAlta, usuario.DtBaja
-                );
+            return new EventoResponse(eventos);
         }
 
-        private CreatedAtActionResult CreatedAtCreateUsuario(Usuario usuario)
+        private static CreateEventoResponse MapCreateEventoResponse(Evento evento)
+        {
+            return new CreateEventoResponse(evento.IdEvento);
+        }
+
+        private CreatedAtActionResult CreatedAtCreateEvento(Evento evento)
         {
             return CreatedAtAction(
-                actionName: nameof(CreateUsuario),
-                routeValues: new { id = usuario.IdUsuario },
-                value: MapUsuarioResponse(usuario));
+                actionName: nameof(CreateEvento),
+                routeValues: new { id = evento.IdEvento },
+                value: MapCreateEventoResponse(evento));
         }
     }
 }
