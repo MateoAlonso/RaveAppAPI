@@ -11,14 +11,12 @@ namespace RaveAppAPI.Services.Repository
 {
     public class EventoService : IEventoService
     {
-        private static readonly ConfigurationBuilder configurationBuilder = new();
-        private static readonly IConfiguration config = configurationBuilder.AddUserSecrets<UsuarioService>().Build();
-        private readonly string connectionString = config.GetConnectionString("Default");
+        private readonly string connectionString = Environment.GetEnvironmentVariable("dbcon", EnvironmentVariableTarget.Machine);
         public ErrorOr<Created> CreateEvento(Evento evento)
         {
-            using (MySqlConnection dbcon = new(connectionString))
+            try
             {
-                try
+                using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
                     //TODO : Acceder SP
@@ -36,18 +34,18 @@ namespace RaveAppAPI.Services.Repository
                         return Error.Failure();
                     }
                 }
-                catch (Exception e)
-                {
-                    return Error.Unexpected();
-                }
+            }
+            catch (Exception e)
+            {
+                return Error.Unexpected();
             }
         }
 
         public ErrorOr<Deleted> DeleteEvento(string id)
         {
-            using (MySqlConnection dbcon = new(connectionString))
+            try
             {
-                try
+                using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
                     //TODO : Acceder SP
@@ -65,17 +63,17 @@ namespace RaveAppAPI.Services.Repository
                         return Error.Failure();
                     }
                 }
-                catch (Exception)
-                {
-                    return Error.Unexpected();
-                }
+            }
+            catch (Exception)
+            {
+                return Error.Unexpected();
             }
         }
         public ErrorOr<Evento> GetEventoById(string id)
         {
-            using (MySqlConnection dbcon = new(connectionString))
+            try
             {
-                try
+                using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
                     //TODO : Acceder SP
@@ -85,19 +83,19 @@ namespace RaveAppAPI.Services.Repository
                     MySqlDataReader datareader = cmd.ExecuteReader();
 
                 }
-                catch (Exception)
-                {
-                    return Error.Unexpected();
-                }
+                return Error.NotFound();
             }
-            return Error.NotFound();
+            catch (Exception)
+            {
+                return Error.Unexpected();
+            }
 
         }
         public ErrorOr<List<Evento>> GetEventosByEstado(string estado)
         {
-            using (MySqlConnection dbcon = new(connectionString))
+            try
             {
-                try
+                using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
                     //TODO : Acceder SP
@@ -116,20 +114,20 @@ namespace RaveAppAPI.Services.Repository
                         }
                     }
                 }
-                catch (Exception e)
-                {
-                    return Error.Unexpected();
-                }
+                return Error.NotFound();
             }
-            return Error.NotFound();
+            catch (Exception e)
+            {
+                return Error.Unexpected();
+            }
 
         }
 
         public ErrorOr<Updated> UpdateEvento(Evento evento)
         {
-            using (MySqlConnection dbcon = new(connectionString))
+            try
             {
-                try
+                using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
                     //TODO : Acceder SP
@@ -147,10 +145,10 @@ namespace RaveAppAPI.Services.Repository
                         return Error.Failure();
                     }
                 }
-                catch (Exception)
-                {
-                    return Error.Unexpected();
-                }
+            }
+            catch (Exception)
+            {
+                return Error.Unexpected();
             }
         }
     }

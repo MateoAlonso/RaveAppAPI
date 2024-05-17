@@ -8,7 +8,6 @@ using Error = ErrorOr.Error;
 using RaveAppAPI.Services.Helpers;
 using Microsoft.Extensions.Configuration;
 using System.Configuration;
-//using ConfigurationManager = System.Configuration.ConfigurationManager;
 
 namespace RaveAppAPI.Services.Repository
 {
@@ -17,9 +16,9 @@ namespace RaveAppAPI.Services.Repository
         private readonly string connectionString = Environment.GetEnvironmentVariable("dbcon", EnvironmentVariableTarget.Machine);
         public ErrorOr<Created> CreateUsuario(Usuario usuario)
         {
-            using (MySqlConnection dbcon = new(connectionString))
+            try
             {
-                try
+                using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
                     MySqlCommand cmd = new("PCD_USUARIOS_SetUsuario", dbcon);
@@ -51,17 +50,18 @@ namespace RaveAppAPI.Services.Repository
                         return Error.Failure();
                     }
                 }
-                catch (Exception e)
-                {
-                    return Error.Unexpected();
-                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
             }
         }
         public ErrorOr<Deleted> DeleteUsuario(string id)
         {
-            using (MySqlConnection dbcon = new(connectionString))
+            try
             {
-                try
+                using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
                     MySqlCommand cmd = new("PCD_USUARIOS_DeleteUsuario", dbcon);
@@ -82,17 +82,18 @@ namespace RaveAppAPI.Services.Repository
                         return Error.Failure();
                     }
                 }
-                catch (Exception)
-                {
-                    return Error.Unexpected();
-                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
             }
         }
         public ErrorOr<Usuario> GetUsuarioById(string id)
         {
-            using (MySqlConnection dbcon = new(connectionString))
+            try
             {
-                try
+                using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
                     MySqlCommand cmd = new("PCD_Usuarios_GetUsuarioById", dbcon);
@@ -112,18 +113,19 @@ namespace RaveAppAPI.Services.Repository
                     }
 
                 }
-                catch (Exception)
-                {
-                    return Error.Unexpected();
-                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
             }
             
         }
         public ErrorOr<Usuario> GetUsuarioByMail(string mail)
         {
-            using (MySqlConnection dbcon = new(connectionString))
+            try
             {
-                try
+                using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
                     MySqlCommand cmd = new("PCD_Usuarios_GetUsuarioByCorreo", dbcon);
@@ -142,19 +144,20 @@ namespace RaveAppAPI.Services.Repository
                         }
                     }
                 }
-                catch (Exception e)
-                {
-                    return Error.Unexpected();
-                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
             }
             
         }
 
         public ErrorOr<Updated> UpdateUsuario(Usuario usuario)
         {
-            using (MySqlConnection dbcon = new(connectionString))
+            try
             {
-                try
+                using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
                     MySqlCommand cmd = new("PCD_USUARIOS_UpdateUsuario", dbcon);
@@ -187,10 +190,11 @@ namespace RaveAppAPI.Services.Repository
                         return Error.Failure();
                     }
                 }
-                catch (Exception)
-                {
-                    return Error.Unexpected();
-                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
             }
         }
     }

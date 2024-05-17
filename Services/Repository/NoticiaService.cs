@@ -18,9 +18,9 @@ namespace RaveAppAPI.Services.Repository
         private readonly string connectionString = Environment.GetEnvironmentVariable("dbcon", EnvironmentVariableTarget.Machine);
         public ErrorOr<Created> CreateNoticia(Noticia noticia)
         {
-            using (MySqlConnection dbcon = new(connectionString))
+            try
             {
-                try
+                using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
                     MySqlCommand cmd = new("PCD_NOTICIAS_SetNoticia", dbcon);
@@ -42,10 +42,10 @@ namespace RaveAppAPI.Services.Repository
                         return Error.Failure();
                     }
                 }
-                catch (Exception)
-                {
-                    return Error.Unexpected();
-                }
+            }
+            catch (Exception)
+            {
+                return Error.Unexpected();
             }
         }
 
