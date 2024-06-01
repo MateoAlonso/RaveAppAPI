@@ -1,9 +1,8 @@
 ﻿using ErrorOr;
 using RaveAppAPI.Contracts.User;
 using RaveAppAPI.Services.Helpers;
-using RaveAppAPI.Services.Models;
 
-namespace RaveAppAPI.Models
+namespace RaveAppAPI.Services.Models
 {
     public class Usuario
     {

@@ -1,7 +1,5 @@
 ﻿using ErrorOr;
-using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
-using RaveAppAPI.Models;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;

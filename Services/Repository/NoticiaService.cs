@@ -1,15 +1,8 @@
 ﻿using ErrorOr;
 using MySql.Data.MySqlClient;
-using MySqlX.XDevAPI;
-using RaveAppAPI.Models;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RaveAppAPI.Services.Repository
 {
@@ -23,14 +16,9 @@ namespace RaveAppAPI.Services.Repository
                 using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
-                    MySqlCommand cmd = new("PCD_NOTICIAS_SetNoticia", dbcon);
+                    MySqlCommand cmd = new(ProcedureHelper.PCDCreateNoticia, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddRange(new MySqlParameter[]{
-                            new ("p_titulo", noticia.Titulo),
-                            new ("p_contenido", noticia.Contenido),
-                            new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
-                            new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
-                    });
+                    cmd.Parameters.AddRange(ProcedureHelper.CreateNoticiaParameters(noticia));
                     cmd.ExecuteNonQuery();
                     int ok = Convert.ToInt32(cmd.Parameters["p_ok"].Value);
                     if (ok == 1)
@@ -56,13 +44,9 @@ namespace RaveAppAPI.Services.Repository
                 using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
-                    MySqlCommand cmd = new("PCD_NOTICIAS_DeleteNoticia", dbcon);
+                    MySqlCommand cmd = new(ProcedureHelper.PCDDeleteNoticia, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddRange(new MySqlParameter[] {
-                            new ("p_idnoticia", idNoticia),
-                            new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
-                            new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output } 
-                    });
+                    cmd.Parameters.AddRange(ProcedureHelper.DeleteNoticiaParameters(idNoticia));
                     cmd.ExecuteNonQuery();
                     int ok = Convert.ToInt32(cmd.Parameters["p_ok"].Value);
                     if (ok == 1)
@@ -88,7 +72,7 @@ namespace RaveAppAPI.Services.Repository
                 using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
-                    MySqlCommand cmd = new("PCD_NOTICIAS_GetNoticias", dbcon);
+                    MySqlCommand cmd = new(ProcedureHelper.PCDGetNoticias, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
@@ -102,7 +86,7 @@ namespace RaveAppAPI.Services.Repository
                             return Error.NotFound();
                         }
                     }
-                    
+
                 }
             }
             catch (Exception)

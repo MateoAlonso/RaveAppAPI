@@ -1,13 +1,9 @@
 ﻿using ErrorOr;
-using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
-using RaveAppAPI.Models;
 using RaveAppAPI.Services.Helpers;
+using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
 using Error = ErrorOr.Error;
-using RaveAppAPI.Services.Helpers;
-using Microsoft.Extensions.Configuration;
-using System.Configuration;
 
 namespace RaveAppAPI.Services.Repository
 {
@@ -21,24 +17,9 @@ namespace RaveAppAPI.Services.Repository
                 using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
-                    MySqlCommand cmd = new("PCD_USUARIOS_SetUsuario", dbcon);
+                    MySqlCommand cmd = new(ProcedureHelper.PCDCreateUsuario, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddRange(new MySqlParameter[] {
-                        new ("p_provincia", usuario.Domicilio.Localidad.Provincia.Nombre),
-                        new ("p_localidad", usuario.Domicilio.Localidad.Nombre),
-                        new ("p_calle", usuario.Domicilio.Calle),
-                        new ("p_altura", usuario.Domicilio.Altura),
-                        new ("p_pisodepartamento", usuario.Domicilio.PisoDepartamento),
-                        new ("p_nombreusuario", usuario.Nombre),
-                        new ("p_apellido", usuario.Apellido),
-                        new ("p_correo", usuario.Correo),
-                        new ("p_nmdni", usuario.Dni),
-                        new ("p_nmtelefono", usuario.Telefono),
-                        new ("p_dscbu", usuario.CBU),
-                        new ("p_isorganizador", usuario.IsOrganizador),
-                        new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
-                        new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output } }
-                        );
+                    cmd.Parameters.AddRange(ProcedureHelper.CreateUsuarioParameters(usuario));
                     cmd.ExecuteNonQuery();
                     int ok = Convert.ToInt32(cmd.Parameters["p_ok"].Value);
                     if (ok == 1)
@@ -64,13 +45,9 @@ namespace RaveAppAPI.Services.Repository
                 using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
-                    MySqlCommand cmd = new("PCD_USUARIOS_DeleteUsuario", dbcon);
+                    MySqlCommand cmd = new(ProcedureHelper.PCDDeleteUsuario, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddRange(new MySqlParameter[] {
-                        new ("p_idusuario", id),
-                        new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
-                        new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output } }
-                        );
+                    cmd.Parameters.AddRange(ProcedureHelper.DeleteUsuarioParameters(id));
                     cmd.ExecuteNonQuery();
                     int ok = Convert.ToInt32(cmd.Parameters["p_ok"].Value);
                     if (ok == 1)
@@ -96,9 +73,9 @@ namespace RaveAppAPI.Services.Repository
                 using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
-                    MySqlCommand cmd = new("PCD_Usuarios_GetUsuarioById", dbcon);
+                    MySqlCommand cmd = new(ProcedureHelper.PCDGetUsuarioById, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.Add(new MySqlParameter("p_idusuario", id));
+                    cmd.Parameters.Add(ProcedureHelper.GetUsuarioByIdParameters(id));
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)
@@ -119,7 +96,7 @@ namespace RaveAppAPI.Services.Repository
                 Logger.LogError(e.Message);
                 return Error.Unexpected();
             }
-            
+
         }
         public ErrorOr<Usuario> GetUsuarioByMail(string mail)
         {
@@ -128,9 +105,9 @@ namespace RaveAppAPI.Services.Repository
                 using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
-                    MySqlCommand cmd = new("PCD_Usuarios_GetUsuarioByCorreo", dbcon);
+                    MySqlCommand cmd = new(ProcedureHelper.PCDGetUsuarioByMail, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.Add(new MySqlParameter("p_correo", mail));
+                    cmd.Parameters.Add(ProcedureHelper.GetUsuarioByMailParameters(mail));
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)
@@ -150,7 +127,7 @@ namespace RaveAppAPI.Services.Repository
                 Logger.LogError(e.Message);
                 return Error.Unexpected();
             }
-            
+
         }
 
         public ErrorOr<Updated> UpdateUsuario(Usuario usuario)
@@ -160,25 +137,9 @@ namespace RaveAppAPI.Services.Repository
                 using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
-                    MySqlCommand cmd = new("PCD_USUARIOS_UpdateUsuario", dbcon);
+                    MySqlCommand cmd = new(ProcedureHelper.PCDUpdateUsuario, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddRange(new MySqlParameter[] {
-                        new ("p_idusuario", usuario.IdUsuario),
-                        new ("p_provincia", usuario.Domicilio.Localidad.Provincia.Nombre),
-                        new ("p_localidad", usuario.Domicilio.Localidad.Nombre),
-                        new ("p_calle", usuario.Domicilio.Calle),
-                        new ("p_altura", usuario.Domicilio.Altura),
-                        new ("p_pisodepartamento", usuario.Domicilio.PisoDepartamento),
-                        new ("p_nombreusuario", usuario.Nombre),
-                        new ("p_apellido", usuario.Apellido),
-                        new ("p_correo", usuario.Correo),
-                        new ("p_nmdni", usuario.Dni),
-                        new ("p_nmtelefono", usuario.Telefono),
-                        new ("p_dscbu", usuario.CBU),
-                        new ("p_isorganizador", usuario.IsOrganizador),
-                        new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
-                        new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output } }
-                        );
+                    cmd.Parameters.AddRange(ProcedureHelper.UpdateUsuarioParameters(usuario));
                     cmd.ExecuteNonQuery();
                     int ok = Convert.ToInt32(cmd.Parameters["p_ok"].Value);
                     if (ok == 1)

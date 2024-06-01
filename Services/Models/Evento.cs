@@ -1,5 +1,4 @@
 ﻿using ErrorOr;
-using RaveAppAPI.Models;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.RequestModel.Evento;
 
@@ -52,7 +51,7 @@ namespace RaveAppAPI.Services.Models
 
         }
 
-        public static ErrorOr<Evento> Crear(string nombre, string descripcion, string genero, bool isAfter, bool isLgbt, DateTime inicioVenta, DateTime finVenta, DateTime inicioEvento, DateTime finEvento, string? estado = null, Usuario? usuario = null, Domicilio? domicilio = null) 
+        public static ErrorOr<Evento> Crear(string nombre, string descripcion, string genero, bool isAfter, bool isLgbt, DateTime inicioVenta, DateTime finVenta, DateTime inicioEvento, DateTime finEvento, string? estado = null, Usuario? usuario = null, Domicilio? domicilio = null)
         {
             List<Error> errors = new();
 
@@ -73,7 +72,7 @@ namespace RaveAppAPI.Services.Models
 
         public static ErrorOr<Evento> From(CreateEventoRequest request)
         {
-            return Crear(request.nombre,request.descripcion, request.genero, request.isAfter, request.isLgbt, request.inicioVenta, request.finVenta, request.inicioEvento, request.finEvento, null, request.usuario, request.domicilio);
+            return Crear(request.nombre, request.descripcion, request.genero, request.isAfter, request.isLgbt, request.inicioVenta, request.finVenta, request.inicioEvento, request.finEvento, null, request.usuario, request.domicilio);
         }
         public static ErrorOr<Evento> From(string idEvento, UpdateEventoRequest request)
         {

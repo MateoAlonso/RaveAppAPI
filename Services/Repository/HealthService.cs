@@ -1,13 +1,7 @@
 ﻿using ErrorOr;
 using MySql.Data.MySqlClient;
-using RaveAppAPI.Models;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Repository.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RaveAppAPI.Services.Repository
 {
@@ -18,7 +12,7 @@ namespace RaveAppAPI.Services.Repository
         {
             try
             {
-                using (MySqlConnection dbcon = new("connectionString"))
+                using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
                     return dbcon.Ping() ? "OK" : Error.Failure();

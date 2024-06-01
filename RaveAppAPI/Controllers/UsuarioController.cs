@@ -1,7 +1,7 @@
 ﻿using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
 using RaveAppAPI.Contracts.User;
-using RaveAppAPI.Models;
+using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
 
 namespace RaveAppAPI.Controllers

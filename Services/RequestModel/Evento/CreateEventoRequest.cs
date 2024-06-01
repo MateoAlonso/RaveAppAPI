@@ -1,5 +1,4 @@
-﻿using RaveAppAPI.Models;
-using RaveAppAPI.Services.Models;
+﻿using RaveAppAPI.Services.Models;
 
 namespace RaveAppAPI.Services.RequestModel.Evento
 {

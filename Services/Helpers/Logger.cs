@@ -1,5 +1,4 @@
-﻿using System;
-using Serilog;
+﻿using Serilog;
 namespace RaveAppAPI.Services.Helpers
 {
     public static class Logger
@@ -10,14 +9,14 @@ namespace RaveAppAPI.Services.Helpers
                 .WriteTo.File("logs/log_.log", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 50)
                 .CreateLogger();
         }
-        
+
         public static void LogInfo(string message)
         {
             Log.Information(message);
         }
-        
+
         public static void LogWarning(string message)
-        { 
+        {
             Log.Logger.Warning(message);
         }
 

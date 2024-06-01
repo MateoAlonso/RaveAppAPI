@@ -1,5 +1,5 @@
 ﻿using ErrorOr;
-using RaveAppAPI.Models;
+using RaveAppAPI.Services.Models;
 
 namespace RaveAppAPI.Services.Repository.Contracts
 {

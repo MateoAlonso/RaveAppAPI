@@ -1,7 +1,6 @@
 ﻿using ErrorOr;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.RequestModel.Noticia;
-using ZstdSharp;
 
 namespace RaveAppAPI.Services.Models
 {
@@ -49,7 +48,7 @@ namespace RaveAppAPI.Services.Models
 
         public static ErrorOr<Noticia> From(CreateNoticiaRequest request)
         {
-            return Crear(request.titulo, request.contenido,request.imagen, request.dtpublicado);
+            return Crear(request.titulo, request.contenido, request.imagen, request.dtpublicado);
         }
     }
 
