@@ -7,11 +7,12 @@ namespace RaveAppAPI.Services.Repository
 {
     public class HealthService : IHealthService
     {
-        private readonly string connectionString = Environment.GetEnvironmentVariable("dbcon", EnvironmentVariableTarget.Machine);
+        private readonly string connectionString = Environment.GetEnvironmentVariable("dbcon");
         public ErrorOr<string> GetDBHealth()
         {
             try
             {
+                Logger.LogInfo($"Entro check health con ConnectionString: {connectionString}");
                 using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();

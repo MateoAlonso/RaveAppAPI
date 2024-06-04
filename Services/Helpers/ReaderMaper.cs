@@ -28,8 +28,6 @@ namespace RaveAppAPI.Services.Helpers
                             propInfo.SetValue(t, value);
                         }
                     }
-
-
                 }
                 yield return t;
             }

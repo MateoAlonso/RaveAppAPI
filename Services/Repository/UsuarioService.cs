@@ -9,7 +9,7 @@ namespace RaveAppAPI.Services.Repository
 {
     public class UsuarioService : IUsuarioService
     {
-        private readonly string connectionString = Environment.GetEnvironmentVariable("dbcon", EnvironmentVariableTarget.Machine);
+        private readonly string connectionString = Environment.GetEnvironmentVariable("dbcon");
         public ErrorOr<Created> CreateUsuario(Usuario usuario)
         {
             try

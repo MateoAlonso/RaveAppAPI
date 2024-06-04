@@ -43,5 +43,4 @@ try
 catch (Exception e)
 {
     Logger.LogError(e.Message);
-    throw;
 }

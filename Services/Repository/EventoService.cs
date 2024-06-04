@@ -3,13 +3,14 @@ using MySql.Data.MySqlClient;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
+using Serilog.Events;
 using Error = ErrorOr.Error;
 
 namespace RaveAppAPI.Services.Repository
 {
     public class EventoService : IEventoService
     {
-        private readonly string connectionString = Environment.GetEnvironmentVariable("dbcon", EnvironmentVariableTarget.Machine);
+        private readonly string connectionString = Environment.GetEnvironmentVariable("dbcon");
         public ErrorOr<Created> CreateEvento(Evento evento)
         {
             try
@@ -35,6 +36,7 @@ namespace RaveAppAPI.Services.Repository
             }
             catch (Exception e)
             {
+                Logger.LogError(e.Message);
                 return Error.Unexpected();
             }
         }
@@ -62,8 +64,9 @@ namespace RaveAppAPI.Services.Repository
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Logger.LogError(e.Message);
                 return Error.Unexpected();
             }
         }
@@ -83,8 +86,9 @@ namespace RaveAppAPI.Services.Repository
                 }
                 return Error.NotFound();
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Logger.LogError(e.Message);
                 return Error.Unexpected();
             }
 
@@ -116,6 +120,7 @@ namespace RaveAppAPI.Services.Repository
             }
             catch (Exception e)
             {
+                Logger.LogError(e.Message);
                 return Error.Unexpected();
             }
 
@@ -144,8 +149,9 @@ namespace RaveAppAPI.Services.Repository
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Logger.LogError(e.Message);
                 return Error.Unexpected();
             }
         }

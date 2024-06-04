@@ -8,7 +8,7 @@ namespace RaveAppAPI.Services.Repository
 {
     public class NoticiaService : INoticiaService
     {
-        private readonly string connectionString = Environment.GetEnvironmentVariable("dbcon", EnvironmentVariableTarget.Machine);
+        private readonly string connectionString = Environment.GetEnvironmentVariable("dbcon");
         public ErrorOr<Created> CreateNoticia(Noticia noticia)
         {
             try
@@ -31,8 +31,9 @@ namespace RaveAppAPI.Services.Repository
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Logger.LogError(e.Message);
                 return Error.Unexpected();
             }
         }
@@ -59,8 +60,9 @@ namespace RaveAppAPI.Services.Repository
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Logger.LogError(e.Message);
                 return Error.Unexpected();
             }
         }
@@ -89,8 +91,9 @@ namespace RaveAppAPI.Services.Repository
 
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Logger.LogError(e.Message);
                 return Error.Unexpected();
             }
         }
