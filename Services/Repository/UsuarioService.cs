@@ -129,7 +129,36 @@ namespace RaveAppAPI.Services.Repository
             }
 
         }
-
+        public ErrorOr<List<RolesUsuario>> GetRolesUsuarioByMail(string mail)
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDGetRolesUsuarioByMail, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddRange(ProcedureHelper.GetRolesUsuarioByMailParameters(mail));
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            List<RolesUsuario> rolesUsuario = ReaderMaper.ReaderToObject<RolesUsuario>(reader).ToList();
+                            return rolesUsuario;
+                        }
+                        else
+                        {
+                            return Error.NotFound();
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
+        }
         public ErrorOr<Updated> UpdateUsuario(Usuario usuario)
         {
             try

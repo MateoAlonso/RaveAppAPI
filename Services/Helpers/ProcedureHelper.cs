@@ -11,6 +11,7 @@ namespace RaveAppAPI.Services.Helpers
         public const string PCDGetUsuarioById = "PCD_USUARIOS_GetUsuarioById";
         public const string PCDGetUsuarioByMail = "PCD_USUARIOS_GetUsuarioByMail";
         public const string PCDUpdateUsuario = "PCD_USUARIOS_UpdateUsuario";
+        public const string PCDGetRolesUsuarioByMail = "PCD_USUARIOS_GetRolesUsuarioByMail";
         #endregion
 
         #region Usuario Parameters
@@ -51,6 +52,13 @@ namespace RaveAppAPI.Services.Helpers
             };
         }
         public static MySqlParameter[] GetUsuarioByMailParameters(string mail)
+        {
+            return new MySqlParameter[]
+            {
+                new ("p_correo", mail)
+            };
+        }
+        public static MySqlParameter[] GetRolesUsuarioByMailParameters(string mail)
         {
             return new MySqlParameter[]
             {

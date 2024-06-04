@@ -52,6 +52,16 @@ namespace RaveAppAPI.Controllers
                 usuario => Ok(MapUsuarioResponse(usuario)),
                 errors => Problem(errors));
         }
+        [HttpGet("roles/{mail}")]
+        public IActionResult GetRolesUsuarioByMail(string mail)
+        {
+            ErrorOr<List<RolesUsuario>> getRolesUsuarioResult = _usuarioService.GetRolesUsuarioByMail(mail);
+
+            return getRolesUsuarioResult.Match(
+                rolesUsuario => Ok(MapRolesUsuarioResponse(rolesUsuario)),
+                errors => Problem(errors));
+        }
+
 
         [HttpPut("{id}")]
         public IActionResult UpdateUsuario(string id, UpdateUsuarioRequest request)
@@ -87,7 +97,10 @@ namespace RaveAppAPI.Controllers
                 usuario.IdUsuario, usuario.Nombre, usuario.Apellido, usuario.Correo, usuario.CBU, usuario.Dni, usuario.Telefono, usuario.IsOrganizador, usuario.IsActivo, usuario.DtAlta, usuario.DtBaja
                 );
         }
-
+        private static RolesUsuarioResponse MapRolesUsuarioResponse(List<RolesUsuario> rolesUsuario)
+        {
+            return new RolesUsuarioResponse(rolesUsuario);
+        }
         private CreatedAtActionResult CreatedAtCreateUsuario(Usuario usuario)
         {
             return CreatedAtAction(
