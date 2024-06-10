@@ -8,7 +8,7 @@ namespace RaveAppAPI.Services.Repository
 {
     public class NoticiaService : INoticiaService
     {
-        private readonly string connectionString = Environment.GetEnvironmentVariable("dbcon");
+        private readonly string connectionString = DbHelper.GetConnectionString();
         public ErrorOr<Created> CreateNoticia(Noticia noticia)
         {
             try

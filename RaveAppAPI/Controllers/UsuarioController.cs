@@ -94,7 +94,7 @@ namespace RaveAppAPI.Controllers
         private static UsuarioResponse MapUsuarioResponse(Usuario usuario)
         {
             return new UsuarioResponse(
-                usuario.IdUsuario, usuario.Nombre, usuario.Apellido, usuario.Correo, usuario.CBU, usuario.Dni, usuario.Telefono, usuario.IsOrganizador, usuario.IsActivo, usuario.DtAlta, usuario.DtBaja
+                usuario.IdUsuario, usuario.Nombre, usuario.Apellido, usuario.Correo, usuario.CBU, usuario.Dni, usuario.Telefono, usuario.IsActivo, usuario.DtAlta, usuario.DtBaja
                 );
         }
         private static RolesUsuarioResponse MapRolesUsuarioResponse(List<RolesUsuario> rolesUsuario)

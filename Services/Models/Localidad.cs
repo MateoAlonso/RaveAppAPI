@@ -8,7 +8,7 @@ namespace RaveAppAPI.Services.Models
         public string Nombre { get; }
         public Provincia Provincia { get; }
 
-        public Localidad(string nombre, string provincia)
+        public Localidad(string nombre, int provincia)
         {
             Nombre = nombre;
             Provincia = new Provincia(provincia);

@@ -7,7 +7,7 @@ namespace RaveAppAPI.Services.Repository
 {
     public class HealthService : IHealthService
     {
-        private readonly string connectionString = Environment.GetEnvironmentVariable("dbcon");
+        private readonly string connectionString = DbHelper.GetConnectionString();
         public ErrorOr<string> GetDBHealth()
         {
             try

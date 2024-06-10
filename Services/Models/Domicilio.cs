@@ -21,7 +21,7 @@ namespace RaveAppAPI.Services.Models
             PisoDepartamento = pisoDepartamento;
         }
 
-        public static ErrorOr<Domicilio> Crear(string provincia, string localidad, string calle, string altura, string pisoDepartamento)
+        public static ErrorOr<Domicilio> Crear(int provincia, string localidad, string calle, string altura, string pisoDepartamento)
         {
 
             List<Error> errors = new();
@@ -36,7 +36,7 @@ namespace RaveAppAPI.Services.Models
             return new Domicilio(loc, calle, altura, pisoDepartamento);
         }
 
-        public static Domicilio Devolver(string provincia, string localidad, string calle, string altura, string dsPisoDepartamento)
+        public static Domicilio Devolver(int provincia, string localidad, string calle, string altura, string dsPisoDepartamento)
         {
             Localidad loc = new Localidad(localidad, provincia);
             return new Domicilio(loc, calle, altura, dsPisoDepartamento);

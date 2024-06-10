@@ -6,10 +6,13 @@ namespace RaveAppAPI.Services.Models
     {
         [ColumnName("dsprovincia")]
         public string Nombre { get; }
+        [ColumnName("cdprovincia")]
+        public int Codigo { get; }
 
-        public Provincia(string nombre)
+        public Provincia(int codigo, string nombre = null)
         {
             Nombre = nombre;
+            Codigo = codigo;
         }
     }
 }
