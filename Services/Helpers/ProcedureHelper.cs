@@ -19,7 +19,7 @@ namespace RaveAppAPI.Services.Helpers
         {
             return new MySqlParameter[]
             {
-                new ("p_provincia", usuario.Domicilio.Localidad.Provincia.Nombre),
+                new ("p_cdprovincia", usuario.Domicilio.Localidad.Provincia.Codigo),
                 new ("p_localidad", usuario.Domicilio.Localidad.Nombre),
                 new ("p_calle", usuario.Domicilio.Calle),
                 new ("p_altura", usuario.Domicilio.Altura),
@@ -30,7 +30,8 @@ namespace RaveAppAPI.Services.Helpers
                 new ("p_nmdni", usuario.Dni),
                 new ("p_nmtelefono", usuario.Telefono),
                 new ("p_dscbu", usuario.CBU),
-                new ("p_isorganizador", usuario.IsOrganizador),
+                new ("p_dsnombrefantasia", usuario.NombreFantasia),
+                new ("p_dsbio", usuario.Bio),
                 new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
             };
@@ -44,26 +45,17 @@ namespace RaveAppAPI.Services.Helpers
                 new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
             };
         }
-        public static MySqlParameter[] GetUsuarioByIdParameters(string id)
+        public static MySqlParameter GetUsuarioByIdParameters(string id)
         {
-            return new MySqlParameter[]
-            {
-                new ("p_idusuario", id)
-            };
+            return new MySqlParameter("p_idusuario", id);
         }
-        public static MySqlParameter[] GetUsuarioByMailParameters(string mail)
+        public static MySqlParameter GetUsuarioByMailParameters(string mail)
         {
-            return new MySqlParameter[]
-            {
-                new ("p_correo", mail)
-            };
+            return new MySqlParameter("p_correo", mail);
         }
-        public static MySqlParameter[] GetRolesUsuarioByMailParameters(string mail)
+        public static MySqlParameter GetRolesUsuarioByMailParameters(string mail)
         {
-            return new MySqlParameter[]
-            {
-                new ("p_correo", mail)
-            };
+            return new MySqlParameter("p_correo", mail);
         }
         public static MySqlParameter[] UpdateUsuarioParameters(Usuario usuario)
         {
@@ -81,7 +73,6 @@ namespace RaveAppAPI.Services.Helpers
                 new ("p_nmdni", usuario.Dni),
                 new ("p_nmtelefono", usuario.Telefono),
                 new ("p_dscbu", usuario.CBU),
-                new ("p_isorganizador", usuario.IsOrganizador),
                 new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
             };
