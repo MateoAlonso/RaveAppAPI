@@ -139,7 +139,7 @@ namespace RaveAppAPI.Services.Repository
                     dbcon.Open();
                     MySqlCommand cmd = new(ProcedureHelper.PCDGetRolesUsuarioByMail, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddRange(ProcedureHelper.GetRolesUsuarioByMailParameters(mail));
+                    cmd.Parameters.Add(ProcedureHelper.GetRolesUsuarioByMailParameters(mail));
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)
