@@ -6,6 +6,7 @@ namespace RaveAppAPI.Services.Repository.Contracts
     public interface IEventoService
     {
         ErrorOr<Created> CreateEvento(Evento Evento);
+        ErrorOr<List<Evento>> GetEventos();
         ErrorOr<Evento> GetEventoById(string id);
         ErrorOr<List<Evento>> GetEventosByEstado(string estado);
         ErrorOr<Updated> UpdateEvento(Evento Evento);

@@ -25,6 +25,10 @@ namespace RaveAppAPI.Services.Helpers
                         {
                             PropertyInfo propInfo = attr.GetValueOrDefault(fieldName);
                             object value = rd.GetValue(i);
+                            if (string.Equals(propInfo.PropertyType.GetTypeInfo().Name.ToUpper(), "BOOLEAN"))
+                            {
+                                value = Convert.ToBoolean(value);
+                            }
                             propInfo.SetValue(t, value);
                         }
                     }

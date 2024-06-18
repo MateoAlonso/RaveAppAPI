@@ -32,7 +32,15 @@ namespace RaveAppAPI.Controllers
                 created => CreatedAtCreateEvento(evento),
                 errors => Problem(errors));
         }
+        [HttpGet]
+        public IActionResult GetEventos()
+        {
+            ErrorOr<List<Evento>> getEventoResult = _eventoService.GetEventos();
 
+            return getEventoResult.Match(
+                eventos => Ok(MapEventoResponse(eventos)),
+                errors => Problem(errors));
+        }
         [HttpGet("id/{id}")]
         public IActionResult GetEventoById(string id)
         {

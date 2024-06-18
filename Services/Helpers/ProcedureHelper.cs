@@ -107,5 +107,67 @@ namespace RaveAppAPI.Services.Helpers
             };
         }
         #endregion
+
+        #region Noticia PCDS
+        public const string PCDGetEventos = "PCD_EVENTOS_GetEventos";
+        public const string PCDGetEventosById = "PCD_EVENTOS_GetEventosById";
+        public const string PCDGetEventosByEstado = "PCD_EVENTOS_GetEventosByEstado";
+        #endregion
+        #region Evento Parameters
+        public static MySqlParameter GetEventosByIdParametes(string idEvento)
+        {
+            return new MySqlParameter("p_idevento", idEvento);
+        }
+        public static MySqlParameter GetEventosByEstadoParametes(int cdEstado)
+        {
+            return new MySqlParameter("p_cdestado", cdEstado);
+        }
+        public static MySqlParameter[] DeleteEventoParameters(string idEvento)
+        {
+            return new MySqlParameter[]
+            {
+                new ("p_idevento", idEvento),
+                new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
+                new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
+            };
+        }
+        public static MySqlParameter[] UpdateEventoParameters(Evento evento)
+        {
+            return new MySqlParameter[]
+            {
+                new ("p_idevento", evento.IdEvento),
+                new ("p_dsnombre", evento.Nombre),
+                new ("p_dsevento", evento.Descripcion),
+                new ("p_cdgenero", evento.Genero),
+                new ("p_cdestado", evento.Estado),
+                new ("p_isafter", evento.IsAfter),
+                new ("p_islgbt", evento.IsLgbt),
+                new ("p_dtinicioventa", evento.InicioVenta),
+                new ("p_dtfinventa", evento.FinVenta),
+                new ("p_dtinicioevento", evento.InicioEvento),
+                new ("p_dtfinevento", evento.FinEvento),
+                new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
+                new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
+            };
+        }
+        public static MySqlParameter[] CreateEventoParameters(Evento evento)
+        {
+            return new MySqlParameter[]
+            {
+                new ("p_dsnombre", evento.Nombre),
+                new ("p_dsevento", evento.Descripcion),
+                new ("p_cdgenero", evento.Genero),
+                new ("p_cdestado", evento.Estado),
+                new ("p_isafter", evento.IsAfter),
+                new ("p_islgbt", evento.IsLgbt),
+                new ("p_dtinicioventa", evento.InicioVenta),
+                new ("p_dtfinventa", evento.FinVenta),
+                new ("p_dtinicioevento", evento.InicioEvento),
+                new ("p_dtfinevento", evento.FinEvento),
+                new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
+                new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
+            };
+        }
+        #endregion
     }
 }

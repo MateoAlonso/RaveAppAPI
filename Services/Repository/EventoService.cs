@@ -70,6 +70,36 @@ namespace RaveAppAPI.Services.Repository
                 return Error.Unexpected();
             }
         }
+        public ErrorOr<List<Evento>> GetEventos()
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDGetEventos, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            List<Evento> eventos = ReaderMaper.ReaderToObject<Evento>(reader).ToList();
+                            return eventos;
+                        }
+                        else
+                        {
+                            return Error.NotFound();
+                        }
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
+        }
         public ErrorOr<Evento> GetEventoById(string id)
         {
             try
