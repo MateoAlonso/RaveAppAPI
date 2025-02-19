@@ -15,7 +15,7 @@ namespace RaveAppAPI.Controllers
             _eventoService = eventoService;
         }
 
-        [HttpPost]
+        [HttpPost("CrearEvento")]
         public IActionResult CreateEvento(CreateEventoRequest request)
         {
             ErrorOr<Evento> requestToEventoResult = Evento.From(request);
@@ -32,36 +32,17 @@ namespace RaveAppAPI.Controllers
                 created => CreatedAtCreateEvento(evento),
                 errors => Problem(errors));
         }
-        [HttpGet]
-        public IActionResult GetEventos()
+        [HttpPost("GetEventos")]
+        public IActionResult GetEventos(GetEventoRequest request)
         {
-            ErrorOr<List<Evento>> getEventoResult = _eventoService.GetEventos();
-
-            return getEventoResult.Match(
-                eventos => Ok(MapEventoResponse(eventos)),
-                errors => Problem(errors));
-        }
-        [HttpGet("id/{id}")]
-        public IActionResult GetEventoById(string id)
-        {
-            ErrorOr<Evento> getEventoResult = _eventoService.GetEventoById(id);
-
-            return getEventoResult.Match(
-                evento => Ok(MapCreateEventoResponse(evento)),
-                errors => Problem(errors));
-        }
-
-        [HttpGet("estado/{estado}")]
-        public IActionResult GetEventosByEstado(string estado)
-        {
-            ErrorOr<List<Evento>> getEventoResult = _eventoService.GetEventosByEstado(estado);
+            ErrorOr<List<Evento>> getEventoResult = _eventoService.GetEventos(request);
 
             return getEventoResult.Match(
                 eventos => Ok(MapEventoResponse(eventos)),
                 errors => Problem(errors));
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("UpdateEvento")]
         public IActionResult UpdateEvento(string id, UpdateEventoRequest request)
         {
             ErrorOr<Evento> requestToEventoResult = Evento.From(id, request);
@@ -79,7 +60,7 @@ namespace RaveAppAPI.Controllers
                 errors => Problem(errors));
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteEvento")]
         public IActionResult DeleteEvento(string id)
         {
             ErrorOr<Deleted> deleteEventoResult = _eventoService.DeleteEvento(id);

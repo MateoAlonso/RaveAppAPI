@@ -3,6 +3,7 @@ using MySql.Data.MySqlClient;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
+using RaveAppAPI.Services.RequestModel.User;
 using Error = ErrorOr.Error;
 
 namespace RaveAppAPI.Services.Repository
@@ -67,22 +68,22 @@ namespace RaveAppAPI.Services.Repository
                 return Error.Unexpected();
             }
         }
-        public ErrorOr<Usuario> GetUsuarioById(string id)
+        public ErrorOr<List<Usuario>> GetUsuario(GetUsuarioRequest request)
         {
             try
             {
                 using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
-                    MySqlCommand cmd = new(ProcedureHelper.PCDGetUsuarioById, dbcon);
+                    MySqlCommand cmd = new(ProcedureHelper.PCDGetUsuario, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.Add(ProcedureHelper.GetUsuarioByIdParameters(id));
+                    cmd.Parameters.AddRange(ProcedureHelper.GetUsuarioParameters(request.IdUsuario, request.Mail, request.IsActivo, request.Rol));
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)
                         {
                             List<Usuario> usuarios = ReaderMaper.ReaderToObject<Usuario>(reader).ToList();
-                            return usuarios.FirstOrDefault();
+                            return usuarios;
                         }
                         else
                         {
@@ -90,37 +91,6 @@ namespace RaveAppAPI.Services.Repository
                         }
                     }
 
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.LogError(e.Message);
-                return Error.Unexpected();
-            }
-
-        }
-        public ErrorOr<Usuario> GetUsuarioByMail(string mail)
-        {
-            try
-            {
-                using (MySqlConnection dbcon = new(connectionString))
-                {
-                    dbcon.Open();
-                    MySqlCommand cmd = new(ProcedureHelper.PCDGetUsuarioByMail, dbcon);
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.Add(ProcedureHelper.GetUsuarioByMailParameters(mail));
-                    using (MySqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            List<Usuario> usuarios = ReaderMaper.ReaderToObject<Usuario>(reader).ToList();
-                            return usuarios.FirstOrDefault();
-                        }
-                        else
-                        {
-                            return Error.NotFound();
-                        }
-                    }
                 }
             }
             catch (Exception e)

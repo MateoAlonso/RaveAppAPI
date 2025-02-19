@@ -9,6 +9,7 @@ namespace RaveAppAPI.Services.Helpers
         public const string PCDCreateUsuario = "PCD_USUARIOS_SetUsuario";
         public const string PCDDeleteUsuario = "PCD_USUARIOS_DeleteUsuario";
         public const string PCDGetUsuarioById = "PCD_USUARIOS_GetUsuarioById";
+        public const string PCDGetUsuario = "PCD_USUARIOS_GetUsuario";
         public const string PCDGetUsuarioByMail = "PCD_USUARIOS_GetUsuarioByMail";
         public const string PCDUpdateUsuario = "PCD_USUARIOS_UpdateUsuario";
         public const string PCDGetRolesUsuarioByMail = "PCD_USUARIOS_GetRolesUsuarioByMail";
@@ -48,6 +49,16 @@ namespace RaveAppAPI.Services.Helpers
         public static MySqlParameter GetUsuarioByIdParameters(string id)
         {
             return new MySqlParameter("p_idusuario", id);
+        }
+        public static MySqlParameter[] GetUsuarioParameters(string idUsuario, string mail, bool?     isActivo, int? rol)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_idusuario", idUsuario),
+                new MySqlParameter ("p_mail", mail),
+                new MySqlParameter ("p_isactivo", (isActivo ?? true) ? 1 : 0),
+                new MySqlParameter ("p_cdrol", rol)
+            };
         }
         public static MySqlParameter GetUsuarioByMailParameters(string mail)
         {
@@ -114,9 +125,17 @@ namespace RaveAppAPI.Services.Helpers
         public const string PCDGetEventosByEstado = "PCD_EVENTOS_GetEventosByEstado";
         #endregion
         #region Evento Parameters
-        public static MySqlParameter GetEventosByIdParametes(string idEvento)
+        public static MySqlParameter[] GetEventoParameters(string? idEvento, int? estado, int? codigoProvincia, int? genero, bool? isAfter, bool? isLgbt)
         {
-            return new MySqlParameter("p_idevento", idEvento);
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_idEvento", idEvento),
+                new MySqlParameter ("p_cdEstadoEvento", estado),
+                new MySqlParameter ("p_cdProvincia", codigoProvincia),
+                new MySqlParameter ("p_cdGeneroEvento", genero),
+                new MySqlParameter ("p_isAfter", (isAfter ?? true) ? 1 : 0),
+                new MySqlParameter ("p_isLgbt", (isLgbt ?? true) ? 1 : 0)
+            };
         }
         public static MySqlParameter GetEventosByEstadoParametes(int cdEstado)
         {

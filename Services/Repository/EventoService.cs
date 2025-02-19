@@ -3,6 +3,7 @@ using MySql.Data.MySqlClient;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
+using RaveAppAPI.Services.RequestModel.Evento;
 using Serilog.Events;
 using Error = ErrorOr.Error;
 
@@ -70,7 +71,7 @@ namespace RaveAppAPI.Services.Repository
                 return Error.Unexpected();
             }
         }
-        public ErrorOr<List<Evento>> GetEventos()
+        public ErrorOr<List<Evento>> GetEventos(GetEventoRequest request)
         {
             try
             {
@@ -79,6 +80,7 @@ namespace RaveAppAPI.Services.Repository
                     dbcon.Open();
                     MySqlCommand cmd = new(ProcedureHelper.PCDGetEventos, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddRange(ProcedureHelper.GetEventoParameters(request.IdEvento, request.Estado, request.CodigoProvincia, request.Genero, request.IsAfter, request.IsLgbt));
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)

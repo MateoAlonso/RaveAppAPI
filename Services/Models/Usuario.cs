@@ -1,6 +1,7 @@
 ﻿using ErrorOr;
 using RaveAppAPI.Contracts.User;
 using RaveAppAPI.Services.Helpers;
+using RaveAppAPI.Services.RequestModel.User;
 
 namespace RaveAppAPI.Services.Models
 {

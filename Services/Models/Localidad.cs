@@ -11,7 +11,7 @@ namespace RaveAppAPI.Services.Models
         public Localidad(string nombre, int provincia)
         {
             Nombre = nombre;
-            Provincia = new Provincia(provincia);
+            Provincia = new Provincia(provincia, nombre);
         }
 
         //public static ErrorOr<Localidad> Create(string dsNombre, string dsProvincia)

@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using RaveAppAPI.Contracts.User;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
+using RaveAppAPI.Services.RequestModel.User;
+using System.Collections.Generic;
 
 namespace RaveAppAPI.Controllers
 {
@@ -15,7 +17,7 @@ namespace RaveAppAPI.Controllers
             _usuarioService = usuarioService;
         }
 
-        [HttpPost]
+        [HttpPost("CreateUsuario")]
         public IActionResult CreateUsuario(CreateUsuarioRequest request)
         {
             ErrorOr<Usuario> requestToUsuarioResult = Usuario.From(request);
@@ -33,37 +35,17 @@ namespace RaveAppAPI.Controllers
                 errors => Problem(errors));
         }
 
-        [HttpGet("id/{id}")]
-        public IActionResult GetUsuarioById(string id)
+        [HttpPost("GetUsuario")]
+        public IActionResult GetUsuario(GetUsuarioRequest request)
         {
-            ErrorOr<Usuario> getUsuarioResult = _usuarioService.GetUsuarioById(id);
+            ErrorOr<List<Usuario>> getUsuarioResult = _usuarioService.GetUsuario(request);
 
             return getUsuarioResult.Match(
                 usuario => Ok(MapUsuarioResponse(usuario)),
                 errors => Problem(errors));
         }
 
-        [HttpGet("mail/{mail}")]
-        public IActionResult GetUsuarioByMail(string mail)
-        {
-            ErrorOr<Usuario> getUsuarioResult = _usuarioService.GetUsuarioByMail(mail);
-
-            return getUsuarioResult.Match(
-                usuario => Ok(MapUsuarioResponse(usuario)),
-                errors => Problem(errors));
-        }
-        [HttpGet("roles/{mail}")]
-        public IActionResult GetRolesUsuarioByMail(string mail)
-        {
-            ErrorOr<List<RolesUsuario>> getRolesUsuarioResult = _usuarioService.GetRolesUsuarioByMail(mail);
-
-            return getRolesUsuarioResult.Match(
-                rolesUsuario => Ok(MapRolesUsuarioResponse(rolesUsuario)),
-                errors => Problem(errors));
-        }
-
-
-        [HttpPut("{id}")]
+        [HttpPut("UpdateUsuario/{id}")]
         public IActionResult UpdateUsuario(string id, UpdateUsuarioRequest request)
         {
             ErrorOr<Usuario> requestToUsuarioResult = Usuario.From(id, request);
@@ -81,7 +63,7 @@ namespace RaveAppAPI.Controllers
                 errors => Problem(errors));
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteUsuario/{id}")]
         public IActionResult DeleteUsuario(string id)
         {
             ErrorOr<Deleted> deleteUsuarioResult = _usuarioService.DeleteUsuario(id);
@@ -91,10 +73,10 @@ namespace RaveAppAPI.Controllers
                 errors => Problem(errors));
         }
 
-        private static UsuarioResponse MapUsuarioResponse(Usuario usuario)
+        private static UsuarioResponse MapUsuarioResponse(List<Usuario> usuarios)
         {
             return new UsuarioResponse(
-                usuario.IdUsuario, usuario.Nombre, usuario.Apellido, usuario.Correo, usuario.CBU, usuario.Dni, usuario.Telefono, usuario.IsActivo, usuario.DtAlta, usuario.DtBaja
+                usuarios
                 );
         }
         private static RolesUsuarioResponse MapRolesUsuarioResponse(List<RolesUsuario> rolesUsuario)
@@ -106,7 +88,7 @@ namespace RaveAppAPI.Controllers
             return CreatedAtAction(
                 actionName: nameof(CreateUsuario),
                 routeValues: new { id = usuario.IdUsuario },
-                value: MapUsuarioResponse(usuario));
+                value: MapUsuarioResponse(new List<Usuario> { usuario }));
         }
     }
 }
