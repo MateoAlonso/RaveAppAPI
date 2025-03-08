@@ -6,7 +6,7 @@ namespace RaveAppAPI.Services.Helpers
         static Logger()
         {
             Log.Logger = new LoggerConfiguration()
-                .WriteTo.File("logs/log_.log", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 50)
+                .WriteTo.File("logs/log_.log", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 15)
                 .CreateLogger();
         }
 
