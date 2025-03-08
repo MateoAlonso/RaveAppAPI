@@ -43,9 +43,9 @@ namespace RaveAppAPI.Controllers
         }
 
         [HttpPut("UpdateEvento")]
-        public IActionResult UpdateEvento(string id, UpdateEventoRequest request)
+        public IActionResult UpdateEvento(UpdateEventoRequest request)
         {
-            ErrorOr<Evento> requestToEventoResult = Evento.From(id, request);
+            ErrorOr<Evento> requestToEventoResult = Evento.From(request);
 
             if (requestToEventoResult.IsError)
             {

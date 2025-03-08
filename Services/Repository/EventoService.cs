@@ -1,5 +1,6 @@
 ﻿using ErrorOr;
 using MySql.Data.MySqlClient;
+using Org.BouncyCastle.Asn1.Ocsp;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
@@ -19,10 +20,9 @@ namespace RaveAppAPI.Services.Repository
                 using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
-                    //TODO : Acceder SP
-                    MySqlCommand cmd = new("", dbcon);
+                    MySqlCommand cmd = new(ProcedureHelper.PCDSetEvento, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    //TODO : Agregar parametros
+                    cmd.Parameters.AddRange(ProcedureHelper.SetEventoParameters(evento));
                     cmd.ExecuteNonQuery();
                     int ok = Convert.ToInt32(cmd.Parameters["p_ok"].Value);
                     if (ok == 1)
@@ -86,6 +86,7 @@ namespace RaveAppAPI.Services.Repository
                         if (reader.HasRows)
                         {
                             List<Evento> eventos = ReaderMaper.ReaderToObject<Evento>(reader).ToList();
+                            eventos.ForEach(e => e.Genero = GetGeneros(e.IdEvento));
                             return eventos;
                         }
                         else
@@ -93,7 +94,6 @@ namespace RaveAppAPI.Services.Repository
                             return Error.NotFound();
                         }
                     }
-
                 }
             }
             catch (Exception e)
@@ -102,61 +102,33 @@ namespace RaveAppAPI.Services.Repository
                 return Error.Unexpected();
             }
         }
-        public ErrorOr<Evento> GetEventoById(string id)
+        private List<int> GetGeneros(string idEvento) 
         {
+            List<int> generos = new();
             try
             {
                 using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
-                    //TODO : Acceder SP
-                    MySqlCommand cmd = new("", dbcon);
+                    MySqlCommand cmd = new(ProcedureHelper.PCDGetGeneros, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    //TODO : Agregar parametros
-                    MySqlDataReader datareader = cmd.ExecuteReader();
-
-                }
-                return Error.NotFound();
-            }
-            catch (Exception e)
-            {
-                Logger.LogError(e.Message);
-                return Error.Unexpected();
-            }
-
-        }
-        public ErrorOr<List<Evento>> GetEventosByEstado(string estado)
-        {
-            try
-            {
-                using (MySqlConnection dbcon = new(connectionString))
-                {
-                    dbcon.Open();
-                    //TODO : Acceder SP
-                    MySqlCommand cmd = new("", dbcon);
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    //TODO : Agregar parametros
+                    cmd.Parameters.Add(ProcedureHelper.GetGenerosParameters(idEvento));
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)
                         {
-                            List<Usuario> usuarios = ReaderMaper.ReaderToObject<Usuario>(reader).ToList();
-                        }
-                        else
-                        {
-                            return Error.NotFound();
+                            generos = ReaderMaper.ReaderToSimpleType<int>(reader).ToList();
                         }
                     }
                 }
-                return Error.NotFound();
             }
             catch (Exception e)
             {
                 Logger.LogError(e.Message);
-                return Error.Unexpected();
             }
-
+            return generos;
         }
+
 
         public ErrorOr<Updated> UpdateEvento(Evento evento)
         {

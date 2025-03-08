@@ -45,10 +45,10 @@ namespace RaveAppAPI.Controllers
                 errors => Problem(errors));
         }
 
-        [HttpPut("UpdateUsuario/{id}")]
-        public IActionResult UpdateUsuario(string id, UpdateUsuarioRequest request)
+        [HttpPut("UpdateUsuario")]
+        public IActionResult UpdateUsuario(UpdateUsuarioRequest request)
         {
-            ErrorOr<Usuario> requestToUsuarioResult = Usuario.From(id, request);
+            ErrorOr<Usuario> requestToUsuarioResult = Usuario.From(request);
 
             if (requestToUsuarioResult.IsError)
             {

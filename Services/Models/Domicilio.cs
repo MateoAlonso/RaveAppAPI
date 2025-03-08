@@ -5,27 +5,31 @@ namespace RaveAppAPI.Services.Models
 {
     public class Domicilio
     {
-        public Localidad Localidad { get; }
-        [ColumnName("dscalle")]
-        public string Calle { get; }
-        [ColumnName("nmaltura")]
-        public string Altura { get; }
-        [ColumnName("dspisodepartamento")]
-        public string PisoDepartamento { get; }
-
-        public Domicilio(Localidad localidad, string calle, string altura, string pisoDepartamento)
+        public Localidad Localidad { get; set; }
+        public Municipio Municipio { get; set; }
+        public Provincia Provincia { get; set; }
+        [ColumnName("dsdireccion")]
+        public string Direccion { get; set; }
+        [ColumnName("nmlatitud")]
+        public decimal Latitud { get; set; }
+        [ColumnName("nmlongitud")]
+        public decimal Longitud { get; set; }
+        public Domicilio()
         {
+        }
+        public Domicilio(Provincia provincia, Municipio municipio, Localidad localidad, string direccion)
+        {
+            Provincia = provincia;
+            Municipio = municipio;
             Localidad = localidad;
-            Calle = calle;
-            Altura = altura;
-            PisoDepartamento = pisoDepartamento;
+            Direccion = direccion;
         }
 
-        public static ErrorOr<Domicilio> Crear(int provincia, string localidad, string calle, string altura, string pisoDepartamento)
+        public static ErrorOr<Domicilio> Crear(Provincia provincia, Municipio municipio, Localidad localidad, string direccion)
         {
 
             List<Error> errors = new();
-            Localidad loc = new Localidad(localidad, provincia);
+
             // Validaciones
 
             if (errors.Count > 0)
@@ -33,13 +37,7 @@ namespace RaveAppAPI.Services.Models
                 return errors;
             }
 
-            return new Domicilio(loc, calle, altura, pisoDepartamento);
-        }
-
-        public static Domicilio Devolver(int provincia, string localidad, string calle, string altura, string dsPisoDepartamento)
-        {
-            Localidad loc = new Localidad(localidad, provincia);
-            return new Domicilio(loc, calle, altura, dsPisoDepartamento);
+            return new Domicilio(provincia, municipio, localidad, direccion);
         }
     }
 }

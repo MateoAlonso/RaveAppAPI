@@ -20,19 +20,23 @@ namespace RaveAppAPI.Services.Helpers
         {
             return new MySqlParameter[]
             {
-                new ("p_cdprovincia", usuario.Domicilio.Localidad.Provincia.Codigo),
-                new ("p_localidad", usuario.Domicilio.Localidad.Nombre),
-                new ("p_calle", usuario.Domicilio.Calle),
-                new ("p_altura", usuario.Domicilio.Altura),
-                new ("p_pisodepartamento", usuario.Domicilio.PisoDepartamento),
-                new ("p_nombreusuario", usuario.Nombre),
-                new ("p_apellido", usuario.Apellido),
-                new ("p_correo", usuario.Correo),
-                new ("p_nmdni", usuario.Dni),
-                new ("p_nmtelefono", usuario.Telefono),
-                new ("p_dscbu", usuario.CBU),
-                new ("p_dsnombrefantasia", usuario.NombreFantasia),
-                new ("p_dsbio", usuario.Bio),
+                new ("p_dsDireccion", usuario.Domicilio.Direccion),
+                new ("p_nmLatitud", usuario.Domicilio.Latitud),
+                new ("p_nmLongitud", usuario.Domicilio.Longitud),
+                new ("p_dsProvincia", usuario.Domicilio.Provincia.Nombre),
+                new ("p_cdProvincia", usuario.Domicilio.Provincia.Codigo),
+                new ("p_dsMunicipio", usuario.Domicilio.Municipio.Nombre),
+                new ("p_cdMunicipio", usuario.Domicilio.Municipio.Codigo),
+                new ("p_dsLocalidad", usuario.Domicilio.Localidad.Nombre),
+                new ("p_cdLocalidad", usuario.Domicilio.Localidad.Codigo),
+                new ("p_dsNombre", usuario.Nombre),
+                new ("p_dsApellido", usuario.Apellido),
+                new ("p_dsCorreo", usuario.Correo),
+                new ("p_nmDni", usuario.Dni),
+                new ("p_nmTelefono", usuario.Telefono),
+                new ("p_dsCbu", usuario.CBU),
+                new ("p_dsNombreFantasia", usuario.NombreFantasia),
+                new ("p_dsBio", usuario.Bio),
                 new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
             };
@@ -72,18 +76,24 @@ namespace RaveAppAPI.Services.Helpers
         {
             return new MySqlParameter[]
             {
-                new ("p_idusuario", usuario.IdUsuario),
-                new ("p_provincia", usuario.Domicilio.Localidad.Provincia.Nombre),
-                new ("p_localidad", usuario.Domicilio.Localidad.Nombre),
-                new ("p_calle", usuario.Domicilio.Calle),
-                new ("p_altura", usuario.Domicilio.Altura),
-                new ("p_pisodepartamento", usuario.Domicilio.PisoDepartamento),
-                new ("p_nombreusuario", usuario.Nombre),
-                new ("p_apellido", usuario.Apellido),
-                new ("p_correo", usuario.Correo),
-                new ("p_nmdni", usuario.Dni),
-                new ("p_nmtelefono", usuario.Telefono),
-                new ("p_dscbu", usuario.CBU),
+                new ("p_idUsuario", usuario.IdUsuario),
+                new ("p_dsDireccion", usuario.Domicilio.Direccion),
+                new ("p_nmLatitud", usuario.Domicilio.Latitud),
+                new ("p_nmLongitud", usuario.Domicilio.Longitud),
+                new ("p_dsProvincia", usuario.Domicilio.Provincia.Nombre),
+                new ("p_cdProvincia", usuario.Domicilio.Provincia.Codigo),
+                new ("p_dsMunicipio", usuario.Domicilio.Municipio.Nombre),
+                new ("p_cdMunicipio", usuario.Domicilio.Municipio.Codigo),
+                new ("p_dsLocalidad", usuario.Domicilio.Localidad.Nombre),
+                new ("p_cdLocalidad", usuario.Domicilio.Localidad.Codigo),
+                new ("p_dsNombre", usuario.Nombre),
+                new ("p_dsApellido", usuario.Apellido),
+                new ("p_dsCorreo", usuario.Correo),
+                new ("p_nmDni", usuario.Dni),
+                new ("p_nmTelefono", usuario.Telefono),
+                new ("p_dsCbu", usuario.CBU),
+                new ("p_dsNombreFantasia", usuario.NombreFantasia),
+                new ("p_dsBio", usuario.Bio),
                 new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
             };
@@ -119,10 +129,12 @@ namespace RaveAppAPI.Services.Helpers
         }
         #endregion
 
-        #region Noticia PCDS
+        #region Evento PCDS
         public const string PCDGetEventos = "PCD_EVENTOS_GetEventos";
+        public const string PCDGetGeneros = "PCD_EVENTOS_GetGenerosEvento";
         public const string PCDGetEventosById = "PCD_EVENTOS_GetEventosById";
         public const string PCDGetEventosByEstado = "PCD_EVENTOS_GetEventosByEstado";
+        public const string PCDSetEvento = "PCD_EVENTOS_SetEvento";
         #endregion
         #region Evento Parameters
         public static MySqlParameter[] GetEventoParameters(string? idEvento, int? estado, int? codigoProvincia, int? genero, bool? isAfter, bool? isLgbt)
@@ -133,8 +145,43 @@ namespace RaveAppAPI.Services.Helpers
                 new MySqlParameter ("p_cdEstadoEvento", estado),
                 new MySqlParameter ("p_cdProvincia", codigoProvincia),
                 new MySqlParameter ("p_cdGeneroEvento", genero),
-                new MySqlParameter ("p_isAfter", (isAfter ?? true) ? 1 : 0),
-                new MySqlParameter ("p_isLgbt", (isLgbt ?? true) ? 1 : 0)
+                new MySqlParameter ("p_isAfter", isAfter),
+                new MySqlParameter ("p_isLgbt", isLgbt)
+            };
+        }
+        public static MySqlParameter GetGenerosParameters(string idEvento) 
+        {
+            return new MySqlParameter("p_idEvento", idEvento);
+        }
+        public static MySqlParameter[] SetEventoParameters(Evento evento)
+        {
+            string idArtistas = string.Join(",", evento.Artistas.Select(a => a.IdUsuario ?? string.Empty));
+            string cdGeneros = string.Join(",", evento.Genero.Select(e => e));
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_idUsuario", evento.Usuario.IdUsuario),
+                new MySqlParameter ("p_idArtistaList", idArtistas),
+                new MySqlParameter ("p_dsDireccion", evento.Domicilio.Direccion),
+                new MySqlParameter ("p_nmLatitud", evento.Domicilio.Latitud),
+                new MySqlParameter ("p_nmLongitud", evento.Domicilio.Longitud),
+                new MySqlParameter ("p_dsProvincia", evento.Domicilio.Provincia.Nombre),
+                new MySqlParameter ("p_cdProvincia", evento.Domicilio.Provincia.Codigo),
+                new MySqlParameter ("p_dsMunicipio", evento.Domicilio.Municipio.Nombre),
+                new MySqlParameter ("p_cdMunicipio", evento.Domicilio.Municipio.Codigo),
+                new MySqlParameter ("p_dsLocalidad", evento.Domicilio.Localidad.Nombre),
+                new MySqlParameter ("p_cdLocalidad", evento.Domicilio.Localidad.Codigo),
+                new MySqlParameter ("p_dsNombre", evento.Nombre),
+                new MySqlParameter ("p_dsEvento", evento.Descripcion),
+                new MySqlParameter ("p_cdGeneroList", cdGeneros),
+                new MySqlParameter ("p_isAfter", evento.IsAfter ? 1 : 0),
+                new MySqlParameter ("p_isLgbt", evento.IsLgbt ? 1 : 0),
+                new MySqlParameter ("p_dtInicioVenta", evento.InicioVenta),
+                new MySqlParameter ("p_dtFinVenta", evento.FinVenta),
+                new MySqlParameter ("p_dtInicioEvento", evento.InicioEvento),
+                new MySqlParameter ("p_dtFinEvento", evento.FinEvento),
+                new MySqlParameter ("p_cdestado", evento.CdEstado),
+                new MySqlParameter ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
+                new MySqlParameter ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
             };
         }
         public static MySqlParameter GetEventosByEstadoParametes(int cdEstado)
@@ -158,25 +205,7 @@ namespace RaveAppAPI.Services.Helpers
                 new ("p_dsnombre", evento.Nombre),
                 new ("p_dsevento", evento.Descripcion),
                 new ("p_cdgenero", evento.Genero),
-                new ("p_cdestado", evento.Estado),
-                new ("p_isafter", evento.IsAfter),
-                new ("p_islgbt", evento.IsLgbt),
-                new ("p_dtinicioventa", evento.InicioVenta),
-                new ("p_dtfinventa", evento.FinVenta),
-                new ("p_dtinicioevento", evento.InicioEvento),
-                new ("p_dtfinevento", evento.FinEvento),
-                new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
-                new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
-            };
-        }
-        public static MySqlParameter[] CreateEventoParameters(Evento evento)
-        {
-            return new MySqlParameter[]
-            {
-                new ("p_dsnombre", evento.Nombre),
-                new ("p_dsevento", evento.Descripcion),
-                new ("p_cdgenero", evento.Genero),
-                new ("p_cdestado", evento.Estado),
+                new ("p_cdestado", evento.CdEstado),
                 new ("p_isafter", evento.IsAfter),
                 new ("p_islgbt", evento.IsLgbt),
                 new ("p_dtinicioventa", evento.InicioVenta),

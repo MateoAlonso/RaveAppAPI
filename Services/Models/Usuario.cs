@@ -54,37 +54,29 @@ namespace RaveAppAPI.Services.Models
 
         }
 
-        public static ErrorOr<Usuario> Crear(int Provincia, string Localidad, string Calle, string Altura, string PisoDepartamento, string nombre, string apellido, string correo, string cbu, string dni, string tel, string nombreFantasia, string bio, int isActivo = 1, DateTime? dtAlta = null, DateTime? dtBaja = null, string? idUsuario = null)
+        public static ErrorOr<Usuario> Crear(Domicilio domicilio, string nombre, string apellido, string correo, string cbu, string dni, string tel, string nombreFantasia, string bio, int isActivo = 1, DateTime? dtAlta = null, DateTime? dtBaja = null, string? idUsuario = null)
         {
             List<Error> errors = new();
 
-            ErrorOr<Domicilio> domicilio = Domicilio.Crear(Provincia, Localidad, Calle, Altura, PisoDepartamento);
-
             // Validaciones
 
-            if (errors.Count > 0 || domicilio.IsError)
+            if (errors.Count > 0)
             {
-                errors.AddRange(domicilio.Errors);
                 return errors;
             }
 
-            return new Usuario(domicilio.Value, nombre, apellido, correo, cbu, dni, tel, isActivo, dtAlta, dtBaja, idUsuario, nombreFantasia, bio);
-        }
-
-        public static Usuario Devolver(int Provincia, string Localidad, string Calle, string Altura, string PisoDepartamento, string nombre, string apellido, string correo, string cbu, string dni, string tel, string nombreFantasia, string bio, int isActivo = 1, DateTime? dtAlta = null, DateTime? dtBaja = null, string? idUsuario = null)
-        {
-            Domicilio domicilio = Domicilio.Devolver(Provincia, Localidad, Calle, Altura, PisoDepartamento);
             return new Usuario(domicilio, nombre, apellido, correo, cbu, dni, tel, isActivo, dtAlta, dtBaja, idUsuario, nombreFantasia, bio);
         }
 
+
         public static ErrorOr<Usuario> From(CreateUsuarioRequest request)
         {
-            return Crear(request.Provincia, request.Localidad, request.Calle, request.Altura, request.PisoDepartamento, request.Nombre, request.Apellido, request.Correo, request.CBU, request.Dni, request.Telefono, request.NombreFantasia, request.Bio);
+            return Crear(request.domicilio, request.Nombre, request.Apellido, request.Correo, request.CBU, request.Dni, request.Telefono, request.NombreFantasia, request.Bio);
         }
 
-        public static ErrorOr<Usuario> From(string idUsuario, UpdateUsuarioRequest request)
+        public static ErrorOr<Usuario> From(UpdateUsuarioRequest request)
         {
-            return Crear(request.Provincia, request.Localidad, request.calle, request.Altura, request.PisoDepartamento, request.Nombre, request.Apellido, request.Correo, request.CBU, request.Dni, request.Telefono, request.NombreFantasia, request.Bio, idUsuario: request.IdUsuario);
+            return Crear(request.domicilio, request.Nombre, request.Apellido, request.Correo, request.CBU, request.Dni, request.Telefono, request.NombreFantasia, request.Bio, idUsuario: request.IdUsuario);
         }
     }
 }
