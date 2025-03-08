@@ -1,5 +1,7 @@
-﻿using System.Data;
+﻿using Org.BouncyCastle.Asn1.X509.Qualified;
+using System.Data;
 using System.Reflection;
+using System.Reflection.Metadata;
 
 namespace RaveAppAPI.Services.Helpers
 {
@@ -36,5 +38,74 @@ namespace RaveAppAPI.Services.Helpers
                 yield return t;
             }
         }
+
+        public static IEnumerable<T> ReaderToObjectRecursive<T>(IDataReader rd) where T : class, new()
+        {
+            while (rd.Read())
+            {
+                yield return (T)MapObject(typeof(T), rd);
+            }
+        }
+        public static IEnumerable<T> ReaderToSimpleType<T>(IDataReader rd)
+        {
+            while (rd.Read())
+            {
+                if (!rd.IsDBNull(0))
+                {
+                    yield return (T)Convert.ChangeType(rd.GetValue(0), typeof(T));
+                }
+            }
+        }
+
+        private static object MapObject(Type type, IDataReader rd)
+        {
+            object instance = Activator.CreateInstance(type);
+
+            var properties = type.GetProperties()
+                                 .Where(p => Attribute.IsDefined(p, typeof(ColumnNameAttribute)));
+            int ordinal;
+            foreach (var prop in properties)
+            {
+                var attr = (ColumnNameAttribute)Attribute.GetCustomAttribute(prop, typeof(ColumnNameAttribute));
+                string columnName = attr.Name.ToUpper();
+
+                try
+                {
+                    ordinal = rd.GetOrdinal(columnName);
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    continue;
+                }
+
+                if (!rd.IsDBNull(ordinal))
+                {
+                    if (IsSimpleType(prop.PropertyType))
+                    {
+                        object value = Convert.ChangeType(rd.GetValue(ordinal), prop.PropertyType);
+                        prop.SetValue(instance, value);
+                    }
+                    else
+                    {
+                        object nestedObj = MapObject(prop.PropertyType, rd);
+                        prop.SetValue(instance, nestedObj);
+                    }
+                }
+            }
+            return instance;
+        }
+
+        private static bool IsSimpleType(Type type)
+        {
+            return type.IsPrimitive
+                || type.IsEnum
+                || type.Equals(typeof(string))
+                || type.Equals(typeof(decimal))
+                || type.Equals(typeof(DateTime))
+                || type.Equals(typeof(DateTimeOffset))
+                || type.Equals(typeof(Guid))
+                || type.Equals(typeof(Array));
+        }
+
     }
 }
