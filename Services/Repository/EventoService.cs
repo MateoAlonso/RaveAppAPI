@@ -85,7 +85,7 @@ namespace RaveAppAPI.Services.Repository
                     {
                         if (reader.HasRows)
                         {
-                            List<Evento> eventos = ReaderMaper.ReaderToObject<Evento>(reader).ToList();
+                            List<Evento> eventos = ReaderMaper.ReaderToObjectRecursive<Evento>(reader).ToList();
                             eventos.ForEach(e => e.Genero = GetGeneros(e.IdEvento));
                             return eventos;
                         }
