@@ -49,10 +49,10 @@ namespace RaveAppAPI.Services.Repository
                 using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
-                    //TODO : Acceder SP
-                    MySqlCommand cmd = new("", dbcon);
+                    
+                    MySqlCommand cmd = new(ProcedureHelper.PCDDeleteEvento, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    //TODO : Agregar parametros
+                    cmd.Parameters.AddRange(ProcedureHelper.DeleteEventoParameters(id));
                     cmd.ExecuteNonQuery();
                     int ok = Convert.ToInt32(cmd.Parameters["p_ok"].Value);
                     if (ok == 1)
@@ -137,10 +137,9 @@ namespace RaveAppAPI.Services.Repository
                 using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
-                    //TODO : Acceder SP
-                    MySqlCommand cmd = new("", dbcon);
+                    MySqlCommand cmd = new(ProcedureHelper.PCDUpdateEvento, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    //TODO : Agregar parametros
+                    cmd.Parameters.AddRange(ProcedureHelper.UpdateEventoParameters(evento));
                     cmd.ExecuteNonQuery();
                     int ok = Convert.ToInt32(cmd.Parameters["p_ok"].Value);
                     if (ok == 1)
