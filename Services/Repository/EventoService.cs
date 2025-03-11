@@ -80,7 +80,7 @@ namespace RaveAppAPI.Services.Repository
                     dbcon.Open();
                     MySqlCommand cmd = new(ProcedureHelper.PCDGetEventos, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddRange(ProcedureHelper.GetEventoParameters(request.IdEvento, request.Estado, request.CodigoProvincia, request.Genero, request.IsAfter, request.IsLgbt));
+                    cmd.Parameters.AddRange(ProcedureHelper.GetEventoParameters(request));
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)

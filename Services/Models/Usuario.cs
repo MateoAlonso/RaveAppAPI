@@ -10,7 +10,7 @@ namespace RaveAppAPI.Services.Models
         [ColumnName("idusuario")]
         public string IdUsuario { get; set; }
         public Domicilio Domicilio { get; set; }
-        [ColumnName("dsnombre")]
+        [ColumnName("dsnombrereal")]
         public string Nombre { get; set; }
         [ColumnName("dsapellido")]
         public string Apellido { get; set; }
