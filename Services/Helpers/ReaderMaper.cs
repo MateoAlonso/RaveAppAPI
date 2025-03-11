@@ -1,5 +1,7 @@
 ﻿using Org.BouncyCastle.Asn1.X509.Qualified;
+using System.Collections;
 using System.Data;
+using System.Diagnostics.Metrics;
 using System.Reflection;
 using System.Reflection.Metadata;
 
@@ -57,10 +59,9 @@ namespace RaveAppAPI.Services.Helpers
             }
         }
 
-        private static object MapObject(Type type, IDataReader rd)
+        private static object MapObject(Type type, IDataReader rd, bool isRecursive = true)
         {
             object instance = Activator.CreateInstance(type);
-
             var properties = type.GetProperties()
                                  .Where(p => Attribute.IsDefined(p, typeof(ColumnNameAttribute)));
             int ordinal;
@@ -85,11 +86,17 @@ namespace RaveAppAPI.Services.Helpers
                         object value = Convert.ChangeType(rd.GetValue(ordinal), prop.PropertyType);
                         prop.SetValue(instance, value);
                     }
-                    else
-                    {
-                        object nestedObj = MapObject(prop.PropertyType, rd);
-                        prop.SetValue(instance, nestedObj);
-                    }
+                }
+            }
+            if (isRecursive)
+            {
+                var objects = type.GetProperties().Where(p => !IsSimpleType(p.PropertyType));
+                foreach (var obj in objects)
+                {
+                    var props = obj.PropertyType.GetProperties().Where(p => !IsSimpleType(p.PropertyType));
+                    bool match = props.Any(p => objects.Any(o => o.PropertyType == p.PropertyType));
+                    object nested = MapObject(obj.PropertyType, rd, !match);
+                    obj.SetValue(instance, nested);
                 }
             }
             return instance;
@@ -104,7 +111,8 @@ namespace RaveAppAPI.Services.Helpers
                 || type.Equals(typeof(DateTime))
                 || type.Equals(typeof(DateTimeOffset))
                 || type.Equals(typeof(Guid))
-                || type.Equals(typeof(Array));
+                || type.IsGenericType
+                || typeof(IEnumerable).IsAssignableFrom(type);
         }
 
     }

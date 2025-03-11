@@ -7,6 +7,7 @@ namespace RaveAppAPI.Services.Models
     {
         [ColumnName("dslocalidad")]
         public string Nombre { get; set; }
+        [ColumnName("cdlocalidad")]
         public int Codigo { get; set;
         }
         public Localidad()

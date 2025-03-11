@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using RaveAppAPI.Services.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,9 @@ namespace RaveAppAPI.Services.Models
 {
     public class Municipio
     {
+        [ColumnName("dsmunicipio")]
         public string Nombre { get; set; }
+        [ColumnName("cdmunicipio")]
         public int Codigo { get; set; }
         public Municipio()
         {
