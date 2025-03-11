@@ -1,5 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using RaveAppAPI.Services.Models;
+using RaveAppAPI.Services.RequestModel.Evento;
 
 namespace RaveAppAPI.Services.Helpers
 {
@@ -139,16 +140,23 @@ namespace RaveAppAPI.Services.Helpers
         public const string PCDUpdateEvento = "PCD_EVENTOS_UpdateEvento";
         #endregion
         #region Evento Parameters
-        public static MySqlParameter[] GetEventoParameters(string? idEvento, int? estado, int? codigoProvincia, int? genero, bool? isAfter, bool? isLgbt)
+        public static MySqlParameter[] GetEventoParameters(GetEventoRequest eventoRequest)
         {
+            string cdGeneros = null;
+            if (eventoRequest.Genero != null)
+            {
+               cdGeneros = string.Join(",", eventoRequest.Genero.Select(e => e));
+            }
             return new MySqlParameter[]
             {
-                new MySqlParameter ("p_idEvento", idEvento),
-                new MySqlParameter ("p_cdEstadoEvento", estado),
-                new MySqlParameter ("p_cdProvincia", codigoProvincia),
-                new MySqlParameter ("p_cdGeneroEvento", genero),
-                new MySqlParameter ("p_isAfter", isAfter),
-                new MySqlParameter ("p_isLgbt", isLgbt)
+                new MySqlParameter ("p_idEvento", eventoRequest.IdEvento),
+                new MySqlParameter ("p_cdEstadoEvento", eventoRequest.Estado),
+                new MySqlParameter ("p_cdProvincia", eventoRequest.CodigoProvincia),
+                new MySqlParameter ("p_cdLocalidad", eventoRequest.CodigoLocalidad),
+                new MySqlParameter ("p_cdMunicipio", eventoRequest.CodigoMunicipio),
+                new MySqlParameter ("p_cdGeneroList", cdGeneros),
+                new MySqlParameter ("p_isAfter", eventoRequest.IsAfter),
+                new MySqlParameter ("p_isLgbt", eventoRequest.IsLgbt)
             };
         }
         public static MySqlParameter GetGenerosParameters(string idEvento) 
@@ -175,8 +183,8 @@ namespace RaveAppAPI.Services.Helpers
                 new MySqlParameter ("p_dsNombre", evento.Nombre),
                 new MySqlParameter ("p_dsEvento", evento.Descripcion),
                 new MySqlParameter ("p_cdGeneroList", cdGeneros),
-                new MySqlParameter ("p_isAfter", evento.IsAfter ? 1 : 0),
-                new MySqlParameter ("p_isLgbt", evento.IsLgbt ? 1 : 0),
+                new MySqlParameter ("p_isAfter", evento.IsAfter),
+                new MySqlParameter ("p_isLgbt", evento.IsLgbt),
                 new MySqlParameter ("p_dtInicioVenta", evento.InicioVenta),
                 new MySqlParameter ("p_dtFinVenta", evento.FinVenta),
                 new MySqlParameter ("p_dtInicioEvento", evento.InicioEvento),
@@ -206,8 +214,8 @@ namespace RaveAppAPI.Services.Helpers
                 new MySqlParameter ("p_dsNombre", evento.Nombre),
                 new MySqlParameter ("p_dsEvento", evento.Descripcion),
                 new MySqlParameter ("p_cdGeneroList", cdGeneros),
-                new MySqlParameter ("p_isAfter", evento.IsAfter ? 1 : 0),
-                new MySqlParameter ("p_isLgbt", evento.IsLgbt ? 1 : 0),
+                new MySqlParameter ("p_isAfter", evento.IsAfter),
+                new MySqlParameter ("p_isLgbt", evento.IsLgbt),
                 new MySqlParameter ("p_dtInicioVenta", evento.InicioVenta),
                 new MySqlParameter ("p_dtFinVenta", evento.FinVenta),
                 new MySqlParameter ("p_dtInicioEvento", evento.InicioEvento),
