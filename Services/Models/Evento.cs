@@ -21,18 +21,14 @@ namespace RaveAppAPI.Services.Models
         public bool IsAfter { get; set; }
         [ColumnName("islgbt")]
         public bool IsLgbt { get; set; }
-        [ColumnName("dtinicioventa")]
-        public DateTime InicioVenta { get; set; }
-        [ColumnName("dtfinventa")]
-        public DateTime FinVenta { get; set; }
         [ColumnName("dtinicioevento")]
         public DateTime InicioEvento { get; set; }
         [ColumnName("dtfinevento")]
         public DateTime FinEvento { get; set; }
         [ColumnName("cdestado")]
         public int CdEstado { get; set; }
-
-        public Evento(string idEvento, Usuario usuario, List<Usuario> artistas, Domicilio domicilio, string nombre, string descripcion, List<int> genero, bool isAfter, bool isLgbt, DateTime inicioVenta, DateTime finVenta, DateTime inicioEvento, DateTime finEvento, int estado)
+        public List<Fecha> Fechas { get; set; }
+        public Evento(string idEvento, Usuario usuario, List<Usuario> artistas, Domicilio domicilio, string nombre, string descripcion, List<int> genero, bool isAfter, bool isLgbt, DateTime inicioEvento, DateTime finEvento, int estado, List<Fecha> fechas)
         {
             IdEvento = idEvento;
             Usuario = usuario;
@@ -43,16 +39,15 @@ namespace RaveAppAPI.Services.Models
             Genero = genero;
             IsAfter = isAfter;
             IsLgbt = isLgbt;
-            InicioVenta = inicioVenta;
-            FinVenta = finVenta;
             InicioEvento = inicioEvento;
             FinEvento = finEvento;
             CdEstado = estado;
+            Fechas = fechas;
         }
         public Evento()
         {
         }
-        public static ErrorOr<Evento> Crear(string idEvento, Usuario usuario,List<Usuario> artistas, Domicilio domicilio, string nombre, string descripcion, List<int> genero, bool isAfter, bool isLgbt, DateTime inicioVenta, DateTime finVenta, DateTime inicioEvento, DateTime finEvento, int estado)
+        public static ErrorOr<Evento> Crear(string idEvento, Usuario usuario,List<Usuario> artistas, Domicilio domicilio, string nombre, string descripcion, List<int> genero, bool isAfter, bool isLgbt, DateTime inicioEvento, DateTime finEvento, int estado, List<Fecha> fechas)
         {
             List<Error> errors = new();
 
@@ -63,9 +58,8 @@ namespace RaveAppAPI.Services.Models
                 return errors;
             }
             
-            return new Evento(idEvento, usuario, artistas, domicilio, nombre, descripcion, genero, isAfter, isLgbt, inicioVenta, finVenta, inicioEvento, finEvento, estado);
+            return new Evento(idEvento, usuario, artistas, domicilio, nombre, descripcion, genero, isAfter, isLgbt, inicioEvento, finEvento, estado, fechas);
         }
-
         public static ErrorOr<Evento> From(CreateEventoRequest request)
         {
             Usuario usr = new();
@@ -77,7 +71,7 @@ namespace RaveAppAPI.Services.Models
                 artista.IdUsuario = idArtista;
                 artistas.Add(artista);
             }
-            return Crear(null, usr, artistas, request.domicilio, request.nombre, request.descripcion, request.genero, request.isAfter, request.isLgbt, request.inicioVenta, request.finVenta, request.inicioEvento, request.finEvento, request.estado);
+            return Crear(null, usr, artistas, request.domicilio, request.nombre, request.descripcion, request.genero, request.isAfter, request.isLgbt, request.inicioEvento, request.finEvento, request.estado, request.fechas);
         }
         public static ErrorOr<Evento> From(UpdateEventoRequest request)
         {
@@ -88,7 +82,7 @@ namespace RaveAppAPI.Services.Models
                 artista.IdUsuario = idArtista;
                 artistas.Add(artista);
             }
-            return Crear(request.idEvento, null, artistas, request.domicilio, request.nombre, request.descripcion, request.genero, request.isAfter, request.isLgbt, request.inicioVenta, request.finVenta, request.inicioEvento, request.finEvento, request.estado);
+            return Crear(request.idEvento, null, artistas, request.domicilio, request.nombre, request.descripcion, request.genero, request.isAfter, request.isLgbt, request.inicioEvento, request.finEvento, request.estado, request.fechas);
         }
     }
 

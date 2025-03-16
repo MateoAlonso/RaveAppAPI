@@ -27,7 +27,10 @@ namespace RaveAppAPI.Controllers
 
             var evento = requestToEventoResult.Value;
             ErrorOr<Created> createEventoResult = _eventoService.CreateEvento(evento);
-
+            if (!createEventoResult.IsError)
+            {
+                createEventoResult = _eventoService.SetFechas(evento);
+            }
             return createEventoResult.Match(
                 created => CreatedAtCreateEvento(evento),
                 errors => Problem(errors));
