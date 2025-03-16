@@ -10,5 +10,6 @@ namespace RaveAppAPI.Services.Repository.Contracts
         ErrorOr<List<Evento>> GetEventos(GetEventoRequest request);
         ErrorOr<Updated> UpdateEvento(Evento Evento);
         ErrorOr<Deleted> DeleteEvento(string id);
+        ErrorOr<Created> SetFechas(Evento evento);
     }
 }
