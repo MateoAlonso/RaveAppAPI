@@ -221,5 +221,36 @@ namespace RaveAppAPI.Services.Repository
                 return Error.Unexpected();
             }
         }
+
+        public ErrorOr<Updated> UpdateFechas(Evento evento)
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    ErrorOr<Updated> result = Result.Updated;
+                    dbcon.Open();
+                    MySqlCommand cmd;
+                    foreach (Fecha fecha in evento.Fechas)
+                    {
+                        cmd = new(ProcedureHelper.PCDUpdateFechas, dbcon);
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.AddRange(ProcedureHelper.UpdateFechaParameters(fecha, evento.IdEvento));
+                        cmd.ExecuteNonQuery();
+                        int ok = Convert.ToInt32(cmd.Parameters["p_ok"].Value);
+                        if (ok != 1)
+                        {
+                            result = Error.Failure();
+                        }
+                    }
+                    return result;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
+        }
     }
 }
