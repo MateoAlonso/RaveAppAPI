@@ -159,7 +159,8 @@ namespace RaveAppAPI.Services.Helpers
                 new MySqlParameter ("p_cdMunicipio", eventoRequest.CodigoMunicipio),
                 new MySqlParameter ("p_cdGeneroList", cdGeneros),
                 new MySqlParameter ("p_isAfter", eventoRequest.IsAfter),
-                new MySqlParameter ("p_isLgbt", eventoRequest.IsLgbt)
+                new MySqlParameter ("p_isLgbt", eventoRequest.IsLgbt),
+                new MySqlParameter ("p_idFiesta", eventoRequest.idFiesta),
             };
         }
         public static MySqlParameter GetGenerosParameters(string idEvento) 
@@ -191,6 +192,7 @@ namespace RaveAppAPI.Services.Helpers
                 new MySqlParameter ("p_dtInicioEvento", evento.InicioEvento),
                 new MySqlParameter ("p_dtFinEvento", evento.FinEvento),
                 new MySqlParameter ("p_cdestado", evento.CdEstado),
+                new MySqlParameter ("p_idFiesta", evento.IdFiesta),
                 new MySqlParameter ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new MySqlParameter ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output },
                 new MySqlParameter ("p_idEvento", MySqlDbType.VarChar, 36) { Direction = System.Data.ParameterDirection.Output }
@@ -221,6 +223,7 @@ namespace RaveAppAPI.Services.Helpers
                 new MySqlParameter ("p_dtInicioEvento", evento.InicioEvento),
                 new MySqlParameter ("p_dtFinEvento", evento.FinEvento),
                 new MySqlParameter ("p_cdEstado", evento.CdEstado),
+                new MySqlParameter ("p_idFiesta", evento.IdFiesta),
                 new MySqlParameter ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new MySqlParameter ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
             };
