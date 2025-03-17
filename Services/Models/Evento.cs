@@ -54,7 +54,7 @@ namespace RaveAppAPI.Services.Models
         {
             List<Error> errors = new();
 
-            //TODO : Validaciones
+            //TODO Validaciones
 
             if (errors.Count > 0)
             {
