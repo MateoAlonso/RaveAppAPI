@@ -8,5 +8,7 @@ namespace RaveAppAPI.Services.Models
         public DateTime Inicio { get; set; }
         [ColumnName("dtfin")]
         public DateTime Fin { get; set; }
+        [ColumnName("cdestado")]
+        public int Estado { get; set; }
     }
 }
