@@ -57,7 +57,10 @@ namespace RaveAppAPI.Controllers
 
             var evento = requestToEventoResult.Value;
             ErrorOr<Updated> updateEventoResult = _eventoService.UpdateEvento(evento);
-
+            if (!updateEventoResult.IsError)
+            {
+                updateEventoResult = _eventoService.UpdateFechas(evento);
+            }
             return updateEventoResult.Match(
                 updated => NoContent(),
                 errors => Problem(errors));

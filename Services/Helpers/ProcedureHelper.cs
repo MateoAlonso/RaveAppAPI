@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.RequestModel.Evento;
+using RaveAppAPI.Services.RequestModel.Fiesta;
 
 namespace RaveAppAPI.Services.Helpers
 {
@@ -135,12 +136,14 @@ namespace RaveAppAPI.Services.Helpers
         public const string PCDGetGeneros = "PCD_EVENTOS_GetGenerosEvento";
         public const string PCDGetFechas = "PCD_EVENTOS_GetFechasEvento";
         public const string PCDSetFechas = "PCD_EVENTOS_SetFechaEvento";
+        public const string PCDUpdateFechas = "PCD_EVENTOS_UpdateFechaEvento";
         public const string PCDGetEventosById = "PCD_EVENTOS_GetEventosById";
         public const string PCDGetEventosByEstado = "PCD_EVENTOS_GetEventosByEstado";
         public const string PCDSetEvento = "PCD_EVENTOS_SetEvento";
         public const string PCDDeleteEvento = "PCD_EVENTOS_DeleteEvento";
         public const string PCDUpdateEvento = "PCD_EVENTOS_UpdateEvento";
         #endregion
+
         #region Evento Parameters
         public static MySqlParameter[] GetEventoParameters(GetEventoRequest eventoRequest)
         {
@@ -158,7 +161,8 @@ namespace RaveAppAPI.Services.Helpers
                 new MySqlParameter ("p_cdMunicipio", eventoRequest.CodigoMunicipio),
                 new MySqlParameter ("p_cdGeneroList", cdGeneros),
                 new MySqlParameter ("p_isAfter", eventoRequest.IsAfter),
-                new MySqlParameter ("p_isLgbt", eventoRequest.IsLgbt)
+                new MySqlParameter ("p_isLgbt", eventoRequest.IsLgbt),
+                new MySqlParameter ("p_idFiesta", eventoRequest.idFiesta),
             };
         }
         public static MySqlParameter GetGenerosParameters(string idEvento) 
@@ -190,6 +194,7 @@ namespace RaveAppAPI.Services.Helpers
                 new MySqlParameter ("p_dtInicioEvento", evento.InicioEvento),
                 new MySqlParameter ("p_dtFinEvento", evento.FinEvento),
                 new MySqlParameter ("p_cdestado", evento.CdEstado),
+                new MySqlParameter ("p_idFiesta", evento.IdFiesta),
                 new MySqlParameter ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new MySqlParameter ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output },
                 new MySqlParameter ("p_idEvento", MySqlDbType.VarChar, 36) { Direction = System.Data.ParameterDirection.Output }
@@ -220,6 +225,7 @@ namespace RaveAppAPI.Services.Helpers
                 new MySqlParameter ("p_dtInicioEvento", evento.InicioEvento),
                 new MySqlParameter ("p_dtFinEvento", evento.FinEvento),
                 new MySqlParameter ("p_cdEstado", evento.CdEstado),
+                new MySqlParameter ("p_idFiesta", evento.IdFiesta),
                 new MySqlParameter ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new MySqlParameter ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
             };
@@ -250,9 +256,65 @@ namespace RaveAppAPI.Services.Helpers
                 new ("p_idEvento", idEvento),
                 new ("p_dtInicio", fecha.Inicio),
                 new ("p_dtFin", fecha.Fin),
+                new ("p_cdEstado", fecha.Estado),
                 new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
             };
+        }
+        public static MySqlParameter[] UpdateFechaParameters(Fecha fecha, string idEvento)
+        {
+            return new MySqlParameter[]
+            {
+                new ("p_idEvento", idEvento),
+                new ("p_dtInicio", fecha.Inicio),
+                new ("p_dtFin", fecha.Fin),
+                new ("p_cdEstado", fecha.Estado),
+                new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
+                new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
+            };
+        }
+        #endregion
+
+        #region Fiesta PCDS
+        public const string PCDCreateFiesta = "PCD_FIESTAS_SetFiesta";
+        public const string PCDUpdateFiesta = "PCD_FIESTAS_UpdateFiesta";
+        public const string PCDGetFiestas = "PCD_FIESTAS_GetFiesta";
+        public const string PCDDeleteFiesta = "PCD_FIESTAS_DeleteFiesta";
+        #endregion
+
+        #region Fiesta Parameters
+        public static MySqlParameter[] GetFiestasParameters(GetFiestaRequest fiestaRequest)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_idFiesta", fiestaRequest.IdFiesta),
+                new MySqlParameter ("p_idUsuario", fiestaRequest.IdUsuario)
+            };
+        }
+        public static MySqlParameter[] SetFiestaParameters(Fiesta fiesta)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_idUsuario", fiesta.IdUsuario),
+                new MySqlParameter ("p_dsNombre", fiesta.DsNombre),
+                new MySqlParameter ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
+                new MySqlParameter ("p_error", MySqlDbType.Text) { Direction = System.Data.ParameterDirection.Output },
+                new MySqlParameter ("p_idFiesta", MySqlDbType.VarChar, 36) { Direction = System.Data.ParameterDirection.Output }
+            };
+        }
+        public static MySqlParameter[] UpdateFiestaParameters(Fiesta fiesta)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("idFiesta", fiesta.IdFiesta),
+                new MySqlParameter ("p_dsNombre", fiesta.DsNombre),
+                new MySqlParameter ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
+                new MySqlParameter ("p_error", MySqlDbType.Text) { Direction = System.Data.ParameterDirection.Output }
+            };
+        }
+        public static MySqlParameter DeleteFiestaParameters(string idFiesta)
+        {
+            return new MySqlParameter ("p_idFiesta", idFiesta);
         }
         #endregion
     }
