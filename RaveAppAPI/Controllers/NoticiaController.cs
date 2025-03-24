@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
@@ -6,6 +7,7 @@ using RaveAppAPI.Services.RequestModel.Noticia;
 
 namespace RaveAppAPI.Controllers
 {
+    [Authorize]
     public class NoticiaController : ApiController
     {
         private readonly INoticiaService _noticiaService;

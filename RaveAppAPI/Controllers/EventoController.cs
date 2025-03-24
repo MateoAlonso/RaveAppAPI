@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
@@ -6,6 +7,7 @@ using RaveAppAPI.Services.RequestModel.Evento;
 
 namespace RaveAppAPI.Controllers
 {
+    [Authorize]
     public class EventoController : ApiController
     {
         private readonly IEventoService _eventoService;
