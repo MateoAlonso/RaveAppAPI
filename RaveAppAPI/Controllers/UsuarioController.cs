@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RaveAppAPI.Contracts.User;
 using RaveAppAPI.Services.Models;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 
 namespace RaveAppAPI.Controllers
 {
+    [Authorize]
     public class UsuarioController : ApiController
     {
         private readonly IUsuarioService _usuarioService;

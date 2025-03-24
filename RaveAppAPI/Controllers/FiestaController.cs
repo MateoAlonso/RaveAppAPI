@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository;
@@ -8,6 +9,7 @@ using RaveAppAPI.Services.RequestModel.Fiesta;
 
 namespace RaveAppAPI.Controllers
 {
+    [Authorize]
     public class FiestaController : ApiController
     {
         private readonly IFiestaService _fiestaService;
