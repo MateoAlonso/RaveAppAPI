@@ -5,7 +5,6 @@ using RaveAppAPI.Contracts.User;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
 using RaveAppAPI.Services.RequestModel.User;
-using System.Collections.Generic;
 
 namespace RaveAppAPI.Controllers
 {
@@ -74,7 +73,15 @@ namespace RaveAppAPI.Controllers
                 deleted => NoContent(),
                 errors => Problem(errors));
         }
+        [HttpGet("GetRoles")]
+        public IActionResult GetRoles()
+        {
+            ErrorOr<List<RolesUsuario>> getRolesResult = _usuarioService.GetRolesUsuario();
 
+            return getRolesResult.Match(
+                roles => Ok(MapRolesUsuarioResponse(roles)),
+                errors => Problem(errors));
+        }
         private static UsuarioResponse MapUsuarioResponse(List<Usuario> usuarios)
         {
             return new UsuarioResponse(
