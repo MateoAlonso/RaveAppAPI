@@ -252,5 +252,95 @@ namespace RaveAppAPI.Services.Repository
                 return Error.Unexpected();
             }
         }
+        public ErrorOr<List<GeneroEvento>> GetGeneros()
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDGetGeneros, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            List<GeneroEvento> generos = ReaderMaper.ReaderToObject<GeneroEvento>(reader).ToList();
+                            return generos;
+                        }
+                        else
+                        {
+                            return Error.NotFound();
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
+
+        }
+        public ErrorOr<List<Estado>> GetEstadosEvento()
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDGetEstadosEvento, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            List<Estado> estados = ReaderMaper.ReaderToObject<Estado>(reader).ToList();
+                            return estados;
+                        }
+                        else
+                        {
+                            return Error.NotFound();
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
+
+        }
+        public ErrorOr<List<Estado>> GetEstadosFecha()
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDGetEstadosFecha, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            List<Estado> estados = ReaderMaper.ReaderToObject<Estado>(reader).ToList();
+                            return estados;
+                        }
+                        else
+                        {
+                            return Error.NotFound();
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
+
+        }
     }
 }

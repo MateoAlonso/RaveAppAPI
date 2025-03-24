@@ -25,7 +25,10 @@ try
         .AddJwtBearer(options => options.TokenValidationParameters = new()
         {
             ValidateIssuer = true,
-            ValidateLifetime = true,
+            RequireExpirationTime = false,
+            RequireAudience = false,
+            ValidateAudience = false,
+            ValidateLifetime = false,
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["ValidIssuer"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["SigningKey"]))

@@ -12,9 +12,8 @@ namespace RaveAppAPI.Services.Helpers
         public const string PCDDeleteUsuario = "PCD_USUARIOS_DeleteUsuario";
         public const string PCDGetUsuarioById = "PCD_USUARIOS_GetUsuarioById";
         public const string PCDGetUsuario = "PCD_USUARIOS_GetUsuario";
-        public const string PCDGetUsuarioByMail = "PCD_USUARIOS_GetUsuarioByMail";
         public const string PCDUpdateUsuario = "PCD_USUARIOS_UpdateUsuario";
-        public const string PCDGetRolesUsuarioByMail = "PCD_USUARIOS_GetRolesUsuarioByMail";
+        public const string PCDGetRolesUsuario = "PCD_USUARIOS_GetRolesUsuario";
         #endregion
 
         #region Usuario Parameters
@@ -133,7 +132,9 @@ namespace RaveAppAPI.Services.Helpers
 
         #region Evento PCDS
         public const string PCDGetEventos = "PCD_EVENTOS_GetEventos";
-        public const string PCDGetGeneros = "PCD_EVENTOS_GetGenerosEvento";
+        public const string PCDGetGeneros = "PCD_EVENTOS_GetGeneros";
+        public const string PCDGetEstadosEvento = "PCD_EVENTOS_GetEstadosEvento";
+        public const string PCDGetEstadosFecha = "PCD_EVENTOS_GetEstadosFecha";
         public const string PCDGetFechas = "PCD_EVENTOS_GetFechasEvento";
         public const string PCDSetFechas = "PCD_EVENTOS_SetFechaEvento";
         public const string PCDUpdateFechas = "PCD_EVENTOS_UpdateFechaEvento";

@@ -100,7 +100,6 @@ namespace RaveAppAPI.Services.Repository
             }
 
         }
-        
         public ErrorOr<Updated> UpdateUsuario(Usuario usuario)
         {
             try
@@ -128,6 +127,37 @@ namespace RaveAppAPI.Services.Repository
                 Logger.LogError(e.Message);
                 return Error.Unexpected();
             }
+        }
+        public ErrorOr<List<RolesUsuario>> GetRolesUsuario()
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDGetRolesUsuario, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            List<RolesUsuario> roles = ReaderMaper.ReaderToObject<RolesUsuario>(reader).ToList();
+                            return roles;
+                        }
+                        else
+                        {
+                            return Error.NotFound();
+                        }
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
+
         }
     }
 }
