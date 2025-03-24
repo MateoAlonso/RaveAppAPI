@@ -11,10 +11,10 @@ namespace RaveAppAPI.Services.Helpers
         public static string GetConnectionString()
         {
 #if DEBUG
-        return Environment.GetEnvironmentVariable("dbcon", EnvironmentVariableTarget.Machine);
+        return Environment.GetEnvironmentVariable("RAVEAPP_dbcon", EnvironmentVariableTarget.Machine);
 #else
-        return Environment.GetEnvironmentVariable("dbcon");
+        return Environment.GetEnvironmentVariable("RAVEAPP_dbcon");
 #endif
-        }          
+        }
     }
 }

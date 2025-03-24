@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace RaveAppAPI.Services.Models
 {
-    public class RolesUsuario
+    public class Estado
     {
-        [ColumnName("cdrol")]
-        public int CdRol { get; set; }
-        [ColumnName("dsrol")]
-        public string DsRol { get; set; }
+        [ColumnName("cdestado")]
+        public int CdEstado { get; set; }
+        [ColumnName("dsestado")]
+        public string DsEstado { get; set; }
     }
 }

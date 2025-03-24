@@ -77,12 +77,37 @@ namespace RaveAppAPI.Controllers
                 deleted => NoContent(),
                 errors => Problem(errors));
         }
+        [HttpGet("GetGeneros")]
+        public IActionResult GetGeneros()
+        {
+            ErrorOr<List<GeneroEvento>> getGenerosResult = _eventoService.GetGeneros();
 
+            return getGenerosResult.Match(
+                generos => Ok(generos),
+                errors => Problem(errors));
+        }
+        [HttpGet("GetEstadosEvento")]
+        public IActionResult GetEstadosEvento()
+        {
+            ErrorOr<List<Estado>> getEstadosEventoResult = _eventoService.GetEstadosEvento();
+
+            return getEstadosEventoResult.Match(
+                estados => Ok(estados),
+                errors => Problem(errors));
+        }
+        [HttpGet("GetEstadosFecha")]
+        public IActionResult GetEstadosFecha()
+        {
+            ErrorOr<List<Estado>> getEstadosFechaResult = _eventoService.GetEstadosFecha();
+
+            return getEstadosFechaResult.Match(
+                estados => Ok(estados),
+                errors => Problem(errors));
+        }
         private static EventoResponse MapEventoResponse(List<Evento> eventos)
         {
             return new EventoResponse(eventos);
         }
-
         private static CreateEventoResponse MapCreateEventoResponse(Evento evento)
         {
             return new CreateEventoResponse(evento.IdEvento);
