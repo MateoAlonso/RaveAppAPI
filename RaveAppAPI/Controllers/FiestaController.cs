@@ -35,8 +35,8 @@ namespace RaveAppAPI.Controllers
                 errors => Problem(errors)
                 );
         }
-        [HttpPost("GetFiestas")]
-        public IActionResult GetFiestas(GetFiestaRequest request)
+        [HttpGet("GetFiestas")]
+        public IActionResult GetFiestas([FromQuery]GetFiestaRequest request)
         {
             ErrorOr<List<Fiesta>> getFiestaResult = _fiestaService.GetFiestas(request);
 
