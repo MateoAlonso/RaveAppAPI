@@ -36,8 +36,8 @@ namespace RaveAppAPI.Controllers
                 errors => Problem(errors));
         }
 
-        [HttpPost("GetUsuario")]
-        public IActionResult GetUsuario(GetUsuarioRequest request)
+        [HttpGet("GetUsuario")]
+        public IActionResult GetUsuario([FromQuery]GetUsuarioRequest request)
         {
             ErrorOr<List<Usuario>> getUsuarioResult = _usuarioService.GetUsuario(request);
 
