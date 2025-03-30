@@ -83,7 +83,13 @@ namespace RaveAppAPI.Services.Helpers
                 {
                     if (IsSimpleType(prop.PropertyType))
                     {
-                        object value = Convert.ChangeType(rd.GetValue(ordinal), prop.PropertyType);
+                        //object value = Convert.ChangeType(rd.GetValue(ordinal), prop.PropertyType);
+                        //prop.SetValue(instance, value);
+                        object value = rd.GetValue(ordinal);
+                        if (string.Equals(prop.PropertyType.GetTypeInfo().Name.ToUpper(), "BOOLEAN"))
+                        {
+                            value = Convert.ToBoolean(value);
+                        }
                         prop.SetValue(instance, value);
                     }
                 }
