@@ -74,9 +74,9 @@ namespace RaveAppAPI.Controllers
                 errors => Problem(errors));
         }
         [HttpGet("GetRoles")]
-        public IActionResult GetRoles()
+        public IActionResult GetRoles(string? idUsuario)
         {
-            ErrorOr<List<RolesUsuario>> getRolesResult = _usuarioService.GetRolesUsuario();
+            ErrorOr<List<RolesUsuario>> getRolesResult = _usuarioService.GetRolesUsuario(idUsuario);
 
             return getRolesResult.Match(
                 roles => Ok(MapRolesUsuarioResponse(roles)),
