@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Microsoft.IdentityModel.Tokens;
+using MySql.Data.MySqlClient;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.RequestModel.Evento;
 using RaveAppAPI.Services.RequestModel.Fiesta;
@@ -38,6 +39,7 @@ namespace RaveAppAPI.Services.Helpers
                 new ("p_dsCbu", usuario.CBU),
                 new ("p_dsNombreFantasia", usuario.NombreFantasia),
                 new ("p_dsBio", usuario.Bio),
+                new ("p_idUsuario", MySqlDbType.VarChar, 36) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
             };
@@ -73,8 +75,17 @@ namespace RaveAppAPI.Services.Helpers
         {
             return new MySqlParameter("p_correo", mail);
         }
+        internal static MySqlParameter GetRolesUsuarioParameters(string idusuario)
+        {
+            return new MySqlParameter("p_idUsuario", idusuario);
+        }
         public static MySqlParameter[] UpdateUsuarioParameters(Usuario usuario)
         {
+            string cdRolList = null;
+            if (!usuario.Roles.IsNullOrEmpty())
+            {
+                cdRolList = string.Join(",", usuario.Roles.Select(u => u.CdRol));
+            }
             return new MySqlParameter[]
             {
                 new ("p_idUsuario", usuario.IdUsuario),
@@ -95,6 +106,7 @@ namespace RaveAppAPI.Services.Helpers
                 new ("p_dsCbu", usuario.CBU),
                 new ("p_dsNombreFantasia", usuario.NombreFantasia),
                 new ("p_dsBio", usuario.Bio),
+                new ("p_cdRolList", cdRolList),
                 new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
             };
