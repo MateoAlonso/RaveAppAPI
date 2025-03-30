@@ -26,6 +26,7 @@ namespace RaveAppAPI.Services.Repository
                     int ok = Convert.ToInt32(cmd.Parameters["p_ok"].Value);
                     if (ok == 1)
                     {
+                        usuario.IdUsuario = cmd.Parameters["p_idUsuario"].Value.ToString();
                         return Result.Created;
                     }
                     else
@@ -82,7 +83,8 @@ namespace RaveAppAPI.Services.Repository
                     {
                         if (reader.HasRows)
                         {
-                            List<Usuario> usuarios = ReaderMaper.ReaderToObject<Usuario>(reader).ToList();
+                            List<Usuario> usuarios = ReaderMaper.ReaderToObjectRecursive<Usuario>(reader).ToList();
+                            usuarios.ForEach( u => u.Roles = (GetRolesUsuario(u.IdUsuario).Value));
                             return usuarios;
                         }
                         else
@@ -128,7 +130,7 @@ namespace RaveAppAPI.Services.Repository
                 return Error.Unexpected();
             }
         }
-        public ErrorOr<List<RolesUsuario>> GetRolesUsuario()
+        public ErrorOr<List<RolesUsuario>> GetRolesUsuario(string idusuario)
         {
             try
             {
@@ -137,6 +139,7 @@ namespace RaveAppAPI.Services.Repository
                     dbcon.Open();
                     MySqlCommand cmd = new(ProcedureHelper.PCDGetRolesUsuario, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(ProcedureHelper.GetRolesUsuarioParameters(idusuario));
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)
