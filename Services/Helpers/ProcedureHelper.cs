@@ -155,6 +155,7 @@ namespace RaveAppAPI.Services.Helpers
         public const string PCDSetEvento = "PCD_EVENTOS_SetEvento";
         public const string PCDDeleteEvento = "PCD_EVENTOS_DeleteEvento";
         public const string PCDUpdateEvento = "PCD_EVENTOS_UpdateEvento";
+        public const string PCDGetEntradasFecha = "PCD_EVENTO_GetEntradasFecha";
         #endregion
 
         #region Evento Parameters
@@ -261,7 +262,10 @@ namespace RaveAppAPI.Services.Helpers
         {
             return new MySqlParameter("p_idEvento", idEvento);
         }
-
+        public static MySqlParameter GetEntradasFechaParameters(string idFecha)
+        {
+            return new MySqlParameter("p_idFecha", idFecha);
+        }
         public static MySqlParameter[] SetFechaParameters(Fecha fecha, string idEvento)
         {
             return new MySqlParameter[]
