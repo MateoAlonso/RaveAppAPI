@@ -67,7 +67,7 @@ namespace RaveAppAPI.Services.Repository
             }
         }
 
-        public ErrorOr<List<Noticia>> GetNoticias()
+        public ErrorOr<List<Noticia>> GetNoticias(string idNoticia)
         {
             try
             {
@@ -76,6 +76,7 @@ namespace RaveAppAPI.Services.Repository
                     dbcon.Open();
                     MySqlCommand cmd = new(ProcedureHelper.PCDGetNoticias, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(ProcedureHelper.GetNoticiaParameters(idNoticia));
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)
@@ -100,7 +101,23 @@ namespace RaveAppAPI.Services.Repository
 
         public ErrorOr<Updated> UpdateNoticia(Noticia noticia)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDUpdateNoticia, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddRange(ProcedureHelper.UpdateNoticiaParameters(noticia));
+                    cmd.ExecuteNonQuery();
+                    return Result.Updated;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
         }
     }
 }
