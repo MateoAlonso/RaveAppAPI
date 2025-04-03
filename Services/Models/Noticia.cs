@@ -50,6 +50,10 @@ namespace RaveAppAPI.Services.Models
         {
             return Crear(request.titulo, request.contenido, request.imagen, request.dtpublicado);
         }
+        public static ErrorOr<Noticia> From(UpdateNoticiaRequest request)
+        {
+            return Crear(request.Titulo, request.Contenido, request.Imagen, request.DtPublicado, request.IdNoticia);
+        }
     }
 
 }

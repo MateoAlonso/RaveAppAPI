@@ -36,32 +36,31 @@ namespace RaveAppAPI.Controllers
         }
 
         [HttpGet()]
-        public IActionResult GetNoticias()
+        public IActionResult GetNoticias(string? idNoticia)
         {
-            ErrorOr<List<Noticia>> getNoticiaResult = _noticiaService.GetNoticias();
+            ErrorOr<List<Noticia>> getNoticiaResult = _noticiaService.GetNoticias(idNoticia);
 
             return getNoticiaResult.Match(
                 noticias => Ok(MapNoticiaResponse(noticias)),
                 errors => Problem(errors));
         }
 
-        [HttpPut("{id}")]
-        public IActionResult UpdateNoticia(/*string id, UpdateNoticiaRequest request*/)
+        [HttpPut()]
+        public IActionResult UpdateNoticia(UpdateNoticiaRequest request)
         {
-            throw new NotImplementedException();
-            //ErrorOr<Noticia> requestToNoticiaResult = Noticia.From(id, request);
+            ErrorOr<Noticia> requestToNoticiaResult = Noticia.From(request);
 
-            //if (requestToNoticiaResult.IsError)
-            //{
-            //    return Problem(requestToNoticiaResult.Errors);
-            //}
+            if (requestToNoticiaResult.IsError)
+            {
+                return Problem(requestToNoticiaResult.Errors);
+            }
 
-            //var noticia = requestToNoticiaResult.Value;
-            //ErrorOr<Updated> updateNoticiaResult = _noticiaService.UpdateNoticia(noticia);
+            var noticia = requestToNoticiaResult.Value;
+            ErrorOr<Updated> updateNoticiaResult = _noticiaService.UpdateNoticia(noticia);
 
-            //return updateNoticiaResult.Match(
-            //                   updated => Ok(MapNoticiaResponse(noticia)),
-            //                                  errors => Problem(errors));
+            return updateNoticiaResult.Match(
+                updated => NoContent(),
+                errors => Problem(errors));
         }
 
         [HttpDelete("{id}")]

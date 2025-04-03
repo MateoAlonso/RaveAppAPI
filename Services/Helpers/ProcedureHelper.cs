@@ -116,6 +116,7 @@ namespace RaveAppAPI.Services.Helpers
         #region Noticia PCDS
         public const string PCDCreateNoticia = "PCD_NOTICIAS_SetNoticia";
         public const string PCDDeleteNoticia = "PCD_NOTICIAS_DeleteNoticia";
+        public const string PCDUpdateNoticia = "PCD_NOTICIAS_UpdateNoticia";
         public const string PCDGetNoticias = "PCD_NOTICIAS_GetNoticias";
         public const string PCDGetNoticiaById = "PCD_NOTICIAS_UpdateNoticia";
         #endregion
@@ -130,6 +131,19 @@ namespace RaveAppAPI.Services.Helpers
                 new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
             };
+        }
+        public static MySqlParameter[] UpdateNoticiaParameters(Noticia noticia)
+        {
+            return new MySqlParameter[]
+            {
+                new ("p_dsTitulo", noticia.Titulo),
+                new ("p_dsContenido", noticia.Contenido),
+                new ("p_idNoticia", noticia.IdNoticia)
+            };
+        }
+        public static MySqlParameter GetNoticiaParameters(string idNoticia)
+        {
+            return new MySqlParameter("p_idNoticia", idNoticia);
         }
         public static MySqlParameter[] DeleteNoticiaParameters(string id)
         {
