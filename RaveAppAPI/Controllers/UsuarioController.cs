@@ -45,6 +45,15 @@ namespace RaveAppAPI.Controllers
                 usuario => Ok(MapUsuarioResponse(usuario)),
                 errors => Problem(errors));
         }
+        [HttpGet("Login")]
+        public IActionResult Login([FromQuery] LoginUsuarioRequest request)
+        {
+            ErrorOr<bool> loginResult = _usuarioService.Login(request);
+
+            return loginResult.Match(
+                result => Ok(result),
+                errors => Problem(errors));
+        }
 
         [HttpPut("UpdateUsuario")]
         public IActionResult UpdateUsuario(UpdateUsuarioRequest request)

@@ -11,5 +11,6 @@ namespace RaveAppAPI.Services.Repository.Contracts
         ErrorOr<Updated> UpdateUsuario(Usuario usuario);
         ErrorOr<Deleted> DeleteUsuario(string id);
         ErrorOr<List<RolesUsuario>> GetRolesUsuario(string idusuario);
+        ErrorOr<bool> Login(LoginUsuarioRequest request);
     }
 }
