@@ -3,6 +3,7 @@ using MySql.Data.MySqlClient;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.RequestModel.Evento;
 using RaveAppAPI.Services.RequestModel.Fiesta;
+using RaveAppAPI.Services.RequestModel.User;
 
 namespace RaveAppAPI.Services.Helpers
 {
@@ -15,6 +16,7 @@ namespace RaveAppAPI.Services.Helpers
         public const string PCDGetUsuario = "PCD_USUARIOS_GetUsuario";
         public const string PCDUpdateUsuario = "PCD_USUARIOS_UpdateUsuario";
         public const string PCDGetRolesUsuario = "PCD_USUARIOS_GetRolesUsuario";
+        public const string PCDLoginUsuario = "PCD_USUARIOS_LoginUsuario";
         #endregion
 
         #region Usuario Parameters
@@ -109,6 +111,15 @@ namespace RaveAppAPI.Services.Helpers
                 new ("p_cdRolList", cdRolList),
                 new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
+            };
+        }
+        public static MySqlParameter[] GetLoginUsuarioParameters(LoginUsuarioRequest request)
+        {
+            return new MySqlParameter[]
+            {
+                new ("p_dsCorreo", request.Correo),
+                new ("p_dspass", request.Password),
+                new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output }
             };
         }
         #endregion
