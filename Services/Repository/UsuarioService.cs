@@ -232,7 +232,6 @@ namespace RaveAppAPI.Services.Repository
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.Parameters.AddRange(ProcedureHelper.RecoverPassUsuarioParameters(request));
                     cmd.ExecuteNonQuery();
-                    int ok = Convert.ToInt32(cmd.Parameters["p_ok"].Value);
                     return Result.Updated;
                 }
             }
