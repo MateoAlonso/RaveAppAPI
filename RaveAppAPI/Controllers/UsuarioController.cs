@@ -60,7 +60,7 @@ namespace RaveAppAPI.Controllers
             ErrorOr<Updated> resetPassResult = _usuarioService.ResetPass(request);
 
             return resetPassResult.Match(
-                result => Ok(result),
+                updated => NoContent(),
                 errors => Problem(errors));
         }
         [HttpPut("RecoverPass")]
@@ -69,7 +69,7 @@ namespace RaveAppAPI.Controllers
             ErrorOr<Updated> recoverPassResult = _usuarioService.RecoverPass(request);
 
             return recoverPassResult.Match(
-                result => Ok(result),
+                updated => NoContent(),
                 errors => Problem(errors));
         }
         [HttpPut("UpdateUsuario")]
