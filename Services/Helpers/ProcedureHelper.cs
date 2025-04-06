@@ -1,6 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using MySql.Data.MySqlClient;
 using RaveAppAPI.Services.Models;
+using RaveAppAPI.Services.RequestModel.Artista;
 using RaveAppAPI.Services.RequestModel.Evento;
 using RaveAppAPI.Services.RequestModel.Fiesta;
 using RaveAppAPI.Services.RequestModel.User;
@@ -17,6 +18,8 @@ namespace RaveAppAPI.Services.Helpers
         public const string PCDUpdateUsuario = "PCD_USUARIOS_UpdateUsuario";
         public const string PCDGetRolesUsuario = "PCD_USUARIOS_GetRolesUsuario";
         public const string PCDLoginUsuario = "PCD_USUARIOS_LoginUsuario";
+        public const string PCDRecoverPassUsuario = "PCD_USUARIOS_ResetPass";
+        public const string PCDResetPassUsuario = "PCD_USUARIOS_RecoverPass";
         #endregion
 
         #region Usuario Parameters
@@ -120,6 +123,24 @@ namespace RaveAppAPI.Services.Helpers
                 new ("p_dsCorreo", request.Correo),
                 new ("p_dspass", request.Password),
                 new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output }
+            };
+        }
+        public static MySqlParameter[] ResetPassUsuarioParameters(ResetPassUsuarioRequest request)
+        {
+            return new MySqlParameter[]
+            {
+                new ("p_dsCorreo", request.Correo),
+                new ("p_dspass", request.Pass),
+                new ("p_dsNewPass", request.NewPass),
+                new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output }
+            };
+        }
+        public static MySqlParameter[] RecoverPassUsuarioParameters(RecoverPassUsuarioRequest request)
+        {
+            return new MySqlParameter[]
+            {
+                new ("p_dsCorreo", request.Correo),
+                new ("p_dspass", request.NewPass)
             };
         }
         #endregion
@@ -353,6 +374,47 @@ namespace RaveAppAPI.Services.Helpers
         public static MySqlParameter DeleteFiestaParameters(string idFiesta)
         {
             return new MySqlParameter ("p_idFiesta", idFiesta);
+        }
+        #endregion
+
+        #region Artista PCDS
+        public const string PCDCreateArtista = "PCD_ARTISTAS_SetArtista";
+        public const string PCDGetArtistas = "PCD_ARTISTAS_GetArtistas";
+        public const string PCDUpdateArtista = "PCD_ARTISTAS_UpdateArtista";
+        public const string PCDCDeleteArtista = "PCD_ARTISTAS_DeleteArtista";
+        #endregion
+
+        #region Artista Parameters
+        public static MySqlParameter[] CreateArtistaParameters(Artista artista)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_dsNombre", artista.Nombre),
+                new MySqlParameter ("p_dsBio", artista.Bio),
+                new MySqlParameter ("p_idArtista", MySqlDbType.VarChar, 36) { Direction = System.Data.ParameterDirection.Output }
+            };
+        }
+        public static MySqlParameter[] GetArtistasParameters(GetArtistaRequest request)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_idArtista", request.idArtista),
+                new MySqlParameter ("p_isActivo", request.isActivo)
+            };
+        }
+        public static MySqlParameter[] UpdateArtistaParameters(Artista artista)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_idArtista", artista.IdArtista),
+                new MySqlParameter ("p_dsNombre", artista.Nombre),
+                new MySqlParameter ("p_dsBio", artista.Bio),
+                new MySqlParameter ("p_isActivo", artista.IsActivo)
+            };
+        }
+        public static MySqlParameter DeleteArtistasParameters(string idArtista)
+        {
+            return new MySqlParameter("p_idArtista", idArtista);
         }
         #endregion
     }

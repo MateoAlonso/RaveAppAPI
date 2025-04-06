@@ -15,6 +15,7 @@ try
     builder.Services.AddScoped<IEventoService, EventoService>();
     builder.Services.AddScoped<IHealthService, HealthService>();
     builder.Services.AddScoped<IFiestaService, FiestaService>();
+    builder.Services.AddScoped<IArtistaService, ArtistaService>();
 
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
