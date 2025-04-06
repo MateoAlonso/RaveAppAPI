@@ -191,5 +191,56 @@ namespace RaveAppAPI.Services.Repository
                 return Error.Unexpected();
             }
         }
+
+        public ErrorOr<Updated> ResetPass(ResetPassUsuarioRequest request)
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDResetPassUsuario, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddRange(ProcedureHelper.ResetPassUsuarioParameters(request));
+                    cmd.ExecuteNonQuery();
+                    int ok = Convert.ToInt32(cmd.Parameters["p_ok"].Value);
+                    if (ok == 1)
+                    {
+                        return Result.Updated;
+                    }
+                    else
+                    {
+                        return Error.Failure("Usuario o contraseña incorrecta");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
+        }
+
+        public ErrorOr<Updated> RecoverPass(RecoverPassUsuarioRequest request)
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDRecoverPassUsuario, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddRange(ProcedureHelper.RecoverPassUsuarioParameters(request));
+                    cmd.ExecuteNonQuery();
+                    int ok = Convert.ToInt32(cmd.Parameters["p_ok"].Value);
+                    return Result.Updated;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
+        }
     }
 }

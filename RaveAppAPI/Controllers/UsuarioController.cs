@@ -54,7 +54,24 @@ namespace RaveAppAPI.Controllers
                 result => Ok(result),
                 errors => Problem(errors));
         }
+        [HttpPut("ResetPass")]
+        public IActionResult ResetPass([FromQuery] ResetPassUsuarioRequest request)
+        {
+            ErrorOr<Updated> resetPassResult = _usuarioService.ResetPass(request);
 
+            return resetPassResult.Match(
+                result => Ok(result),
+                errors => Problem(errors));
+        }
+        [HttpPut("RecoverPass")]
+        public IActionResult RecoverPass([FromQuery] RecoverPassUsuarioRequest request)
+        {
+            ErrorOr<Updated> recoverPassResult = _usuarioService.RecoverPass(request);
+
+            return recoverPassResult.Match(
+                result => Ok(result),
+                errors => Problem(errors));
+        }
         [HttpPut("UpdateUsuario")]
         public IActionResult UpdateUsuario(UpdateUsuarioRequest request)
         {

@@ -12,5 +12,7 @@ namespace RaveAppAPI.Services.Repository.Contracts
         ErrorOr<Deleted> DeleteUsuario(string id);
         ErrorOr<List<RolesUsuario>> GetRolesUsuario(string idusuario);
         ErrorOr<bool> Login(LoginUsuarioRequest request);
+        ErrorOr<Updated> ResetPass(ResetPassUsuarioRequest request);
+        ErrorOr<Updated> RecoverPass(RecoverPassUsuarioRequest request);
     }
 }

@@ -17,6 +17,8 @@ namespace RaveAppAPI.Services.Helpers
         public const string PCDUpdateUsuario = "PCD_USUARIOS_UpdateUsuario";
         public const string PCDGetRolesUsuario = "PCD_USUARIOS_GetRolesUsuario";
         public const string PCDLoginUsuario = "PCD_USUARIOS_LoginUsuario";
+        public const string PCDRecoverPassUsuario = "PCD_USUARIOS_ResetPass";
+        public const string PCDResetPassUsuario = "PCD_USUARIOS_RecoverPass";
         #endregion
 
         #region Usuario Parameters
@@ -120,6 +122,24 @@ namespace RaveAppAPI.Services.Helpers
                 new ("p_dsCorreo", request.Correo),
                 new ("p_dspass", request.Password),
                 new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output }
+            };
+        }
+        public static MySqlParameter[] ResetPassUsuarioParameters(ResetPassUsuarioRequest request)
+        {
+            return new MySqlParameter[]
+            {
+                new ("p_dsCorreo", request.Correo),
+                new ("p_dspass", request.Pass),
+                new ("p_dsNewPass", request.NewPass),
+                new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output }
+            };
+        }
+        public static MySqlParameter[] RecoverPassUsuarioParameters(RecoverPassUsuarioRequest request)
+        {
+            return new MySqlParameter[]
+            {
+                new ("p_dsCorreo", request.Correo),
+                new ("p_dspass", request.NewPass)
             };
         }
         #endregion
