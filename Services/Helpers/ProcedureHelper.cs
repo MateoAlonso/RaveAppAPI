@@ -44,6 +44,7 @@ namespace RaveAppAPI.Services.Helpers
                 new ("p_dsCbu", usuario.CBU),
                 new ("p_dsNombreFantasia", usuario.NombreFantasia),
                 new ("p_dsBio", usuario.Bio),
+                new ("p_dsPass", usuario.Pass),
                 new ("p_idUsuario", MySqlDbType.VarChar, 36) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
