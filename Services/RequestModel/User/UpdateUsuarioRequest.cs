@@ -1,4 +1,3 @@
-using Org.BouncyCastle.Asn1.Ocsp;
 using RaveAppAPI.Services.Models;
 
 namespace RaveAppAPI.Contracts.User

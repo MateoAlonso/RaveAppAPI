@@ -11,7 +11,7 @@ namespace RaveAppAPI.Services.Models
         public int Codigo { get; set; }
         public Provincia()
         {
-            
+
         }
         private Provincia(int codigo, string nombre)
         {

@@ -2,9 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RaveAppAPI.Services.Models;
-using RaveAppAPI.Services.Repository;
 using RaveAppAPI.Services.Repository.Contracts;
-using RaveAppAPI.Services.RequestModel.Evento;
 using RaveAppAPI.Services.RequestModel.Fiesta;
 
 namespace RaveAppAPI.Controllers
@@ -19,7 +17,7 @@ namespace RaveAppAPI.Controllers
             _fiestaService = fiestaService;
         }
         [HttpPost("CrearFiesta")]
-        public IActionResult CreateFiesta(CreateFiestaRequest request) 
+        public IActionResult CreateFiesta(CreateFiestaRequest request)
         {
             ErrorOr<Fiesta> requestToFiestaResult = Fiesta.From(request);
 
@@ -36,7 +34,7 @@ namespace RaveAppAPI.Controllers
                 );
         }
         [HttpGet("GetFiestas")]
-        public IActionResult GetFiestas([FromQuery]GetFiestaRequest request)
+        public IActionResult GetFiestas([FromQuery] GetFiestaRequest request)
         {
             ErrorOr<List<Fiesta>> getFiestaResult = _fiestaService.GetFiestas(request);
 
@@ -75,7 +73,7 @@ namespace RaveAppAPI.Controllers
         {
             return CreatedAtAction(
                 actionName: nameof(CreateFiesta),
-                routeValues: new {id = fiesta.IdFiesta },
+                routeValues: new { id = fiesta.IdFiesta },
                 value: MapCreateFiestaResponse(fiesta)
                 );
         }

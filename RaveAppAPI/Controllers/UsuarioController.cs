@@ -12,10 +12,12 @@ namespace RaveAppAPI.Controllers
     public class UsuarioController : ApiController
     {
         private readonly IUsuarioService _usuarioService;
+        private readonly IMediaService _mediaService;
 
-        public UsuarioController(IUsuarioService usuarioService)
+        public UsuarioController(IUsuarioService usuarioService, IMediaService mediaService)
         {
             _usuarioService = usuarioService;
+            _mediaService = mediaService;
         }
 
         [HttpPost("CreateUsuario")]
@@ -37,10 +39,20 @@ namespace RaveAppAPI.Controllers
         }
 
         [HttpGet("GetUsuario")]
-        public IActionResult GetUsuario([FromQuery]GetUsuarioRequest request)
+        public IActionResult GetUsuario([FromQuery] GetUsuarioRequest request)
         {
             ErrorOr<List<Usuario>> getUsuarioResult = _usuarioService.GetUsuario(request);
-
+            if (!getUsuarioResult.IsError)
+            {
+                foreach (Usuario usuario in getUsuarioResult.Value)
+                {
+                    ErrorOr<List<Media>> getMediaResult = _mediaService.GetMedia(usuario.IdUsuario);
+                    if (!getMediaResult.IsError)
+                    {
+                        usuario.Media = getMediaResult.Value;
+                    }
+                }
+            }
             return getUsuarioResult.Match(
                 usuario => Ok(MapUsuarioResponse(usuario)),
                 errors => Problem(errors));
