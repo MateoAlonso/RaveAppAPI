@@ -1,12 +1,9 @@
 ﻿using ErrorOr;
 using MySql.Data.MySqlClient;
-using Mysqlx.Expr;
-using Org.BouncyCastle.Asn1.Ocsp;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
 using RaveAppAPI.Services.RequestModel.Evento;
-using Serilog.Events;
 using Error = ErrorOr.Error;
 
 namespace RaveAppAPI.Services.Repository
@@ -82,7 +79,7 @@ namespace RaveAppAPI.Services.Repository
                 using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
-                    
+
                     MySqlCommand cmd = new(ProcedureHelper.PCDDeleteEvento, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.Parameters.AddRange(ProcedureHelper.DeleteEventoParameters(id));
@@ -119,10 +116,10 @@ namespace RaveAppAPI.Services.Repository
                         if (reader.HasRows)
                         {
                             List<Evento> eventos = ReaderMaper.ReaderToObjectRecursive<Evento>(reader).ToList();
-                            eventos.ForEach(e => 
-                            { 
-                                e.Genero = GetGeneros(e.IdEvento); 
-                                e.Fechas = GetFechas(e.IdEvento); 
+                            eventos.ForEach(e =>
+                            {
+                                e.Genero = GetGeneros(e.IdEvento);
+                                e.Fechas = GetFechas(e.IdEvento);
                             });
                             return eventos;
                         }
@@ -167,7 +164,7 @@ namespace RaveAppAPI.Services.Repository
             return fechas;
         }
 
-        private List<int> GetGeneros(string idEvento) 
+        private List<int> GetGeneros(string idEvento)
         {
             List<int> generos = new();
             try

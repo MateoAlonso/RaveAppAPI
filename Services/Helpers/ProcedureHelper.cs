@@ -63,7 +63,7 @@ namespace RaveAppAPI.Services.Helpers
         {
             return new MySqlParameter("p_idusuario", id);
         }
-        public static MySqlParameter[] GetUsuarioParameters(string idUsuario, string mail, bool?     isActivo, int? rol)
+        public static MySqlParameter[] GetUsuarioParameters(string idUsuario, string mail, bool? isActivo, int? rol)
         {
             return new MySqlParameter[]
             {
@@ -210,7 +210,7 @@ namespace RaveAppAPI.Services.Helpers
             string cdGeneros = null;
             if (eventoRequest.Genero != null)
             {
-               cdGeneros = string.Join(",", eventoRequest.Genero.Select(e => e));
+                cdGeneros = string.Join(",", eventoRequest.Genero.Select(e => e));
             }
             return new MySqlParameter[]
             {
@@ -225,7 +225,7 @@ namespace RaveAppAPI.Services.Helpers
                 new MySqlParameter ("p_idFiesta", eventoRequest.idFiesta),
             };
         }
-        public static MySqlParameter GetGenerosParameters(string idEvento) 
+        public static MySqlParameter GetGenerosParameters(string idEvento)
         {
             return new MySqlParameter("p_idEvento", idEvento);
         }
@@ -374,7 +374,7 @@ namespace RaveAppAPI.Services.Helpers
         }
         public static MySqlParameter DeleteFiestaParameters(string idFiesta)
         {
-            return new MySqlParameter ("p_idFiesta", idFiesta);
+            return new MySqlParameter("p_idFiesta", idFiesta);
         }
         #endregion
 
@@ -416,6 +416,33 @@ namespace RaveAppAPI.Services.Helpers
         public static MySqlParameter DeleteArtistasParameters(string idArtista)
         {
             return new MySqlParameter("p_idArtista", idArtista);
+        }
+        #endregion
+
+        #region Media PCDS
+        public const string PCDGetMedia = "PCD_MEDIA_GetMedia";
+        public const string PCDCreateMedia = "PCD_MEDIA_SetMedia";
+        public const string PCDDeleteMedia = "PCD_MEDIA_DeleteMedia";
+        #endregion
+
+        #region Media Parameters
+        public static MySqlParameter[] CreateMediaParameters(Media media)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_idEntidadMedia", media.IdEntidadMedia),
+                new MySqlParameter ("p_mdImagen", media.Imagen),
+                new MySqlParameter ("p_mdVideo", media.Video),
+                new MySqlParameter ("p_idMedia", MySqlDbType.VarChar, 36) { Direction = System.Data.ParameterDirection.Output }
+            };
+        }
+        public static MySqlParameter DeleteMediaParameters(string idMedia)
+        {
+            return new MySqlParameter("p_idMedia", idMedia);
+        }
+        public static MySqlParameter GetMediaParameters(string idEntidadMedia)
+        {
+            return new MySqlParameter("p_idEntidadMedia", idEntidadMedia);
         }
         #endregion
     }

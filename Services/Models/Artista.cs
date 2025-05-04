@@ -1,11 +1,6 @@
 ﻿using ErrorOr;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.RequestModel.Artista;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RaveAppAPI.Services.Models
 {
@@ -21,19 +16,21 @@ namespace RaveAppAPI.Services.Models
         public DateTime? DtAlta { get; set; }
         [ColumnName("isactivo")]
         public sbyte? IsActivo { get; set; }
+        public List<Media> Media { get; set; }
         public Artista()
         {
-            
+
         }
-        public Artista(string idArtista, string nombre, string bio, DateTime? dtAlta, sbyte? isActivo)
+        public Artista(string idArtista, string nombre, string bio, DateTime? dtAlta, sbyte? isActivo, List<Media> media)
         {
             IdArtista = idArtista;
             Nombre = nombre;
             Bio = bio;
             DtAlta = dtAlta;
             IsActivo = isActivo;
+            Media = media;
         }
-        public static ErrorOr<Artista> Crear(string idArtista, string nombre, string bio, DateTime? dtAlta, sbyte? isActivo)
+        public static ErrorOr<Artista> Crear(string idArtista, string nombre, string bio, DateTime? dtAlta, sbyte? isActivo, List<Media> media)
         {
             List<Error> errors = new();
 
@@ -44,17 +41,17 @@ namespace RaveAppAPI.Services.Models
                 return errors;
             }
 
-            return new Artista(idArtista, nombre, bio, dtAlta, isActivo);
+            return new Artista(idArtista, nombre, bio, dtAlta, isActivo, media);
         }
 
         public static ErrorOr<Artista> From(CreateArtistaRequest request)
         {
-            return Crear(null, request.Nombre, request.Bio, null, null);
+            return Crear(null, request.Nombre, request.Bio, null, null, null);
         }
 
         public static ErrorOr<Artista> From(UpdateArtistaRequest request)
         {
-            return Crear(request.idArtista, request.Nombre, request.Bio, null, request.IsActivo);
+            return Crear(request.idArtista, request.Nombre, request.Bio, null, request.IsActivo, null);
         }
     }
 }

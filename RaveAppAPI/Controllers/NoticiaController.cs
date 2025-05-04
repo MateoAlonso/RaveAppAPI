@@ -11,10 +11,12 @@ namespace RaveAppAPI.Controllers
     public class NoticiaController : ApiController
     {
         private readonly INoticiaService _noticiaService;
+        private readonly IMediaService _mediaService;
 
-        public NoticiaController(INoticiaService noticiaService)
+        public NoticiaController(INoticiaService noticiaService, IMediaService mediaService)
         {
             _noticiaService = noticiaService;
+            _mediaService = mediaService;
         }
 
         [HttpPost]
@@ -39,6 +41,18 @@ namespace RaveAppAPI.Controllers
         public IActionResult GetNoticias(string? idNoticia)
         {
             ErrorOr<List<Noticia>> getNoticiaResult = _noticiaService.GetNoticias(idNoticia);
+
+            if (!getNoticiaResult.IsError)
+            {
+                foreach (Noticia noticia in getNoticiaResult.Value)
+                {
+                    ErrorOr<List<Media>> getMediaResult = _mediaService.GetMedia(idNoticia);
+                    if (!getMediaResult.IsError)
+                    {
+                        noticia.Media = getMediaResult.Value;
+                    }
+                }
+            }
 
             return getNoticiaResult.Match(
                 noticias => Ok(MapNoticiaResponse(noticias)),
@@ -81,11 +95,11 @@ namespace RaveAppAPI.Controllers
 
         private NoticiaResponse MapNoticiaResponse(List<Noticia> noticias)
         {
-            return new NoticiaResponse(noticias);      
+            return new NoticiaResponse(noticias);
         }
         private CreateNoticiaResponse MapCreateNoticiaResponse(Noticia noticia)
         {
-            return new CreateNoticiaResponse(noticia.IdNoticia, noticia.Titulo, noticia.Contenido, noticia.DtPublicado);      
+            return new CreateNoticiaResponse(noticia.IdNoticia, noticia.Titulo, noticia.Contenido, noticia.DtPublicado);
         }
     }
 }
