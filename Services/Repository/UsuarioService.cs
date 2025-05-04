@@ -84,7 +84,7 @@ namespace RaveAppAPI.Services.Repository
                         if (reader.HasRows)
                         {
                             List<Usuario> usuarios = ReaderMaper.ReaderToObjectRecursive<Usuario>(reader).ToList();
-                            usuarios.ForEach( u => u.Roles = (GetRolesUsuario(u.IdUsuario).Value));
+                            usuarios.ForEach(u => u.Roles = (GetRolesUsuario(u.IdUsuario).Value));
                             return usuarios;
                         }
                         else

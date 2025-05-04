@@ -3,26 +3,23 @@ using MySql.Data.MySqlClient;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
-using RaveAppAPI.Services.RequestModel.Artista;
 
 namespace RaveAppAPI.Services.Repository
 {
-    public class ArtistaService : IArtistaService
+    public class MediaService : IMediaService
     {
         private readonly string connectionString = DbHelper.GetConnectionString();
-
-        public ErrorOr<Created> CreateArtista(Artista artista)
+        public ErrorOr<Created> CreateMedia(Media media)
         {
             try
             {
                 using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
-                    MySqlCommand cmd = new(ProcedureHelper.PCDCreateArtista, dbcon);
+                    MySqlCommand cmd = new(ProcedureHelper.PCDCreateMedia, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddRange(ProcedureHelper.CreateArtistaParameters(artista));
+                    cmd.Parameters.AddRange(ProcedureHelper.CreateMediaParameters(media));
                     cmd.ExecuteNonQuery();
-                    artista.IdArtista = cmd.Parameters["p_idArtista"].Value.ToString();
                     return Result.Created;
                 }
             }
@@ -33,16 +30,16 @@ namespace RaveAppAPI.Services.Repository
             }
         }
 
-        public ErrorOr<Deleted> DeleteArtista(string idArtista)
+        public ErrorOr<Deleted> DeleteMedia(string idMedia)
         {
             try
             {
                 using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
-                    MySqlCommand cmd = new(ProcedureHelper.PCDCDeleteArtista, dbcon);
+                    MySqlCommand cmd = new(ProcedureHelper.PCDDeleteMedia, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.Add(ProcedureHelper.DeleteArtistasParameters(idArtista));
+                    cmd.Parameters.Add(ProcedureHelper.DeleteMediaParameters(idMedia));
                     cmd.ExecuteNonQuery();
                     return Result.Deleted;
                 }
@@ -54,22 +51,22 @@ namespace RaveAppAPI.Services.Repository
             }
         }
 
-        public ErrorOr<List<Artista>> GetArtistas(GetArtistaRequest request)
+        public ErrorOr<List<Media>> GetMedia(string idMediaEntidad)
         {
             try
             {
                 using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
-                    MySqlCommand cmd = new(ProcedureHelper.PCDGetArtistas, dbcon);
+                    MySqlCommand cmd = new(ProcedureHelper.PCDGetMedia, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddRange(ProcedureHelper.GetArtistasParameters(request));
+                    cmd.Parameters.Add(ProcedureHelper.GetMediaParameters(idMediaEntidad));
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)
                         {
-                            List<Artista> artistas = ReaderMaper.ReaderToObject<Artista>(reader).ToList();
-                            return artistas;
+                            List<Media> medias = ReaderMaper.ReaderToObject<Media>(reader).ToList();
+                            return medias;
                         }
                         else
                         {
@@ -77,27 +74,6 @@ namespace RaveAppAPI.Services.Repository
                         }
                     }
 
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.LogError(e.Message);
-                return Error.Unexpected();
-            }
-        }
-
-        public ErrorOr<Updated> UpdateArtista(Artista artista)
-        {
-            try
-            {
-                using (MySqlConnection dbcon = new(connectionString))
-                {
-                    dbcon.Open();
-                    MySqlCommand cmd = new(ProcedureHelper.PCDUpdateArtista, dbcon);
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddRange(ProcedureHelper.UpdateArtistaParameters(artista));
-                    cmd.ExecuteNonQuery();
-                    return Result.Updated;
                 }
             }
             catch (Exception e)

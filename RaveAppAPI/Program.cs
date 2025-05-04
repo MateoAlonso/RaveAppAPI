@@ -16,6 +16,7 @@ try
     builder.Services.AddScoped<IHealthService, HealthService>();
     builder.Services.AddScoped<IFiestaService, FiestaService>();
     builder.Services.AddScoped<IArtistaService, ArtistaService>();
+    builder.Services.AddScoped<IMediaService, MediaService>();
 
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
@@ -84,8 +85,8 @@ try
     app.MapControllers();
     //if (app.Environment.IsDevelopment())
     //{
-        app.UseSwagger();
-        app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
     //}
     Logger.LogInfo("Ready to run...");
     app.Run();

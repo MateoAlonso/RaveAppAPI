@@ -11,9 +11,11 @@ namespace RaveAppAPI.Controllers
     public class ArtistaController : ApiController
     {
         private readonly IArtistaService _artistaService;
-        public ArtistaController(IArtistaService artistaService)
+        private readonly IMediaService _mediaService;
+        public ArtistaController(IArtistaService artistaService, IMediaService mediaService)
         {
             _artistaService = artistaService;
+            _mediaService = mediaService;
         }
         [HttpPost("CreateArtista")]
         public IActionResult CreateArtista(CreateArtistaRequest request)
@@ -37,6 +39,17 @@ namespace RaveAppAPI.Controllers
         public IActionResult GetArtista([FromQuery] GetArtistaRequest request)
         {
             ErrorOr<List<Artista>> getArtistaResult = _artistaService.GetArtistas(request);
+            if (!getArtistaResult.IsError)
+            {
+                foreach (Artista artista in getArtistaResult.Value)
+                {
+                    ErrorOr<List<Media>> getMediaResult = _mediaService.GetMedia(artista.IdArtista);
+                    if (!getMediaResult.IsError)
+                    {
+                        artista.Media = getMediaResult.Value;
+                    }
+                }
+            }
             return getArtistaResult.Match(
                 created => Ok(MapArtistaResponse(getArtistaResult.Value)),
                 errors => Problem(errors));
