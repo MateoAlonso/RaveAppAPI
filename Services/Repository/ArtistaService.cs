@@ -68,7 +68,7 @@ namespace RaveAppAPI.Services.Repository
                     {
                         if (reader.HasRows)
                         {
-                            List<Artista> artistas = ReaderMaper.ReaderToObject<Artista>(reader).ToList();
+                            List<Artista> artistas = ReaderMaper.ReaderToObjectRecursive<Artista>(reader).ToList();
                             return artistas;
                         }
                         else
