@@ -45,6 +45,9 @@ namespace RaveAppAPI.Services.Helpers
                 new ("p_dsNombreFantasia", usuario.NombreFantasia),
                 new ("p_dsBio", usuario.Bio),
                 new ("p_dsPass", usuario.Pass),
+                new ("p_mdInstagram", usuario.Socials.MdInstagram),
+                new ("p_mdSpotify", usuario.Socials.MdSpotify),
+                new ("p_mdSoundcloud", usuario.Socials.MdSoundcloud),
                 new ("p_idUsuario", MySqlDbType.VarChar, 36) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
@@ -113,6 +116,9 @@ namespace RaveAppAPI.Services.Helpers
                 new ("p_dsNombreFantasia", usuario.NombreFantasia),
                 new ("p_dsBio", usuario.Bio),
                 new ("p_cdRolList", cdRolList),
+                new ("p_mdInstagram", usuario.Socials.MdInstagram),
+                new ("p_mdSpotify", usuario.Socials.MdSpotify),
+                new ("p_mdSoundcloud", usuario.Socials.MdSoundcloud),
                 new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
             };
@@ -392,6 +398,9 @@ namespace RaveAppAPI.Services.Helpers
             {
                 new MySqlParameter ("p_dsNombre", artista.Nombre),
                 new MySqlParameter ("p_dsBio", artista.Bio),
+                new MySqlParameter ("p_mdSpotify", artista.Socials.MdSpotify),
+                new MySqlParameter ("p_mdInstagram", artista.Socials.MdInstagram),
+                new MySqlParameter ("p_mdSoundcloud", artista.Socials.MdSoundcloud),
                 new MySqlParameter ("p_idArtista", MySqlDbType.VarChar, 36) { Direction = System.Data.ParameterDirection.Output }
             };
         }
@@ -410,6 +419,9 @@ namespace RaveAppAPI.Services.Helpers
                 new MySqlParameter ("p_idArtista", artista.IdArtista),
                 new MySqlParameter ("p_dsNombre", artista.Nombre),
                 new MySqlParameter ("p_dsBio", artista.Bio),
+                new MySqlParameter ("p_mdSpotify", artista.Socials.MdSpotify),
+                new MySqlParameter ("p_mdInstagram", artista.Socials.MdInstagram),
+                new MySqlParameter ("p_mdSoundcloud", artista.Socials.MdSoundcloud),
                 new MySqlParameter ("p_isActivo", artista.IsActivo)
             };
         }

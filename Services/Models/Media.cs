@@ -23,7 +23,7 @@ namespace RaveAppAPI.Services.Models
             IdMedia = idMedia;
             Imagen = imagen;
             Video = video;
-            IdMedia = idEntidadMedia;
+            IdEntidadMedia = idEntidadMedia;
         }
         public static ErrorOr<Media> Crear(string idMedia, string imagen, string video, string idEntidadMedia)
         {

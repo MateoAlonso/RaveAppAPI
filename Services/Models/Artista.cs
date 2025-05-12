@@ -17,11 +17,12 @@ namespace RaveAppAPI.Services.Models
         [ColumnName("isactivo")]
         public sbyte? IsActivo { get; set; }
         public List<Media> Media { get; set; }
+        public Socials Socials { get; set; }
         public Artista()
         {
 
         }
-        public Artista(string idArtista, string nombre, string bio, DateTime? dtAlta, sbyte? isActivo, List<Media> media)
+        public Artista(string idArtista, string nombre, string bio, DateTime? dtAlta, sbyte? isActivo, List<Media> media, Socials socials)
         {
             IdArtista = idArtista;
             Nombre = nombre;
@@ -29,8 +30,9 @@ namespace RaveAppAPI.Services.Models
             DtAlta = dtAlta;
             IsActivo = isActivo;
             Media = media;
+            Socials = socials;
         }
-        public static ErrorOr<Artista> Crear(string idArtista, string nombre, string bio, DateTime? dtAlta, sbyte? isActivo, List<Media> media)
+        public static ErrorOr<Artista> Crear(string idArtista, string nombre, string bio, DateTime? dtAlta, sbyte? isActivo, List<Media> media, Socials socials)
         {
             List<Error> errors = new();
 
@@ -39,19 +41,21 @@ namespace RaveAppAPI.Services.Models
             if (errors.Count > 0)
             {
                 return errors;
-            }
+            }						
 
-            return new Artista(idArtista, nombre, bio, dtAlta, isActivo, media);
+            return new Artista(idArtista, nombre, bio, dtAlta, isActivo, media, socials);
         }
 
         public static ErrorOr<Artista> From(CreateArtistaRequest request)
         {
-            return Crear(null, request.Nombre, request.Bio, null, null, null);
+            Socials socials = request.Socials ?? new() { MdInstagram = string.Empty, MdSpotify = string.Empty, MdSoundcloud = string.Empty };
+            return Crear(null, request.Nombre, request.Bio, null, null, null, socials);
         }
 
         public static ErrorOr<Artista> From(UpdateArtistaRequest request)
         {
-            return Crear(request.idArtista, request.Nombre, request.Bio, null, request.IsActivo, null);
+            Socials socials = request.Socials ?? new() { MdInstagram = string.Empty, MdSpotify = string.Empty, MdSoundcloud = string.Empty };
+            return Crear(request.idArtista, request.Nombre, request.Bio, null, request.IsActivo, null, socials);
         }
     }
 }
