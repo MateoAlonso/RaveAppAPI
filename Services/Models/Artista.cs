@@ -49,13 +49,15 @@ namespace RaveAppAPI.Services.Models
         public static ErrorOr<Artista> From(CreateArtistaRequest request)
         {
             Socials socials = request.Socials ?? new() { MdInstagram = string.Empty, MdSpotify = string.Empty, MdSoundcloud = string.Empty };
-            return Crear(null, request.Nombre, request.Bio, null, null, null, socials);
+            sbyte isActivo = (sbyte)(request.IsActivo ? 1 : 0);
+            return Crear(null, request.Nombre, request.Bio, null, isActivo, null, socials);
         }
 
         public static ErrorOr<Artista> From(UpdateArtistaRequest request)
         {
             Socials socials = request.Socials ?? new() { MdInstagram = string.Empty, MdSpotify = string.Empty, MdSoundcloud = string.Empty };
-            return Crear(request.idArtista, request.Nombre, request.Bio, null, request.IsActivo, null, socials);
+            sbyte isActivo = (sbyte)(request.IsActivo ? 1 : 0);
+            return Crear(request.idArtista, request.Nombre, request.Bio, null, isActivo, null, socials);
         }
     }
 }

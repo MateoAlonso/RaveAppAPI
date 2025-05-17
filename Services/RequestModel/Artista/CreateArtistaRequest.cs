@@ -2,5 +2,5 @@
 
 namespace RaveAppAPI.Services.RequestModel.Artista
 {
-    public record CreateArtistaRequest(string Nombre, string Bio, Socials? Socials);
+    public record CreateArtistaRequest(string Nombre, string Bio, Socials? Socials, bool IsActivo);
 }
