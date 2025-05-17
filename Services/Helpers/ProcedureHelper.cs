@@ -167,6 +167,8 @@ namespace RaveAppAPI.Services.Helpers
             {
                 new ("p_titulo", noticia.Titulo),
                 new ("p_contenido", noticia.Contenido),
+                new ("p_dsurlevento", noticia.UrlEvento),
+                new ("p_idNoticia", MySqlDbType.VarChar) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
             };
