@@ -8,17 +8,17 @@ namespace RaveAppAPI.Services.Models
         [ColumnName("dsmunicipio")]
         public string Nombre { get; set; }
         [ColumnName("cdmunicipio")]
-        public int Codigo { get; set; }
+        public string Codigo { get; set; }
         public Municipio()
         {
 
         }
-        private Municipio(int codigo, string nombre)
+        private Municipio(string codigo, string nombre)
         {
             Codigo = codigo;
             Nombre = nombre;
         }
-        public static ErrorOr<Municipio> Crear(int codigo, string nombre)
+        public static ErrorOr<Municipio> Crear(string codigo, string nombre)
         {
             List<Error> errors = new();
 
