@@ -403,6 +403,7 @@ namespace RaveAppAPI.Services.Helpers
                 new MySqlParameter ("p_mdSpotify", artista.Socials.MdSpotify),
                 new MySqlParameter ("p_mdInstagram", artista.Socials.MdInstagram),
                 new MySqlParameter ("p_mdSoundcloud", artista.Socials.MdSoundcloud),
+                new MySqlParameter ("p_isActivo", artista.IsActivo),
                 new MySqlParameter ("p_idArtista", MySqlDbType.VarChar, 36) { Direction = System.Data.ParameterDirection.Output }
             };
         }

@@ -20,6 +20,7 @@ namespace RaveAppAPI.Services.Repository
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.Parameters.AddRange(ProcedureHelper.CreateMediaParameters(media));
                     cmd.ExecuteNonQuery();
+                    media.IdMedia = cmd.Parameters["p_idMedia"].Value.ToString();
                     return Result.Created;
                 }
             }
