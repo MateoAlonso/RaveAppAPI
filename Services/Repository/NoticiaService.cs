@@ -23,6 +23,7 @@ namespace RaveAppAPI.Services.Repository
                     int ok = Convert.ToInt32(cmd.Parameters["p_ok"].Value);
                     if (ok == 1)
                     {
+                        noticia.IdNoticia = cmd.Parameters["p_idNoticia"].Value.ToString();
                         return Result.Created;
                     }
                     else
@@ -81,7 +82,7 @@ namespace RaveAppAPI.Services.Repository
                     {
                         if (reader.HasRows)
                         {
-                            List<Noticia> noticias = ReaderMaper.ReaderToObject<Noticia>(reader).ToList();
+                            List<Noticia> noticias = ReaderMaper.ReaderToObjectRecursive<Noticia>(reader).ToList();
                             return noticias;
                         }
                         else
