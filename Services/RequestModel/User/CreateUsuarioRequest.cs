@@ -1,5 +1,4 @@
 using RaveAppAPI.Services.Models;
-using RaveAppAPI.Services.RequestModel.Social;
 
 namespace RaveAppAPI.Contracts.User
 {

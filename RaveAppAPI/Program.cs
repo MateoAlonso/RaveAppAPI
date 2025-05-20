@@ -17,6 +17,7 @@ try
     builder.Services.AddScoped<IFiestaService, FiestaService>();
     builder.Services.AddScoped<IArtistaService, ArtistaService>();
     builder.Services.AddScoped<IMediaService, MediaService>();
+    builder.Services.AddScoped<IReseniaService, ReseniaService>();
 
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();

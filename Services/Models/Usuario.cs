@@ -78,7 +78,7 @@ namespace RaveAppAPI.Services.Models
 
         public static ErrorOr<Usuario> From(CreateUsuarioRequest request)
         {
-            Socials socials = request.Socials ?? new() {MdInstagram = string.Empty, MdSoundcloud = string.Empty, MdSpotify = string.Empty };
+            Socials socials = request.Socials ?? new() { MdInstagram = string.Empty, MdSoundcloud = string.Empty, MdSpotify = string.Empty };
             return Crear(request.domicilio, request.Nombre, request.Apellido, request.Correo, request.CBU, request.Dni, request.Telefono, request.NombreFantasia, request.Bio, request.Password, media: null, socials: socials);
         }
 
