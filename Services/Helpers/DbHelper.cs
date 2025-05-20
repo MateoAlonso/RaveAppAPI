@@ -7,7 +7,7 @@
 #if DEBUG
             return Environment.GetEnvironmentVariable("RAVEAPP_dbcon", EnvironmentVariableTarget.Machine);
 #else
-        return Environment.GetEnvironmentVariable("RAVEAPP_dbcon");
+            return Environment.GetEnvironmentVariable("RAVEAPP_dbcon");
 #endif
         }
     }
