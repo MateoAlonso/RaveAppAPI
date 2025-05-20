@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RaveAppAPI.Services.RequestModel.Resenia
+﻿namespace RaveAppAPI.Services.RequestModel.Resenia
 {
-    public record UpdateReseniaRequest();
+    public record UpdateReseniaRequest(string IdResenia, int Estrellas, string Comentario);
 }

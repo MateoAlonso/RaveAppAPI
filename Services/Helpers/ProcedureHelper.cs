@@ -4,6 +4,7 @@ using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.RequestModel.Artista;
 using RaveAppAPI.Services.RequestModel.Evento;
 using RaveAppAPI.Services.RequestModel.Fiesta;
+using RaveAppAPI.Services.RequestModel.Resenia;
 using RaveAppAPI.Services.RequestModel.User;
 
 namespace RaveAppAPI.Services.Helpers
@@ -457,6 +458,55 @@ namespace RaveAppAPI.Services.Helpers
         public static MySqlParameter GetMediaParameters(string idEntidadMedia)
         {
             return new MySqlParameter("p_idEntidadMedia", idEntidadMedia);
+        }
+        #endregion
+
+        #region Resenia PCDS
+        public const string PCDCreateResenia = "PCD_RESENIAS_SetResenia";
+        public const string PCDUpdateResenia = "PCD_RESENIAS_UpdateResenia";
+        public const string PCDDeleteResenia = "PCD_RESENIAS_DeleteResenia";
+        public const string PCDGetResenias = "PCD_RESENIAS_GetResenias";
+        public const string PCDGetAvgResenias = "PCD_RESENIAS_GetAvgResenias";
+        #endregion
+
+        #region Resenia Parameters
+        public static MySqlParameter[] CreateReseniaParameters(Resenia resenia)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_idFiesta", resenia.IdFiesta),
+                new MySqlParameter ("p_idUsuario", resenia.IdUsuario),
+                new MySqlParameter ("p_nmEstrellas", resenia.Estrellas),
+                new MySqlParameter ("p_dsComentario", resenia.Comentario),
+                new MySqlParameter ("p_idResenia", MySqlDbType.VarChar, 36) { Direction = System.Data.ParameterDirection.Output }
+            };
+        }
+        public static MySqlParameter[] UpdateReseniaParameters(Resenia resenia)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_idResenia", resenia.IdResenia),
+                new MySqlParameter ("p_nmEstrellas", resenia.Estrellas),
+                new MySqlParameter ("p_dsComentario", resenia.Comentario)
+            };
+        }
+        public static MySqlParameter DeleteReseniaParameters(string idResenia)
+        {
+            return new MySqlParameter("p_idResenia", idResenia);
+        }
+        public static MySqlParameter[] GetReseniasParameters(GetReseniaRequest request)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_idResenia", request.IdResenia),
+                new MySqlParameter ("p_idFiesta", request.IdFiesta),
+                new MySqlParameter ("p_idUsuario", request.IdUsuario),
+                new MySqlParameter ("p_nmEstrellas", request.Estrellas)
+            };
+        }
+        public static MySqlParameter GetAvgReseniaParameters(GetAvgReseniaRequest request)
+        {
+            return new MySqlParameter("p_idFiesta", request.IdFiesta);
         }
         #endregion
     }

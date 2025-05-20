@@ -41,7 +41,7 @@ namespace RaveAppAPI.Services.Models
             if (errors.Count > 0)
             {
                 return errors;
-            }						
+            }
 
             return new Artista(idArtista, nombre, bio, dtAlta, isActivo, media, socials);
         }
