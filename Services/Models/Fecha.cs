@@ -1,7 +1,6 @@
 ﻿using ErrorOr;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.RequestModel.Evento;
-using System.Data;
 
 namespace RaveAppAPI.Services.Models
 {
@@ -47,7 +46,7 @@ namespace RaveAppAPI.Services.Models
 
             return new Fecha(idFecha, inicio, fin, estado, entradas);
         }
-        public static ErrorOr<Fecha> From(CreateFechaRequest request) 
+        public static ErrorOr<Fecha> From(CreateFechaRequest request)
         {
             return Crear(null, request.FechaInicio, request.FechaFin, request.Estado, null);
         }

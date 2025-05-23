@@ -1,7 +1,6 @@
 ﻿using ErrorOr;
 using RaveAppAPI.Contracts.User;
 using RaveAppAPI.Services.Helpers;
-using RaveAppAPI.Services.RequestModel.User;
 
 namespace RaveAppAPI.Services.Models
 {
@@ -78,7 +77,7 @@ namespace RaveAppAPI.Services.Models
         public static ErrorOr<Usuario> From(UpdateUsuarioRequest request)
         {
             List<RolesUsuario> roles = new();
-            request.CdRoles.ForEach(r => roles.Add(new() {CdRol = r }));
+            request.CdRoles.ForEach(r => roles.Add(new() { CdRol = r }));
             return Crear(request.domicilio, request.Nombre, request.Apellido, request.Correo, request.CBU, request.Dni, request.Telefono, request.NombreFantasia, request.Bio, idUsuario: request.IdUsuario, roles: roles);
         }
     }

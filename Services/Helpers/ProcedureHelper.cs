@@ -57,7 +57,7 @@ namespace RaveAppAPI.Services.Helpers
         {
             return new MySqlParameter("p_idusuario", id);
         }
-        public static MySqlParameter[] GetUsuarioParameters(string idUsuario, string mail, bool?     isActivo, int? rol)
+        public static MySqlParameter[] GetUsuarioParameters(string idUsuario, string mail, bool? isActivo, int? rol)
         {
             return new MySqlParameter[]
             {
@@ -164,7 +164,7 @@ namespace RaveAppAPI.Services.Helpers
             string cdGeneros = null;
             if (eventoRequest.Genero != null)
             {
-               cdGeneros = string.Join(",", eventoRequest.Genero.Select(e => e));
+                cdGeneros = string.Join(",", eventoRequest.Genero.Select(e => e));
             }
             return new MySqlParameter[]
             {
@@ -179,7 +179,7 @@ namespace RaveAppAPI.Services.Helpers
                 new MySqlParameter ("p_idFiesta", eventoRequest.idFiesta),
             };
         }
-        public static MySqlParameter GetGenerosParameters(string idEvento) 
+        public static MySqlParameter GetGenerosParameters(string idEvento)
         {
             return new MySqlParameter("p_idEvento", idEvento);
         }
@@ -331,7 +331,7 @@ namespace RaveAppAPI.Services.Helpers
         }
         public static MySqlParameter DeleteFiestaParameters(string idFiesta)
         {
-            return new MySqlParameter ("p_idFiesta", idFiesta);
+            return new MySqlParameter("p_idFiesta", idFiesta);
         }
         #endregion
     }

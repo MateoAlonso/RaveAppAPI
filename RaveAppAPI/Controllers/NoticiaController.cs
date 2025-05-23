@@ -82,11 +82,11 @@ namespace RaveAppAPI.Controllers
 
         private NoticiaResponse MapNoticiaResponse(List<Noticia> noticias)
         {
-            return new NoticiaResponse(noticias);      
+            return new NoticiaResponse(noticias);
         }
         private CreateNoticiaResponse MapCreateNoticiaResponse(Noticia noticia)
         {
-            return new CreateNoticiaResponse(noticia.IdNoticia, noticia.Titulo, noticia.Contenido, noticia.DtPublicado);      
+            return new CreateNoticiaResponse(noticia.IdNoticia, noticia.Titulo, noticia.Contenido, noticia.DtPublicado);
         }
     }
 }

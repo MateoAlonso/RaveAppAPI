@@ -1,11 +1,6 @@
 ﻿using ErrorOr;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.RequestModel.Fiesta;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RaveAppAPI.Services.Models
 {
@@ -19,7 +14,7 @@ namespace RaveAppAPI.Services.Models
         public string DsNombre { get; set; }
         [ColumnName("isactivo")]
         public bool IsActivo { get; set; }
-        public Fiesta(string idFiesta, string idUsuario, string nombre, bool isActivo) 
+        public Fiesta(string idFiesta, string idUsuario, string nombre, bool isActivo)
         {
             IdFiesta = idFiesta;
             IdUsuario = idUsuario;

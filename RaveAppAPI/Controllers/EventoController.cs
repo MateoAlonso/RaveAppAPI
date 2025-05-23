@@ -38,7 +38,7 @@ namespace RaveAppAPI.Controllers
                 errors => Problem(errors));
         }
         [HttpGet("GetEventos")]
-        public IActionResult GetEventos([FromQuery]GetEventoRequest request)
+        public IActionResult GetEventos([FromQuery] GetEventoRequest request)
         {
             ErrorOr<List<Evento>> getEventoResult = _eventoService.GetEventos(request);
 
