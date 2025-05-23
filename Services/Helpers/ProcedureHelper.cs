@@ -49,6 +49,7 @@ namespace RaveAppAPI.Services.Helpers
                 new ("p_mdInstagram", usuario.Socials.MdInstagram),
                 new ("p_mdSpotify", usuario.Socials.MdSpotify),
                 new ("p_mdSoundcloud", usuario.Socials.MdSoundcloud),
+                new ("p_dtNacimiento", usuario.DtNacimiento),
                 new ("p_idUsuario", MySqlDbType.VarChar, 36) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
@@ -120,6 +121,7 @@ namespace RaveAppAPI.Services.Helpers
                 new ("p_mdInstagram", usuario.Socials.MdInstagram),
                 new ("p_mdSpotify", usuario.Socials.MdSpotify),
                 new ("p_mdSoundcloud", usuario.Socials.MdSoundcloud),
+                new ("p_dtNacimiento", usuario.DtNacimiento),
                 new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
             };
