@@ -433,6 +433,8 @@ namespace RaveAppAPI.Services.Helpers
                 new MySqlParameter ("p_idFecha", request.IdFecha),
                 new MySqlParameter ("p_cdEstado", request.Estado)
             };
+        }
+        #endregion
         #region Artista PCDS
         public const string PCDCreateArtista = "PCD_ARTISTAS_SetArtista";
         public const string PCDGetArtistas = "PCD_ARTISTAS_GetArtistas";
