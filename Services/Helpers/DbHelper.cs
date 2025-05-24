@@ -5,7 +5,7 @@
         public static string GetConnectionString()
         {
 #if DEBUG
-        return Environment.GetEnvironmentVariable("RAVEAPP_dbcon", EnvironmentVariableTarget.Machine);
+            return Environment.GetEnvironmentVariable("RAVEAPP_dbcon", EnvironmentVariableTarget.Machine);
 #else
             return Environment.GetEnvironmentVariable("RAVEAPP_dbcon");
 #endif

@@ -3,33 +3,27 @@ using MySql.Data.MySqlClient;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
+using RaveAppAPI.Services.RequestModel.Artista;
 
 namespace RaveAppAPI.Services.Repository
 {
-    public class NoticiaService : INoticiaService
+    public class ArtistaService : IArtistaService
     {
         private readonly string connectionString = DbHelper.GetConnectionString();
-        public ErrorOr<Created> CreateNoticia(Noticia noticia)
+
+        public ErrorOr<Created> CreateArtista(Artista artista)
         {
             try
             {
                 using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
-                    MySqlCommand cmd = new(ProcedureHelper.PCDCreateNoticia, dbcon);
+                    MySqlCommand cmd = new(ProcedureHelper.PCDCreateArtista, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddRange(ProcedureHelper.CreateNoticiaParameters(noticia));
+                    cmd.Parameters.AddRange(ProcedureHelper.CreateArtistaParameters(artista));
                     cmd.ExecuteNonQuery();
-                    int ok = Convert.ToInt32(cmd.Parameters["p_ok"].Value);
-                    if (ok == 1)
-                    {
-                        noticia.IdNoticia = cmd.Parameters["p_idNoticia"].Value.ToString();
-                        return Result.Created;
-                    }
-                    else
-                    {
-                        return Error.Failure();
-                    }
+                    artista.IdArtista = cmd.Parameters["p_idArtista"].Value.ToString();
+                    return Result.Created;
                 }
             }
             catch (Exception e)
@@ -39,26 +33,18 @@ namespace RaveAppAPI.Services.Repository
             }
         }
 
-        public ErrorOr<Deleted> DeleteNoticia(string idNoticia)
+        public ErrorOr<Deleted> DeleteArtista(string idArtista)
         {
             try
             {
                 using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
-                    MySqlCommand cmd = new(ProcedureHelper.PCDDeleteNoticia, dbcon);
+                    MySqlCommand cmd = new(ProcedureHelper.PCDCDeleteArtista, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddRange(ProcedureHelper.DeleteNoticiaParameters(idNoticia));
+                    cmd.Parameters.Add(ProcedureHelper.DeleteArtistasParameters(idArtista));
                     cmd.ExecuteNonQuery();
-                    int ok = Convert.ToInt32(cmd.Parameters["p_ok"].Value);
-                    if (ok == 1)
-                    {
-                        return Result.Deleted;
-                    }
-                    else
-                    {
-                        return Error.Failure();
-                    }
+                    return Result.Deleted;
                 }
             }
             catch (Exception e)
@@ -68,22 +54,22 @@ namespace RaveAppAPI.Services.Repository
             }
         }
 
-        public ErrorOr<List<Noticia>> GetNoticias(string idNoticia)
+        public ErrorOr<List<Artista>> GetArtistas(GetArtistaRequest request)
         {
             try
             {
                 using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
-                    MySqlCommand cmd = new(ProcedureHelper.PCDGetNoticias, dbcon);
+                    MySqlCommand cmd = new(ProcedureHelper.PCDGetArtistas, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.Add(ProcedureHelper.GetNoticiaParameters(idNoticia));
+                    cmd.Parameters.AddRange(ProcedureHelper.GetArtistasParameters(request));
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)
                         {
-                            List<Noticia> noticias = ReaderMaper.ReaderToObjectRecursive<Noticia>(reader).ToList();
-                            return noticias;
+                            List<Artista> artistas = ReaderMaper.ReaderToObjectRecursive<Artista>(reader).ToList();
+                            return artistas;
                         }
                         else
                         {
@@ -100,16 +86,16 @@ namespace RaveAppAPI.Services.Repository
             }
         }
 
-        public ErrorOr<Updated> UpdateNoticia(Noticia noticia)
+        public ErrorOr<Updated> UpdateArtista(Artista artista)
         {
             try
             {
                 using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
-                    MySqlCommand cmd = new(ProcedureHelper.PCDUpdateNoticia, dbcon);
+                    MySqlCommand cmd = new(ProcedureHelper.PCDUpdateArtista, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddRange(ProcedureHelper.UpdateNoticiaParameters(noticia));
+                    cmd.Parameters.AddRange(ProcedureHelper.UpdateArtistaParameters(artista));
                     cmd.ExecuteNonQuery();
                     return Result.Updated;
                 }

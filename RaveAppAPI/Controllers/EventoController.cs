@@ -11,10 +11,12 @@ namespace RaveAppAPI.Controllers
     public class EventoController : ApiController
     {
         private readonly IEventoService _eventoService;
+        private readonly IMediaService _mediaService;
 
-        public EventoController(IEventoService eventoService)
+        public EventoController(IEventoService eventoService, IMediaService mediaService)
         {
             _eventoService = eventoService;
+            _mediaService = mediaService;
         }
 
         [HttpPost("CrearEvento")]
@@ -41,6 +43,17 @@ namespace RaveAppAPI.Controllers
         public IActionResult GetEventos([FromQuery] GetEventoRequest request)
         {
             ErrorOr<List<Evento>> getEventoResult = _eventoService.GetEventos(request);
+            if (!getEventoResult.IsError)
+            {
+                foreach (Evento evento in getEventoResult.Value)
+                {
+                    ErrorOr<List<Media>> getMediaResult = _mediaService.GetMedia(evento.IdEvento);
+                    if (!getMediaResult.IsError)
+                    {
+                        evento.Media = getMediaResult.Value;
+                    }
+                }
+            }
 
             return getEventoResult.Match(
                 eventos => Ok(MapEventoResponse(eventos)),
