@@ -15,6 +15,7 @@ try
     builder.Services.AddScoped<IEventoService, EventoService>();
     builder.Services.AddScoped<IHealthService, HealthService>();
     builder.Services.AddScoped<IFiestaService, FiestaService>();
+    builder.Services.AddScoped<IEntradaService, EntradaService>();
     builder.Services.AddScoped<IArtistaService, ArtistaService>();
     builder.Services.AddScoped<IMediaService, MediaService>();
     builder.Services.AddScoped<IReseniaService, ReseniaService>();
