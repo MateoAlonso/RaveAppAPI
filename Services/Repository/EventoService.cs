@@ -165,33 +165,6 @@ namespace RaveAppAPI.Services.Repository
             return fechas;
         }
 
-        private List<Entrada> GetEntradasFecha(string idFecha)
-        {
-            List<Entrada> entradas = new();
-            try
-            {
-                using (MySqlConnection dbcon = new(connectionString))
-                {
-                    dbcon.Open();
-                    MySqlCommand cmd = new(ProcedureHelper.PCDGetEntradasFecha, dbcon);
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.Add(ProcedureHelper.GetFechasParameters(idFecha));
-                    using (MySqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            entradas = ReaderMaper.ReaderToObjectRecursive<Entrada>(reader).ToList();
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.LogError(e.Message);
-            }
-            return entradas;
-        }
-
         private List<int> GetGeneros(string idEvento)
         {
             List<int> generos = new();

@@ -12,23 +12,25 @@ namespace RaveAppAPI.Services.Models
         public string Titulo { get; set; }
         [ColumnName("dscontenido")]
         public string Contenido { get; set; }
-        [ColumnName("mdimagen")]
-        public string Imagen { get; set; }
+        public List<Media> Media { get; set; }
         [ColumnName("dtpublicado")]
         public DateTime DtPublicado { get; set; }
-        public Noticia(string idNoticia, string titulo, string contenido, string imagen, DateTime fechaPublicado)
+        [ColumnName("dsurlevento")]
+        public string? UrlEvento { get; set; }
+        public Noticia(string idNoticia, string titulo, string contenido, DateTime fechaPublicado, string? urlEvento, List<Media> media)
         {
             IdNoticia = idNoticia;
             Titulo = titulo;
             Contenido = contenido;
-            Imagen = imagen;
             DtPublicado = fechaPublicado;
+            UrlEvento = urlEvento;
+            Media = media;
         }
         public Noticia()
         {
         }
 
-        public static ErrorOr<Noticia> Crear(string titulo, string contenido, string imagen, DateTime dtpublicado, string? idNoticia = null)
+        public static ErrorOr<Noticia> Crear(string titulo, string contenido, DateTime dtpublicado, string? idNoticia, string? urlEvento, List<Media> media)
         {
             //Validaciones
 
@@ -38,17 +40,15 @@ namespace RaveAppAPI.Services.Models
                 return errors;
             }
 
-            return new Noticia(idNoticia, titulo, contenido, imagen, dtpublicado);
+            return new Noticia(idNoticia, titulo, contenido, dtpublicado, urlEvento, media);
         }
-
-        public static ErrorOr<Noticia> Devolver(string titulo, string contenido, string imagen, DateTime dtpublicado, string? idNoticia)
-        {
-            return new Noticia(idNoticia, titulo, contenido, imagen, dtpublicado);
-        }
-
         public static ErrorOr<Noticia> From(CreateNoticiaRequest request)
         {
-            return Crear(request.titulo, request.contenido, request.imagen, request.dtpublicado);
+            return Crear(request.Titulo, request.Contenido, request.DtPublicado, null, request.UrlEvento, null);
+        }
+        public static ErrorOr<Noticia> From(UpdateNoticiaRequest request)
+        {
+            return Crear(request.Titulo, request.Contenido, request.DtPublicado, request.IdNoticia, request.UrlEvento, null);
         }
     }
 

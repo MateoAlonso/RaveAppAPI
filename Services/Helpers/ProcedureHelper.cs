@@ -2,8 +2,11 @@
 using MySql.Data.MySqlClient;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.RequestModel.Entrada;
+using RaveAppAPI.Services.RequestModel.Artista;
 using RaveAppAPI.Services.RequestModel.Evento;
 using RaveAppAPI.Services.RequestModel.Fiesta;
+using RaveAppAPI.Services.RequestModel.Resenia;
+using RaveAppAPI.Services.RequestModel.User;
 
 namespace RaveAppAPI.Services.Helpers
 {
@@ -16,6 +19,9 @@ namespace RaveAppAPI.Services.Helpers
         public const string PCDGetUsuario = "PCD_USUARIOS_GetUsuario";
         public const string PCDUpdateUsuario = "PCD_USUARIOS_UpdateUsuario";
         public const string PCDGetRolesUsuario = "PCD_USUARIOS_GetRolesUsuario";
+        public const string PCDLoginUsuario = "PCD_USUARIOS_LoginUsuario";
+        public const string PCDRecoverPassUsuario = "PCD_USUARIOS_RecoverPass";
+        public const string PCDResetPassUsuario = "PCD_USUARIOS_ResetPass";
         #endregion
 
         #region Usuario Parameters
@@ -40,6 +46,11 @@ namespace RaveAppAPI.Services.Helpers
                 new ("p_dsCbu", usuario.CBU),
                 new ("p_dsNombreFantasia", usuario.NombreFantasia),
                 new ("p_dsBio", usuario.Bio),
+                new ("p_dsPass", usuario.Pass),
+                new ("p_mdInstagram", usuario.Socials.MdInstagram),
+                new ("p_mdSpotify", usuario.Socials.MdSpotify),
+                new ("p_mdSoundcloud", usuario.Socials.MdSoundcloud),
+                new ("p_dtNacimiento", usuario.DtNacimiento),
                 new ("p_idUsuario", MySqlDbType.VarChar, 36) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
@@ -108,8 +119,39 @@ namespace RaveAppAPI.Services.Helpers
                 new ("p_dsNombreFantasia", usuario.NombreFantasia),
                 new ("p_dsBio", usuario.Bio),
                 new ("p_cdRolList", cdRolList),
+                new ("p_mdInstagram", usuario.Socials.MdInstagram),
+                new ("p_mdSpotify", usuario.Socials.MdSpotify),
+                new ("p_mdSoundcloud", usuario.Socials.MdSoundcloud),
+                new ("p_dtNacimiento", usuario.DtNacimiento),
                 new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
+            };
+        }
+        public static MySqlParameter[] GetLoginUsuarioParameters(LoginUsuarioRequest request)
+        {
+            return new MySqlParameter[]
+            {
+                new ("p_dsCorreo", request.Correo),
+                new ("p_dspass", request.Password),
+                new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output }
+            };
+        }
+        public static MySqlParameter[] ResetPassUsuarioParameters(ResetPassUsuarioRequest request)
+        {
+            return new MySqlParameter[]
+            {
+                new ("p_dsCorreo", request.Correo),
+                new ("p_dsPass", request.Pass),
+                new ("p_dsNewPass", request.NewPass),
+                new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output }
+            };
+        }
+        public static MySqlParameter[] RecoverPassUsuarioParameters(RecoverPassUsuarioRequest request)
+        {
+            return new MySqlParameter[]
+            {
+                new ("p_dsCorreo", request.Correo),
+                new ("p_dsNewPass", request.NewPass)
             };
         }
         #endregion
@@ -117,6 +159,7 @@ namespace RaveAppAPI.Services.Helpers
         #region Noticia PCDS
         public const string PCDCreateNoticia = "PCD_NOTICIAS_SetNoticia";
         public const string PCDDeleteNoticia = "PCD_NOTICIAS_DeleteNoticia";
+        public const string PCDUpdateNoticia = "PCD_NOTICIAS_UpdateNoticia";
         public const string PCDGetNoticias = "PCD_NOTICIAS_GetNoticias";
         public const string PCDGetNoticiaById = "PCD_NOTICIAS_UpdateNoticia";
         #endregion
@@ -128,9 +171,24 @@ namespace RaveAppAPI.Services.Helpers
             {
                 new ("p_titulo", noticia.Titulo),
                 new ("p_contenido", noticia.Contenido),
+                new ("p_dsurlevento", noticia.UrlEvento),
+                new ("p_idNoticia", MySqlDbType.VarChar) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
             };
+        }
+        public static MySqlParameter[] UpdateNoticiaParameters(Noticia noticia)
+        {
+            return new MySqlParameter[]
+            {
+                new ("p_dsTitulo", noticia.Titulo),
+                new ("p_dsContenido", noticia.Contenido),
+                new ("p_idNoticia", noticia.IdNoticia)
+            };
+        }
+        public static MySqlParameter GetNoticiaParameters(string idNoticia)
+        {
+            return new MySqlParameter("p_idNoticia", idNoticia);
         }
         public static MySqlParameter[] DeleteNoticiaParameters(string id)
         {
@@ -375,6 +433,127 @@ namespace RaveAppAPI.Services.Helpers
                 new MySqlParameter ("p_idFecha", request.IdFecha),
                 new MySqlParameter ("p_cdEstado", request.Estado)
             };
+        #region Artista PCDS
+        public const string PCDCreateArtista = "PCD_ARTISTAS_SetArtista";
+        public const string PCDGetArtistas = "PCD_ARTISTAS_GetArtistas";
+        public const string PCDUpdateArtista = "PCD_ARTISTAS_UpdateArtista";
+        public const string PCDCDeleteArtista = "PCD_ARTISTAS_DeleteArtista";
+        #endregion
+
+        #region Artista Parameters
+        public static MySqlParameter[] CreateArtistaParameters(Artista artista)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_dsNombre", artista.Nombre),
+                new MySqlParameter ("p_dsBio", artista.Bio),
+                new MySqlParameter ("p_mdSpotify", artista.Socials.MdSpotify),
+                new MySqlParameter ("p_mdInstagram", artista.Socials.MdInstagram),
+                new MySqlParameter ("p_mdSoundcloud", artista.Socials.MdSoundcloud),
+                new MySqlParameter ("p_isActivo", artista.IsActivo),
+                new MySqlParameter ("p_idArtista", MySqlDbType.VarChar, 36) { Direction = System.Data.ParameterDirection.Output }
+            };
+        }
+        public static MySqlParameter[] GetArtistasParameters(GetArtistaRequest request)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_idArtista", request.idArtista),
+                new MySqlParameter ("p_isActivo", request.isActivo)
+            };
+        }
+        public static MySqlParameter[] UpdateArtistaParameters(Artista artista)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_idArtista", artista.IdArtista),
+                new MySqlParameter ("p_dsNombre", artista.Nombre),
+                new MySqlParameter ("p_dsBio", artista.Bio),
+                new MySqlParameter ("p_mdSpotify", artista.Socials.MdSpotify),
+                new MySqlParameter ("p_mdInstagram", artista.Socials.MdInstagram),
+                new MySqlParameter ("p_mdSoundcloud", artista.Socials.MdSoundcloud),
+                new MySqlParameter ("p_isActivo", artista.IsActivo)
+            };
+        }
+        public static MySqlParameter DeleteArtistasParameters(string idArtista)
+        {
+            return new MySqlParameter("p_idArtista", idArtista);
+        }
+        #endregion
+
+        #region Media PCDS
+        public const string PCDGetMedia = "PCD_MEDIA_GetMedia";
+        public const string PCDCreateMedia = "PCD_MEDIA_SetMedia";
+        public const string PCDDeleteMedia = "PCD_MEDIA_DeleteMedia";
+        #endregion
+
+        #region Media Parameters
+        public static MySqlParameter[] CreateMediaParameters(Media media)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_idEntidadMedia", media.IdEntidadMedia),
+                new MySqlParameter ("p_mdImagen", media.Imagen),
+                new MySqlParameter ("p_mdVideo", media.Video),
+                new MySqlParameter ("p_idMedia", MySqlDbType.VarChar, 36) { Direction = System.Data.ParameterDirection.Output }
+            };
+        }
+        public static MySqlParameter DeleteMediaParameters(string idMedia)
+        {
+            return new MySqlParameter("p_idMedia", idMedia);
+        }
+        public static MySqlParameter GetMediaParameters(string idEntidadMedia)
+        {
+            return new MySqlParameter("p_idEntidadMedia", idEntidadMedia);
+        }
+        #endregion
+
+        #region Resenia PCDS
+        public const string PCDCreateResenia = "PCD_RESENIAS_SetResenia";
+        public const string PCDUpdateResenia = "PCD_RESENIAS_UpdateResenia";
+        public const string PCDDeleteResenia = "PCD_RESENIAS_DeleteResenia";
+        public const string PCDGetResenias = "PCD_RESENIAS_GetResenias";
+        public const string PCDGetAvgResenias = "PCD_RESENIAS_GetAvgResenias";
+        #endregion
+
+        #region Resenia Parameters
+        public static MySqlParameter[] CreateReseniaParameters(Resenia resenia)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_idFiesta", resenia.IdFiesta),
+                new MySqlParameter ("p_idUsuario", resenia.IdUsuario),
+                new MySqlParameter ("p_nmEstrellas", resenia.Estrellas),
+                new MySqlParameter ("p_dsComentario", resenia.Comentario),
+                new MySqlParameter ("p_idResenia", MySqlDbType.VarChar, 36) { Direction = System.Data.ParameterDirection.Output }
+            };
+        }
+        public static MySqlParameter[] UpdateReseniaParameters(Resenia resenia)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_idResenia", resenia.IdResenia),
+                new MySqlParameter ("p_nmEstrellas", resenia.Estrellas),
+                new MySqlParameter ("p_dsComentario", resenia.Comentario)
+            };
+        }
+        public static MySqlParameter DeleteReseniaParameters(string idResenia)
+        {
+            return new MySqlParameter("p_idResenia", idResenia);
+        }
+        public static MySqlParameter[] GetReseniasParameters(GetReseniaRequest request)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_idResenia", request.IdResenia),
+                new MySqlParameter ("p_idFiesta", request.IdFiesta),
+                new MySqlParameter ("p_idUsuario", request.IdUsuario),
+                new MySqlParameter ("p_nmEstrellas", request.Estrellas)
+            };
+        }
+        public static MySqlParameter GetAvgReseniaParameters(GetAvgReseniaRequest request)
+        {
+            return new MySqlParameter("p_idFiesta", request.IdFiesta);
         }
         #endregion
     }
