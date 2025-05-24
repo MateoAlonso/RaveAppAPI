@@ -81,7 +81,7 @@ namespace RaveAppAPI.Services.Models
             {
                 fechas.Add(Fecha.From(req).Value);
             }
-            return Crear(null, usr, artistas, request.domicilio, request.nombre, request.descripcion, request.genero, request.isAfter, request.isLgbt, request.inicioEvento, request.finEvento, request.estado, request.fechas, request.idFiesta, null);
+            return Crear(null, usr, artistas, request.domicilio, request.nombre, request.descripcion, request.genero, request.isAfter, request.isLgbt, request.inicioEvento, request.finEvento, request.estado, fechas, request.idFiesta, null);
         }
         public static ErrorOr<Evento> From(UpdateEventoRequest request)
         {
