@@ -70,11 +70,16 @@ namespace RaveAppAPI.Services.Models
             Usuario usr = new();
             usr.IdUsuario = request.idUsuario;
             List<Usuario> artistas = new List<Usuario>();
+            List<Fecha> fechas = new List<Fecha>();
             foreach (string idArtista in request.idArtistas)
             {
                 Usuario artista = new();
                 artista.IdUsuario = idArtista;
                 artistas.Add(artista);
+            }
+            foreach (CreateFechaRequest req in request.fechas)
+            {
+                fechas.Add(Fecha.From(req).Value);
             }
             return Crear(null, usr, artistas, request.domicilio, request.nombre, request.descripcion, request.genero, request.isAfter, request.isLgbt, request.inicioEvento, request.finEvento, request.estado, request.fechas, request.idFiesta, null);
         }
