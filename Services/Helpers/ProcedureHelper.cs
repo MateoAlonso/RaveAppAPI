@@ -1,6 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using MySql.Data.MySqlClient;
 using RaveAppAPI.Services.Models;
+using RaveAppAPI.Services.RequestModel.Entrada;
 using RaveAppAPI.Services.RequestModel.Evento;
 using RaveAppAPI.Services.RequestModel.Fiesta;
 
@@ -155,7 +156,6 @@ namespace RaveAppAPI.Services.Helpers
         public const string PCDSetEvento = "PCD_EVENTOS_SetEvento";
         public const string PCDDeleteEvento = "PCD_EVENTOS_DeleteEvento";
         public const string PCDUpdateEvento = "PCD_EVENTOS_UpdateEvento";
-        public const string PCDGetEntradasFecha = "PCD_EVENTO_GetEntradasFecha";
         #endregion
 
         #region Evento Parameters
@@ -332,6 +332,49 @@ namespace RaveAppAPI.Services.Helpers
         public static MySqlParameter DeleteFiestaParameters(string idFiesta)
         {
             return new MySqlParameter("p_idFiesta", idFiesta);
+        }
+        #endregion
+
+        #region Entrada PCDS
+        public const string PCDCreateEntrada = "PCD_ENTRADAS_SetEntradas";
+        public const string PCDGetEntradasFecha = "PCD_ENTRADAS_GetEntradasFecha";
+        public const string PCDReservarEntradas = "PCD_ENTRADAS_ReservarEntradas";
+        public const string PCDCancelarReserva = "PCD_ENTRADAS_CancelarReserva";
+        #endregion
+
+        #region Entrada Parameters
+        public static MySqlParameter[] CreateEntradaParameters(Entrada entrada)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_idFecha", entrada.Fecha.IdFecha),
+                new MySqlParameter ("p_cdTipo", entrada.Tipo),
+                new MySqlParameter ("p_amPrecio", entrada.Precio),
+                new MySqlParameter ("p_vlCant", entrada.Cantidad)
+            };
+        }
+        public static MySqlParameter CancelarReservaParameters(string idCompra)
+        {
+            return new MySqlParameter("p_idCompra", idCompra);
+        }
+        public static MySqlParameter[] ReservarEntradasParameters(ReservarEntradasRequest request)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_nmCantidad", request.Cantidad),
+                new MySqlParameter ("p_idUsuario", request.IdUsuario),
+                new MySqlParameter ("p_idFecha", request.IdFecha),
+                new MySqlParameter ("p_cdTipoEntrada", request.TipoEntrada),
+                new MySqlParameter ("p_idCompra", MySqlDbType.VarChar, 36) { Direction = System.Data.ParameterDirection.Output }
+            };
+        }
+        public static MySqlParameter[] GetEntradasFechaParameters(GetEntradasFechaRequest request)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_idFecha", request.IdFecha),
+                new MySqlParameter ("p_cdEstado", request.Estado)
+            };
         }
         #endregion
     }

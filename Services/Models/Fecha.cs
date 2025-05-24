@@ -16,7 +16,7 @@ namespace RaveAppAPI.Services.Models
         public DateTime InicioVenta { get; set; }
         [ColumnName("dtfinventa")]
         public DateTime FinVenta { get; set; }
-        [ColumnName("dtfinventaeb")]
+        [ColumnName("dtfinearlybird")]
         public DateTime FinVentaEB { get; set; }
         [ColumnName("cdestado")]
         public int Estado { get; set; }

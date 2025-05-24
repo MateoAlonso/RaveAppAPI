@@ -15,6 +15,7 @@ namespace RaveAppAPI.Controllers
         {
             _entradaService = entradaService;
         }
+        [HttpPost("CrearEntradas")]
         public IActionResult CreateEntradas(CreateEntradaRequest request)
         {
             ErrorOr<Entrada> requestToEntradaResult = Entrada.From(request);
@@ -32,7 +33,30 @@ namespace RaveAppAPI.Controllers
                 errors => Problem(errors)
                 );
         }
-
+        [HttpGet("GetEntradasFecha")]
+        public IActionResult GetEntradasFecha([FromQuery] GetEntradasFechaRequest request)
+        {
+            ErrorOr<List<Entrada>> getEntradasFechaResult = _entradaService.GetEntradasFecha(request);
+            return getEntradasFechaResult.Match(
+                entradas => Ok(entradas),
+                errors => Problem(errors));
+        }
+        [HttpPut("ReservarEntradas")]
+        public IActionResult ReservarEntradas(ReservarEntradasRequest request)
+        {
+            ErrorOr<string> reservarEntradasResult = _entradaService.ReservarEntradas(request);
+            return reservarEntradasResult.Match(
+                idCompra => Ok(idCompra),
+                errors => Problem(errors));
+        }
+        [HttpPut("CancelarReserva")]
+        public IActionResult CancelarReserva(string idCompra)
+        {
+            ErrorOr<Updated> cancelarReservaResult = _entradaService.CancelarReserva(idCompra);
+            return cancelarReservaResult.Match(
+                updated => NoContent(),
+                errors => Problem(errors));
+        }
         private IActionResult CreatedAtCreateEntrada(Entrada entrada)
         {
             return CreatedAtAction(
@@ -41,5 +65,5 @@ namespace RaveAppAPI.Controllers
                 value: entrada);
         }
     }
-    
+
 }

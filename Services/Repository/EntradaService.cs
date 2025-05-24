@@ -1,4 +1,6 @@
 ﻿using ErrorOr;
+using MySql.Data.MySqlClient;
+using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
 using RaveAppAPI.Services.RequestModel.Entrada;
@@ -7,19 +9,100 @@ namespace RaveAppAPI.Services.Repository
 {
     public class EntradaService : IEntradaService
     {
+        private readonly string connectionString = DbHelper.GetConnectionString();
+
+        public ErrorOr<Updated> CancelarReserva(string idCompra)
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDCancelarReserva, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(ProcedureHelper.CancelarReservaParameters(idCompra));
+                    cmd.ExecuteNonQuery();
+                    return Result.Updated;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
+        }
+
         public ErrorOr<Created> CreateEntrada(Entrada entrada)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDCreateEntrada, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddRange(ProcedureHelper.CreateEntradaParameters(entrada));
+                    cmd.ExecuteNonQuery();
+                    return Result.Created;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
         }
 
-        public ErrorOr<Entrada> GetEntradasFecha(GetEntradasFechaRequest request)
+        public ErrorOr<List<Entrada>> GetEntradasFecha(GetEntradasFechaRequest request)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDGetEntradasFecha, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddRange(ProcedureHelper.GetEntradasFechaParameters(request));
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            List<Entrada> entradas = ReaderMaper.ReaderToObjectRecursive<Entrada>(reader).ToList();
+                            return entradas;
+                        }
+                        else
+                        {
+                            return Error.NotFound();
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
         }
 
-        public ErrorOr<Updated> UpdateEntrada(Entrada entrada)
+        public ErrorOr<string> ReservarEntradas(ReservarEntradasRequest request)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDReservarEntradas, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddRange(ProcedureHelper.ReservarEntradasParameters(request));
+                    cmd.ExecuteNonQuery();
+                    return cmd.Parameters["p_idCompra"].Value.ToString();
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
         }
     }
 }
