@@ -172,9 +172,9 @@ namespace RaveAppAPI.Services.Repository
                 using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
-                    MySqlCommand cmd = new(ProcedureHelper.PCDGetGeneros, dbcon);
+                    MySqlCommand cmd = new(ProcedureHelper.PCDGetGenerosByEvento, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.Add(ProcedureHelper.GetGenerosParameters(idEvento));
+                    cmd.Parameters.Add(ProcedureHelper.GetGenerosByEventoParameters(idEvento));
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)

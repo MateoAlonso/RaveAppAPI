@@ -204,6 +204,7 @@ namespace RaveAppAPI.Services.Helpers
         #region Evento PCDS
         public const string PCDGetEventos = "PCD_EVENTOS_GetEventos";
         public const string PCDGetGeneros = "PCD_EVENTOS_GetGeneros";
+        public const string PCDGetGenerosByEvento = "PCD_EVENTOS_GetGenerosByEvento";
         public const string PCDGetEstadosEvento = "PCD_EVENTOS_GetEstadosEvento";
         public const string PCDGetEstadosFecha = "PCD_EVENTOS_GetEstadosFecha";
         public const string PCDGetFechas = "PCD_EVENTOS_GetFechasEvento";
@@ -237,7 +238,7 @@ namespace RaveAppAPI.Services.Helpers
                 new MySqlParameter ("p_idFiesta", eventoRequest.idFiesta),
             };
         }
-        public static MySqlParameter GetGenerosParameters(string idEvento)
+        public static MySqlParameter GetGenerosByEventoParameters(string idEvento)
         {
             return new MySqlParameter("p_idEvento", idEvento);
         }
