@@ -20,20 +20,18 @@ namespace RaveAppAPI.Services.Models
         public DateTime FinVentaEB { get; set; }
         [ColumnName("cdestado")]
         public int Estado { get; set; }
-        public List<Entrada> Entradas { get; set; }
         public Fecha()
         {
 
         }
-        public Fecha(string idFecha, DateTime inicio, DateTime fin, int estado, List<Entrada> entradas)
+        public Fecha(string idFecha, DateTime inicio, DateTime fin, int estado)
         {
             this.IdFecha = idFecha;
             this.Inicio = inicio;
             this.Fin = fin;
             this.Estado = estado;
-            this.Entradas = entradas;
         }
-        public static ErrorOr<Fecha> Crear(string idFecha, DateTime inicio, DateTime fin, int estado, List<Entrada> entradas)
+        public static ErrorOr<Fecha> Crear(string idFecha, DateTime inicio, DateTime fin, int estado)
         {
             List<Error> errors = new();
 
@@ -44,11 +42,11 @@ namespace RaveAppAPI.Services.Models
                 return errors;
             }
 
-            return new Fecha(idFecha, inicio, fin, estado, entradas);
+            return new Fecha(idFecha, inicio, fin, estado);
         }
         public static ErrorOr<Fecha> From(CreateFechaRequest request)
         {
-            return Crear(null, request.FechaInicio, request.FechaFin, request.Estado, null);
+            return Crear(null, request.FechaInicio, request.FechaFin, request.Estado);
         }
     }
 }
