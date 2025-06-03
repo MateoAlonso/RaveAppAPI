@@ -232,7 +232,7 @@ namespace RaveAppAPI.Services.Repository
                     {
                         cmd = new(ProcedureHelper.PCDUpdateFechas, dbcon);
                         cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                        cmd.Parameters.AddRange(ProcedureHelper.UpdateFechaParameters(fecha, evento.IdEvento));
+                        cmd.Parameters.AddRange(ProcedureHelper.UpdateFechaParameters(fecha));
                         cmd.ExecuteNonQuery();
                         int ok = Convert.ToInt32(cmd.Parameters["p_ok"].Value);
                         if (ok != 1)
