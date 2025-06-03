@@ -1,4 +1,4 @@
 ﻿namespace RaveAppAPI.Services.RequestModel.Entrada
 {
-    public record GetEntradasFechaRequest(string? IdFecha, int? Estado);
+    public record GetEntradasFechaRequest(string IdFecha, int? Estado);
 }
