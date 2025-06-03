@@ -338,11 +338,11 @@ namespace RaveAppAPI.Services.Helpers
                 new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
             };
         }
-        public static MySqlParameter[] UpdateFechaParameters(Fecha fecha, string idEvento)
+        public static MySqlParameter[] UpdateFechaParameters(Fecha fecha)
         {
             return new MySqlParameter[]
             {
-                new ("p_idEvento", idEvento),
+                new ("p_idFecha", fecha.IdFecha),
                 new ("p_dtInicio", fecha.Inicio),
                 new ("p_dtFin", fecha.Fin),
                 new ("p_cdEstado", fecha.Estado),
