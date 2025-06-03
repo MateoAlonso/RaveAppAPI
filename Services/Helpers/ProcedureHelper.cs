@@ -183,7 +183,8 @@ namespace RaveAppAPI.Services.Helpers
             {
                 new ("p_dsTitulo", noticia.Titulo),
                 new ("p_dsContenido", noticia.Contenido),
-                new ("p_idNoticia", noticia.IdNoticia)
+                new ("p_idNoticia", noticia.IdNoticia),
+                new ("p_dsUrlEvento", noticia.UrlEvento)
             };
         }
         public static MySqlParameter GetNoticiaParameters(string idNoticia)
