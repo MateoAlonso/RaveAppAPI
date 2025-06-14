@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RaveAppAPI.Services.Models;
+using RaveAppAPI.Services.Repository;
 using RaveAppAPI.Services.Repository.Contracts;
 using RaveAppAPI.Services.RequestModel.Entrada;
 
@@ -55,6 +56,24 @@ namespace RaveAppAPI.Controllers
             ErrorOr<Updated> cancelarReservaResult = _entradaService.CancelarReserva(idCompra);
             return cancelarReservaResult.Match(
                 updated => NoContent(),
+                errors => Problem(errors));
+        }
+        [HttpGet("GetEstadosEntrada")]
+        public IActionResult GetEstadosEntrada()
+        {
+            ErrorOr<List<Estado>> getEstadosEntradaResult = _entradaService.GetEstadosEntrada();
+
+            return getEstadosEntradaResult.Match(
+                estados => Ok(estados),
+                errors => Problem(errors));
+        }
+        [HttpGet("GetTiposEntrada")]
+        public IActionResult GetTiposEntrada()
+        {
+            ErrorOr<List<Tipo>> getTiposEntradaResult = _entradaService.GetTiposEntrada();
+
+            return getTiposEntradaResult.Match(
+                tipos => Ok(tipos),
                 errors => Problem(errors));
         }
         private IActionResult CreatedAtCreateEntrada(Entrada entrada)
