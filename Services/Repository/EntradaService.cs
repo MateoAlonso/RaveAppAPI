@@ -84,6 +84,66 @@ namespace RaveAppAPI.Services.Repository
             }
         }
 
+        public ErrorOr<List<Estado>> GetEstadosEntrada()
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDGetEstadosEntrada, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            List<Estado> estados = ReaderMaper.ReaderToObject<Estado>(reader).ToList();
+                            return estados;
+                        }
+                        else
+                        {
+                            return Error.NotFound();
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
+        }
+
+        public ErrorOr<List<Tipo>> GetTiposEntrada()
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDGetTipoEntradas, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            List<Tipo> tipos = ReaderMaper.ReaderToObject<Tipo>(reader).ToList();
+                            return tipos;
+                        }
+                        else
+                        {
+                            return Error.NotFound();
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
+        }
+
         public ErrorOr<string> ReservarEntradas(ReservarEntradasRequest request)
         {
             try

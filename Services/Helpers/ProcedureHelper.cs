@@ -237,6 +237,7 @@ namespace RaveAppAPI.Services.Helpers
                 new MySqlParameter ("p_isAfter", eventoRequest.IsAfter),
                 new MySqlParameter ("p_isLgbt", eventoRequest.IsLgbt),
                 new MySqlParameter ("p_idFiesta", eventoRequest.idFiesta),
+                new MySqlParameter ("p_idUsuario", eventoRequest.IdUsuario)
             };
         }
         public static MySqlParameter GetGenerosByEventoParameters(string idEvento)
@@ -245,7 +246,7 @@ namespace RaveAppAPI.Services.Helpers
         }
         public static MySqlParameter[] SetEventoParameters(Evento evento)
         {
-            string idArtistas = string.Join(",", evento.Artistas.Select(a => a.IdUsuario ?? string.Empty));
+            string idArtistas = string.Join(",", evento.Artistas.Select(a => a.IdArtista ?? string.Empty));
             string cdGeneros = string.Join(",", evento.Genero.Select(e => e));
             return new MySqlParameter[]
             {
@@ -276,7 +277,7 @@ namespace RaveAppAPI.Services.Helpers
         }
         public static MySqlParameter[] UpdateEventoParameters(Evento evento)
         {
-            string idArtistas = string.Join(",", evento.Artistas.Select(a => a.IdUsuario ?? string.Empty));
+            string idArtistas = string.Join(",", evento.Artistas.Select(a => a.IdArtista ?? string.Empty));
             string cdGeneros = string.Join(",", evento.Genero.Select(e => e));
             return new MySqlParameter[]
             {
@@ -332,7 +333,9 @@ namespace RaveAppAPI.Services.Helpers
             {
                 new ("p_idEvento", idEvento),
                 new ("p_dtInicio", fecha.Inicio),
+                new ("p_dtInicioVenta", fecha.InicioVenta),
                 new ("p_dtFin", fecha.Fin),
+                new ("p_dtFinVenta", fecha.FinVenta),
                 new ("p_cdEstado", fecha.Estado),
                 new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
@@ -400,6 +403,8 @@ namespace RaveAppAPI.Services.Helpers
         public const string PCDGetEntradasFecha = "PCD_ENTRADAS_GetEntradasFecha";
         public const string PCDReservarEntradas = "PCD_ENTRADAS_ReservarEntradas";
         public const string PCDCancelarReserva = "PCD_ENTRADAS_CancelarReserva";
+        public const string PCDGetTipoEntradas = "PCD_ENTRADAS_GetTipoEntradas";
+        public const string PCDGetEstadosEntrada = "PCD_ENTRADAS_GetEstadosEntrada";
         #endregion
 
         #region Entrada Parameters
@@ -408,7 +413,7 @@ namespace RaveAppAPI.Services.Helpers
             return new MySqlParameter[]
             {
                 new MySqlParameter ("p_idFecha", entrada.Fecha.IdFecha),
-                new MySqlParameter ("p_cdTipo", entrada.Tipo),
+                new MySqlParameter ("p_cdTipo", entrada.Tipo.CdTipo),
                 new MySqlParameter ("p_amPrecio", entrada.Precio),
                 new MySqlParameter ("p_vlCant", entrada.Cantidad)
             };

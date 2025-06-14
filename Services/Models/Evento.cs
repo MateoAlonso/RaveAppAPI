@@ -7,7 +7,7 @@ namespace RaveAppAPI.Services.Models
     public class Evento
     {
         public Usuario Usuario { get; set; }
-        public List<Usuario> Artistas { get; set; }
+        public List<Artista> Artistas { get; set; }
         public Domicilio Domicilio { get; set; }
         [ColumnName("idevento")]
         public string IdEvento { get; set; }
@@ -31,7 +31,7 @@ namespace RaveAppAPI.Services.Models
         public int CdEstado { get; set; }
         public List<Fecha> Fechas { get; set; }
         public List<Media> Media { get; set; }
-        public Evento(string idEvento, Usuario usuario, List<Usuario> artistas, Domicilio domicilio, string nombre, string descripcion, List<int> genero, bool isAfter, bool isLgbt, DateTime inicioEvento, DateTime finEvento, int estado, List<Fecha> fechas, string idFiesta, List<Media> media)
+        public Evento(string idEvento, Usuario usuario, List<Artista> artistas, Domicilio domicilio, string nombre, string descripcion, List<int> genero, bool isAfter, bool isLgbt, DateTime inicioEvento, DateTime finEvento, int estado, List<Fecha> fechas, string idFiesta, List<Media> media)
         {
             IdEvento = idEvento;
             Usuario = usuario;
@@ -52,7 +52,7 @@ namespace RaveAppAPI.Services.Models
         public Evento()
         {
         }
-        public static ErrorOr<Evento> Crear(string idEvento, Usuario usuario, List<Usuario> artistas, Domicilio domicilio, string nombre, string descripcion, List<int> genero, bool isAfter, bool isLgbt, DateTime inicioEvento, DateTime finEvento, int estado, List<Fecha> fechas, string idFiesta, List<Media> media)
+        public static ErrorOr<Evento> Crear(string idEvento, Usuario usuario, List<Artista> artistas, Domicilio domicilio, string nombre, string descripcion, List<int> genero, bool isAfter, bool isLgbt, DateTime inicioEvento, DateTime finEvento, int estado, List<Fecha> fechas, string idFiesta, List<Media> media)
         {
             List<Error> errors = new();
 
@@ -69,12 +69,12 @@ namespace RaveAppAPI.Services.Models
         {
             Usuario usr = new();
             usr.IdUsuario = request.idUsuario;
-            List<Usuario> artistas = new List<Usuario>();
+            List<Artista> artistas = new List<Artista>();
             List<Fecha> fechas = new List<Fecha>();
             foreach (string idArtista in request.idArtistas)
             {
-                Usuario artista = new();
-                artista.IdUsuario = idArtista;
+                Artista artista = new();
+                artista.IdArtista = idArtista;
                 artistas.Add(artista);
             }
             foreach (CreateFechaRequest req in request.fechas)
@@ -85,11 +85,11 @@ namespace RaveAppAPI.Services.Models
         }
         public static ErrorOr<Evento> From(UpdateEventoRequest request)
         {
-            List<Usuario> artistas = new List<Usuario>();
+            List<Artista> artistas = new List<Artista>();
             foreach (string idArtista in request.idArtistas)
             {
-                Usuario artista = new();
-                artista.IdUsuario = idArtista;
+                Artista artista = new();
+                artista.IdArtista = idArtista;
                 artistas.Add(artista);
             }
             return Crear(request.idEvento, null, artistas, request.domicilio, request.nombre, request.descripcion, request.genero, request.isAfter, request.isLgbt, request.inicioEvento, request.finEvento, request.estado, request.fechas, request.idFiesta, null);
