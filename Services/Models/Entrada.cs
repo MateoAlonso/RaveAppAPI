@@ -16,13 +16,12 @@ namespace RaveAppAPI.Services.Models
         public decimal Precio { get; set; }
         [ColumnName("nmcantidad")]
         public int Cantidad { get; set; }
-        [ColumnName("cdtipo")]
-        public int Tipo { get; set; }
+        public Tipo Tipo { get; set; }
         public Entrada()
         {
 
         }
-        public Entrada(string idEntrada, Fecha fecha, string mdQR, Estado estado, decimal precio, int cantidad, int tipo)
+        public Entrada(string idEntrada, Fecha fecha, string mdQR, Estado estado, decimal precio, int cantidad, Tipo tipo)
         {
             IdEntrada = idEntrada;
             MdQR = mdQR;
@@ -32,7 +31,7 @@ namespace RaveAppAPI.Services.Models
             Fecha = fecha;
             Tipo = tipo;
         }
-        public static ErrorOr<Entrada> Crear(string idEntrada, Fecha fecha, string mdQR, Estado estado, decimal precio, int cantidad, int tipo)
+        public static ErrorOr<Entrada> Crear(string idEntrada, Fecha fecha, string mdQR, Estado estado, decimal precio, int cantidad, Tipo tipo)
         {
             List<Error> errors = new();
             //TODO Validaciones
@@ -46,7 +45,8 @@ namespace RaveAppAPI.Services.Models
         {
             Estado estado = new Estado { CdEstado = request.Estado };
             Fecha fecha = new Fecha { IdFecha = request.IdFecha };
-            return Crear(null, fecha, null, estado, request.Precio, request.Cantidad, request.Tipo);
+            Tipo tipo = new Tipo { CdTipo = request.Tipo };
+            return Crear(null, fecha, null, estado, request.Precio, request.Cantidad, tipo);
         }
     }
 
