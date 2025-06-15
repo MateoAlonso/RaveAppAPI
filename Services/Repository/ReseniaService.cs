@@ -9,7 +9,7 @@ namespace RaveAppAPI.Services.Repository
 {
     public class ReseniaService : IReseniaService
     {
-        private readonly string connectionString = DbHelper.GetConnectionString();
+        private readonly string connectionString = EnvHelper.GetConnectionString();
         public ErrorOr<Created> CreateResenia(Resenia resenia)
         {
             try

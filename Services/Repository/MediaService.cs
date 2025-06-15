@@ -8,7 +8,7 @@ namespace RaveAppAPI.Services.Repository
 {
     public class MediaService : IMediaService
     {
-        private readonly string connectionString = DbHelper.GetConnectionString();
+        private readonly string connectionString = EnvHelper.GetConnectionString();
         public ErrorOr<Created> CreateMedia(Media media)
         {
             try
