@@ -10,7 +10,7 @@ namespace RaveAppAPI.Services.Repository
 {
     public class EventoService : IEventoService
     {
-        private readonly string connectionString = DbHelper.GetConnectionString();
+        private readonly string connectionString = EnvHelper.GetConnectionString();
         public ErrorOr<Created> CreateEvento(Evento evento)
         {
             try

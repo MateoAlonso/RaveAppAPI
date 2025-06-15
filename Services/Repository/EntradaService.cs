@@ -9,7 +9,7 @@ namespace RaveAppAPI.Services.Repository
 {
     public class EntradaService : IEntradaService
     {
-        private readonly string connectionString = DbHelper.GetConnectionString();
+        private readonly string connectionString = EnvHelper.GetConnectionString();
 
         public ErrorOr<Updated> CancelarReserva(string idCompra)
         {

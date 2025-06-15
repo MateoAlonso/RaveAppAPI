@@ -9,7 +9,7 @@ namespace RaveAppAPI.Services.Repository
 {
     public class ArtistaService : IArtistaService
     {
-        private readonly string connectionString = DbHelper.GetConnectionString();
+        private readonly string connectionString = EnvHelper.GetConnectionString();
 
         public ErrorOr<Created> CreateArtista(Artista artista)
         {
