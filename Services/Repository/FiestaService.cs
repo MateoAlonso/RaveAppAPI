@@ -9,7 +9,7 @@ namespace RaveAppAPI.Services.Repository
 {
     public class FiestaService : IFiestaService
     {
-        private readonly string connectionString = DbHelper.GetConnectionString();
+        private readonly string connectionString = EnvHelper.GetConnectionString();
         public ErrorOr<Created> CreateFiesta(Fiesta fiesta)
         {
             try
