@@ -10,6 +10,8 @@ using RaveAppAPI.Services.Repository.Contracts;
 using RaveAppAPI.Services.RequestModel.Media;
 using Amazon.Runtime;
 using Amazon.S3.Model.Internal.MarshallTransformations;
+using System.Net.Http.Headers;
+using System.IO;
 
 namespace RaveAppAPI.Controllers
 {
@@ -31,14 +33,20 @@ namespace RaveAppAPI.Controllers
         public IActionResult GetMedia(string idEntidadMedia)
         {
             ErrorOr<List<Media>> getMediaResult = _mediaService.GetMedia(idEntidadMedia);
-
+            if (!getMediaResult.IsError)
+            {
+                foreach (var media in getMediaResult.Value)
+                {
+                    media.Url = GetMediaUrl(media.IdMedia);
+                }
+            }
             return getMediaResult.Match(
                 medias => Ok(MapMediaResponse(medias)),
                 errors => Problem(errors));
         }
 
         [HttpPost]
-        public IActionResult CreateMedia(CreateMediaRequest request)
+        public async Task<IActionResult> CreateMedia([FromForm]CreateMediaRequest request)
         {
             ErrorOr<Media> requestToMediaResult = Media.From(request);
 
@@ -50,6 +58,56 @@ namespace RaveAppAPI.Controllers
             var media = requestToMediaResult.Value;
             ErrorOr<Created> createMediaResult = _mediaService.CreateMedia(media);
 
+            if (!createMediaResult.IsError)
+            {
+                try
+                {
+                    var credentials = new BasicAWSCredentials(_accessKey, _secretKey);
+
+                    var config = new AmazonS3Config
+                    {
+                        RegionEndpoint = RegionEndpoint.USEast1,
+                        ServiceURL = _r2Endpoint,
+                        ForcePathStyle = true
+                    };
+
+                    var preSignedRequest = new GetPreSignedUrlRequest
+                    {
+                        BucketName = _bucketName,
+                        Key = media.IdMedia,
+                        Verb = HttpVerb.PUT,
+                        Expires = DateTime.UtcNow.AddMinutes(5)
+                    };
+
+                    string url;
+                    using (var client = new AmazonS3Client(credentials, config))
+                    {
+                        url = client.GetPreSignedURL(preSignedRequest);
+                    }
+
+                    using (var memStream = new MemoryStream())
+                    {
+                        await request.File.CopyToAsync(memStream);
+                        using (var httpClient = new HttpClient())
+                        {
+                            var content = new ByteArrayContent(memStream.ToArray());
+                            content.Headers.ContentType = new MediaTypeHeaderValue(request.File.ContentType);
+                            var response = httpClient.PutAsync(url, content);
+                            response.Wait();
+                            if (!response.Result.IsSuccessStatusCode)
+                            {
+                                return Problem("Ocurrio un error al subir imagen al bucket");
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError(e.Message);
+                    return Problem(e.Message);
+                }
+            }
+
             return createMediaResult.Match(
                 created => CreatedAtCreateMedia(media),
                 errors => Problem(errors));
@@ -58,14 +116,14 @@ namespace RaveAppAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMedia(string id)
         {
-            var credentials = new Amazon.Runtime.BasicAWSCredentials(_accessKey, _secretKey);
+            var credentials = new BasicAWSCredentials(_accessKey, _secretKey);
             var config = new AmazonS3Config
             {
                 RegionEndpoint = RegionEndpoint.USEast1,
                 ServiceURL = _r2Endpoint,
                 ForcePathStyle = true
             };
-            var deleteRequest = new Amazon.S3.Model.DeleteObjectRequest
+            var deleteRequest = new DeleteObjectRequest
             {
                 BucketName = _bucketName,
                 Key = id
@@ -91,42 +149,7 @@ namespace RaveAppAPI.Controllers
                 errors => Problem(errors));
         }
 
-        [HttpGet("GetMediaPutUrl")]
-        public IActionResult GetMediaPutUrl([FromQuery] string fileName)
-        {
-            try
-            {
-                var credentials = new BasicAWSCredentials(_accessKey, _secretKey);
-
-                var config = new AmazonS3Config
-                {
-                    RegionEndpoint = RegionEndpoint.USEast1,
-                    ServiceURL = _r2Endpoint,
-                    ForcePathStyle = true
-                };
-
-                var request = new GetPreSignedUrlRequest
-                {
-                    BucketName = _bucketName,
-                    Key = fileName,
-                    Verb = HttpVerb.PUT,
-                    Expires = DateTime.UtcNow.AddMinutes(15)
-                };
-
-                using (var client = new AmazonS3Client(credentials, config))
-                { 
-                    string url = client.GetPreSignedURL(request);
-                    return Ok(url);
-                };
-            }
-            catch (Exception e)
-            {
-                return Problem(e.Message);
-            }
-        }
-
-        [HttpGet("GetMediaGetUrl")]
-        public IActionResult GetMediaGetUrl([FromQuery] string fileName)
+        private string GetMediaUrl(string fileName)
         {
             try
             {
@@ -149,13 +172,12 @@ namespace RaveAppAPI.Controllers
 
                 using (var client = new AmazonS3Client(credentials, config))
                 {
-                    string url = client.GetPreSignedURL(request);
-                    return Ok(url);
+                    return client.GetPreSignedURL(request);
                 };
             }
             catch (Exception e)
             {
-                return Problem(e.Message);
+                return string.Empty;
             }
         }
 
