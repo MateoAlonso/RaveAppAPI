@@ -10,6 +10,7 @@ namespace RaveAppAPI.Services.Models
         public string IdMedia { get; set; }
         [ColumnName("identidadmedia")]
         public string IdEntidadMedia { get; set; }
+        public string Url { get; set; }
 
         public Media()
         {

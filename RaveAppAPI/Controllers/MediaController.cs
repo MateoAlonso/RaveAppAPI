@@ -33,7 +33,13 @@ namespace RaveAppAPI.Controllers
         public IActionResult GetMedia(string idEntidadMedia)
         {
             ErrorOr<List<Media>> getMediaResult = _mediaService.GetMedia(idEntidadMedia);
-
+            if (!getMediaResult.IsError)
+            {
+                foreach (var media in getMediaResult.Value)
+                {
+                    media.Url = GetMediaUrl(media.IdMedia);
+                }
+            }
             return getMediaResult.Match(
                 medias => Ok(MapMediaResponse(medias)),
                 errors => Problem(errors));
@@ -143,8 +149,7 @@ namespace RaveAppAPI.Controllers
                 errors => Problem(errors));
         }
 
-        [HttpGet("GetMediaGetUrl")]
-        public IActionResult GetMediaGetUrl([FromQuery] string fileName)
+        private string GetMediaUrl(string fileName)
         {
             try
             {
@@ -167,13 +172,12 @@ namespace RaveAppAPI.Controllers
 
                 using (var client = new AmazonS3Client(credentials, config))
                 {
-                    string url = client.GetPreSignedURL(request);
-                    return Ok(url);
+                    return client.GetPreSignedURL(request);
                 };
             }
             catch (Exception e)
             {
-                return Problem(e.Message);
+                return string.Empty;
             }
         }
 
