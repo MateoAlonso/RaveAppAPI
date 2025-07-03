@@ -15,5 +15,6 @@ namespace RaveAppAPI.Services.Repository.Contracts
         ErrorOr<List<GeneroEvento>> GetGeneros();
         ErrorOr<List<Estado>> GetEstadosEvento();
         ErrorOr<List<Estado>> GetEstadosFecha();
+        ErrorOr<List<Artista>> GetArtistasEvento(string id);
     }
 }

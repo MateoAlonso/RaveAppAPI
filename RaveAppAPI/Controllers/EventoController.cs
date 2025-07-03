@@ -52,6 +52,11 @@ namespace RaveAppAPI.Controllers
                     {
                         evento.Media = getMediaResult.Value;
                     }
+                    ErrorOr<List<Artista>> getArtistasResult = _eventoService.GetArtistasEvento(evento.IdEvento);
+                    if (!getArtistasResult.IsError)
+                    {
+                        evento.Artistas = getArtistasResult.Value;
+                    }
                 }
             }
 

@@ -339,5 +339,32 @@ namespace RaveAppAPI.Services.Repository
             }
 
         }
+
+        public ErrorOr<List<Artista>> GetArtistasEvento(string id)
+        {
+            List<Artista> artistas = new();
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDGetArtistasEvento, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(ProcedureHelper.GetArtistasEventoParameters(id));
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            artistas = ReaderMaper.ReaderToObjectRecursive<Artista>(reader).ToList();
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+            }
+            return artistas;
+        }
     }
 }

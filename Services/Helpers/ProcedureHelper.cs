@@ -216,6 +216,7 @@ namespace RaveAppAPI.Services.Helpers
         public const string PCDSetEvento = "PCD_EVENTOS_SetEvento";
         public const string PCDDeleteEvento = "PCD_EVENTOS_DeleteEvento";
         public const string PCDUpdateEvento = "PCD_EVENTOS_UpdateEvento";
+        public const string PCDGetArtistasEvento = "PCD_EVENTOS_GetArtistasEvento";
         #endregion
 
         #region Evento Parameters
@@ -352,6 +353,10 @@ namespace RaveAppAPI.Services.Helpers
                 new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
             };
+        }
+        public static MySqlParameter GetArtistasEventoParameters(string idEvento)
+        {
+            return new MySqlParameter("p_idEvento", idEvento);
         }
         #endregion
 
