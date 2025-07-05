@@ -37,7 +37,7 @@ namespace RaveAppAPI.Controllers
             {
                 foreach (var media in getMediaResult.Value)
                 {
-                    media.Url = GetMediaUrl(media.IdMedia);
+                    media.Url = string.IsNullOrEmpty(media.MdVideo) ? GetMediaUrl(media.IdMedia) : string.Empty;
                 }
             }
             return getMediaResult.Match(
@@ -58,7 +58,7 @@ namespace RaveAppAPI.Controllers
             var media = requestToMediaResult.Value;
             ErrorOr<Created> createMediaResult = _mediaService.CreateMedia(media);
 
-            if (!createMediaResult.IsError)
+            if (!createMediaResult.IsError && request.File != null)
             {
                 try
                 {

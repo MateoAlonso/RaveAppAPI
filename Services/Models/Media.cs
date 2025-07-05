@@ -11,16 +11,19 @@ namespace RaveAppAPI.Services.Models
         [ColumnName("identidadmedia")]
         public string IdEntidadMedia { get; set; }
         public string Url { get; set; }
+        [ColumnName("mdvideo")]
+        public string MdVideo { get; set; }
 
         public Media()
         {
         }
-        public Media(string idMedia, string idEntidadMedia)
+        public Media(string idMedia, string idEntidadMedia, string mdVideo)
         {
             IdMedia = idMedia;
             IdEntidadMedia = idEntidadMedia;
+            MdVideo = mdVideo;
         }
-        public static ErrorOr<Media> Crear(string idMedia, string idEntidadMedia)
+        public static ErrorOr<Media> Crear(string idMedia, string idEntidadMedia, string mdVideo)
         {
             List<Error> errors = new();
 
@@ -28,11 +31,11 @@ namespace RaveAppAPI.Services.Models
             {
                 return errors;
             }
-            return new Media(idMedia, idEntidadMedia);
+            return new Media(idMedia, idEntidadMedia, mdVideo);
         }
         public static ErrorOr<Media> From(CreateMediaRequest request)
         {
-            return Crear(null, request.IdEntidadMedia);
+            return Crear(null, request.IdEntidadMedia, request.Video);
         }
     }
 
