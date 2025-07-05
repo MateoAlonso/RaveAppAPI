@@ -507,6 +507,7 @@ namespace RaveAppAPI.Services.Helpers
             return new MySqlParameter[]
             {
                 new MySqlParameter ("p_idEntidadMedia", media.IdEntidadMedia),
+                new MySqlParameter ("p_mdVideo", media.MdVideo),
                 new MySqlParameter ("p_idMedia", MySqlDbType.VarChar, 36) { Direction = System.Data.ParameterDirection.Output }
             };
         }
