@@ -22,6 +22,8 @@ namespace RaveAppAPI.Services.Helpers
         public const string PCDLoginUsuario = "PCD_USUARIOS_LoginUsuario";
         public const string PCDRecoverPassUsuario = "PCD_USUARIOS_RecoverPass";
         public const string PCDResetPassUsuario = "PCD_USUARIOS_ResetPass";
+        public const string PCDToggleEventoFavorito = "PCD_USUARIOS_ToggleEventoFavorito";
+        public const string PCDToggleLikeArtista = "PCD_USUARIOS_ToggleLikeArtista";
         #endregion
 
         #region Usuario Parameters
@@ -154,6 +156,22 @@ namespace RaveAppAPI.Services.Helpers
                 new ("p_dsNewPass", request.NewPass)
             };
         }
+        public static MySqlParameter[] EventoFavoritoParameters(EventoFavoritoRequest request)
+        {
+            return new MySqlParameter[]
+            {
+                new ("p_idUsuario", request.IdUsuario),
+                new ("p_idEvento", request.IdEvento)
+            };
+        }
+        public static MySqlParameter[] ArtistaFavoritoParameters(ArtistaFavoritoRequest request)
+        {
+            return new MySqlParameter[]
+            {
+                new ("p_idUsuario", request.IdUsuario),
+                new ("p_idartista", request.IdArtista)
+            };
+        }
         #endregion
 
         #region Noticia PCDS
@@ -238,7 +256,8 @@ namespace RaveAppAPI.Services.Helpers
                 new MySqlParameter ("p_isAfter", eventoRequest.IsAfter),
                 new MySqlParameter ("p_isLgbt", eventoRequest.IsLgbt),
                 new MySqlParameter ("p_idFiesta", eventoRequest.idFiesta),
-                new MySqlParameter ("p_idUsuario", eventoRequest.IdUsuario)
+                new MySqlParameter ("p_idUsuarioOrg", eventoRequest.IdUsuarioOrg),
+                new MySqlParameter ("p_idUsuarioFav", eventoRequest.IdUsuarioFav)
             };
         }
         public static MySqlParameter GetGenerosByEventoParameters(string idEvento)
@@ -271,6 +290,7 @@ namespace RaveAppAPI.Services.Helpers
                 new MySqlParameter ("p_dtFinEvento", evento.FinEvento),
                 new MySqlParameter ("p_cdestado", evento.CdEstado),
                 new MySqlParameter ("p_idFiesta", evento.IdFiesta),
+                new MySqlParameter ("p_mdSoundCloud", evento.SoundCloud),
                 new MySqlParameter ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new MySqlParameter ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output },
                 new MySqlParameter ("p_idEvento", MySqlDbType.VarChar, 36) { Direction = System.Data.ParameterDirection.Output }
@@ -302,6 +322,7 @@ namespace RaveAppAPI.Services.Helpers
                 new MySqlParameter ("p_dtFinEvento", evento.FinEvento),
                 new MySqlParameter ("p_cdEstado", evento.CdEstado),
                 new MySqlParameter ("p_idFiesta", evento.IdFiesta),
+                new MySqlParameter ("p_mdSoundCloud", evento.SoundCloud),
                 new MySqlParameter ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new MySqlParameter ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
             };
@@ -473,6 +494,7 @@ namespace RaveAppAPI.Services.Helpers
             return new MySqlParameter[]
             {
                 new MySqlParameter ("p_idArtista", request.idArtista),
+                new MySqlParameter ("p_idUsuario", request.idUsuario),
                 new MySqlParameter ("p_isActivo", request.isActivo)
             };
         }

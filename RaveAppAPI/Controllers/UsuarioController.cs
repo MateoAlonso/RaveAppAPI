@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using RaveAppAPI.Contracts.User;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
+using RaveAppAPI.Services.RequestModel.Artista;
 using RaveAppAPI.Services.RequestModel.User;
 
 namespace RaveAppAPI.Controllers
@@ -118,6 +119,24 @@ namespace RaveAppAPI.Controllers
 
             return getRolesResult.Match(
                 roles => Ok(MapRolesUsuarioResponse(roles)),
+                errors => Problem(errors));
+        }
+        [HttpPut("EventoFavorito")]
+        public IActionResult EventoFavorito(EventoFavoritoRequest request)
+        {
+            ErrorOr<Updated> eventoFavoritoResult = _usuarioService.EventoFavorito(request);
+
+            return eventoFavoritoResult.Match(
+                created => Ok(),
+                errors => Problem(errors));
+        }
+        [HttpPut("ArtistaFavorito")]
+        public IActionResult ArtistaFavorito(ArtistaFavoritoRequest request)
+        {
+            ErrorOr<Updated> artistaFavoritoResult = _usuarioService.ArtistaFavorito(request);
+
+            return artistaFavoritoResult.Match(
+                created => Ok(),
                 errors => Problem(errors));
         }
         private static UsuarioResponse MapUsuarioResponse(List<Usuario> usuarios)

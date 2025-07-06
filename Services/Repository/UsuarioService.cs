@@ -3,6 +3,7 @@ using MySql.Data.MySqlClient;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
+using RaveAppAPI.Services.RequestModel.Artista;
 using RaveAppAPI.Services.RequestModel.User;
 using Error = ErrorOr.Error;
 
@@ -231,6 +232,48 @@ namespace RaveAppAPI.Services.Repository
                     MySqlCommand cmd = new(ProcedureHelper.PCDRecoverPassUsuario, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.Parameters.AddRange(ProcedureHelper.RecoverPassUsuarioParameters(request));
+                    cmd.ExecuteNonQuery();
+                    return Result.Updated;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
+        }
+        //TODO fix EventoFavorito and ArtistaFavorito mapeo de booleano
+        public ErrorOr<Updated> EventoFavorito(EventoFavoritoRequest request)
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDToggleEventoFavorito, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddRange(ProcedureHelper.EventoFavoritoParameters(request));
+                    cmd.ExecuteNonQuery();
+                    return Result.Updated;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
+        }
+
+        public ErrorOr<Updated> ArtistaFavorito(ArtistaFavoritoRequest request)
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDToggleLikeArtista, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddRange(ProcedureHelper.ArtistaFavoritoParameters(request));
                     cmd.ExecuteNonQuery();
                     return Result.Updated;
                 }

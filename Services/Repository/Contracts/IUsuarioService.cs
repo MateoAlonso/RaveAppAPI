@@ -1,5 +1,6 @@
 ﻿using ErrorOr;
 using RaveAppAPI.Services.Models;
+using RaveAppAPI.Services.RequestModel.Artista;
 using RaveAppAPI.Services.RequestModel.User;
 
 namespace RaveAppAPI.Services.Repository.Contracts
@@ -14,5 +15,7 @@ namespace RaveAppAPI.Services.Repository.Contracts
         ErrorOr<bool> Login(LoginUsuarioRequest request);
         ErrorOr<Updated> ResetPass(ResetPassUsuarioRequest request);
         ErrorOr<Updated> RecoverPass(RecoverPassUsuarioRequest request);
+        ErrorOr<Updated> EventoFavorito(EventoFavoritoRequest request);
+        ErrorOr<Updated> ArtistaFavorito(ArtistaFavoritoRequest request);
     }
 }
