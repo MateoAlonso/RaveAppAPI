@@ -86,6 +86,28 @@ namespace RaveAppAPI.Services.Repository
             }
         }
 
+        public int GetCantLikesArtista(string id)
+        {
+            int res = 0;
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDCGetCantLikesArtista, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddRange(ProcedureHelper.GetCantLikesArtistaParameters(id));
+                    cmd.ExecuteNonQuery();
+                    res = Convert.ToInt32(cmd.Parameters["p_Cant"].Value);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+            }
+            return res;
+        }
+
         public ErrorOr<Updated> UpdateArtista(Artista artista)
         {
             try

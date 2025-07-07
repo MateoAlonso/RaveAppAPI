@@ -44,6 +44,7 @@ namespace RaveAppAPI.Controllers
                 foreach (Artista artista in getArtistaResult.Value)
                 {
                     ErrorOr<List<Media>> getMediaResult = _mediaService.GetMedia(artista.IdArtista);
+                    artista.Likes = _artistaService.GetCantLikesArtista(artista.IdArtista);
                     if (!getMediaResult.IsError)
                     {
                         artista.Media = getMediaResult.Value;
