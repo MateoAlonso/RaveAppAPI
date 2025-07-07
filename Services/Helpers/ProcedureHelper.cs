@@ -473,6 +473,7 @@ namespace RaveAppAPI.Services.Helpers
         public const string PCDGetArtistas = "PCD_ARTISTAS_GetArtistas";
         public const string PCDUpdateArtista = "PCD_ARTISTAS_UpdateArtista";
         public const string PCDCDeleteArtista = "PCD_ARTISTAS_DeleteArtista";
+        public const string PCDCGetCantLikesArtista = "PCD_ARTISTAS_GetCantLikesArtista";
         #endregion
 
         #region Artista Parameters
@@ -514,6 +515,14 @@ namespace RaveAppAPI.Services.Helpers
         public static MySqlParameter DeleteArtistasParameters(string idArtista)
         {
             return new MySqlParameter("p_idArtista", idArtista);
+        }
+        public static MySqlParameter[] GetCantLikesArtistaParameters(string idArtista)
+        {
+            return new MySqlParameter[] 
+            {
+                new MySqlParameter ("p_idArtista", idArtista),
+                new MySqlParameter ("p_Cant", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output }
+            };
         }
         #endregion
 

@@ -19,7 +19,8 @@ namespace RaveAppAPI.Services.Models
         public List<Media> Media { get; set; }
         public Socials Socials { get; set; }
         [ColumnName("isfavorito")]
-        public sbyte IsFavorito { get; set; }
+        public int IsFavorito { get; set; }
+        public int Likes { get; set; }
         public Artista()
         {
 
