@@ -12,5 +12,6 @@ namespace RaveAppAPI.Services.Repository.Contracts
         ErrorOr<Updated> CancelarReserva(string idCompra);
         ErrorOr<List<Estado>> GetEstadosEntrada();
         ErrorOr<List<Tipo>> GetTiposEntrada();
+        ErrorOr<Updated> UpdateEntrada(Entrada request);
     }
 }
