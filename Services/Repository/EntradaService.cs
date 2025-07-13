@@ -164,5 +164,26 @@ namespace RaveAppAPI.Services.Repository
                 return Error.Unexpected();
             }
         }
+
+        public ErrorOr<Updated> UpdateEntrada(Entrada entrada)
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDUpdateEntradas, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddRange(ProcedureHelper.UpdateEntradasParameters(entrada));
+                    cmd.ExecuteNonQuery();
+                    return Result.Updated;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
+        }
     }
 }

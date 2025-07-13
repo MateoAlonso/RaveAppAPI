@@ -1,4 +1,4 @@
 ﻿namespace RaveAppAPI.Services.RequestModel.Entrada
 {
-    public record UpdateEntradaRequest();
+    public record UpdateEntradaRequest(string IdFecha, decimal Precio);
 }

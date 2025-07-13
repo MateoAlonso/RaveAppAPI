@@ -48,6 +48,11 @@ namespace RaveAppAPI.Services.Models
             Tipo tipo = new Tipo { CdTipo = request.Tipo };
             return Crear(null, fecha, null, estado, request.Precio, request.Cantidad, tipo);
         }
+        public static ErrorOr<Entrada> From(UpdateEntradaRequest request)
+        {
+            Fecha fecha = new Fecha { IdFecha = request.IdFecha };
+            return Crear(null, fecha, null, null, request.Precio, 0, null);
+        }
     }
 
 }
