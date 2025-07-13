@@ -17,5 +17,6 @@ namespace RaveAppAPI.Services.Repository.Contracts
         ErrorOr<Updated> RecoverPass(RecoverPassUsuarioRequest request);
         ErrorOr<Updated> EventoFavorito(EventoFavoritoRequest request);
         ErrorOr<Updated> ArtistaFavorito(ArtistaFavoritoRequest request);
+        ErrorOr<List<string>> GetEventosFavoritos(string idUsuario);
     }
 }

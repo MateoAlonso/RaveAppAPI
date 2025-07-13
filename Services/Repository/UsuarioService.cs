@@ -1,5 +1,6 @@
 ﻿using ErrorOr;
 using MySql.Data.MySqlClient;
+using Org.BouncyCastle.Asn1.Ocsp;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
@@ -242,7 +243,6 @@ namespace RaveAppAPI.Services.Repository
                 return Error.Unexpected();
             }
         }
-        //TODO fix EventoFavorito and ArtistaFavorito mapeo de booleano
         public ErrorOr<Updated> EventoFavorito(EventoFavoritoRequest request)
         {
             try
@@ -276,6 +276,37 @@ namespace RaveAppAPI.Services.Repository
                     cmd.Parameters.AddRange(ProcedureHelper.ArtistaFavoritoParameters(request));
                     cmd.ExecuteNonQuery();
                     return Result.Updated;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
+        }
+
+        public ErrorOr<List<string>> GetEventosFavoritos(string idUsuario)
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDGetEventosFavoritos, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(ProcedureHelper.GetEventosFavoritosParameters(idUsuario));
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            return ReaderMaper.ReaderToSimpleType<string>(reader).ToList();
+                        }
+                        else
+                        {
+                            return Error.NotFound();
+                        }
+                    }
+
                 }
             }
             catch (Exception e)

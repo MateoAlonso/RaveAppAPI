@@ -76,6 +76,23 @@ namespace RaveAppAPI.Controllers
                 tipos => Ok(tipos),
                 errors => Problem(errors));
         }
+        [HttpPut("UpdateEntrada")]
+        public IActionResult UpdateEntrada(UpdateEntradaRequest request)
+        {
+            ErrorOr<Entrada> requestToEntradaResult = Entrada.From(request);
+
+            if (requestToEntradaResult.IsError)
+            {
+                return Problem(requestToEntradaResult.Errors);
+            }
+
+            var entrada = requestToEntradaResult.Value;
+
+            ErrorOr<Updated> updateEntradaResult = _entradaService.UpdateEntrada(entrada);
+            return updateEntradaResult.Match(
+                updated => NoContent(),
+                errors => Problem(errors));
+        }
         private IActionResult CreatedAtCreateEntrada(Entrada entrada)
         {
             return CreatedAtAction(
