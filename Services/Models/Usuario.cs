@@ -27,8 +27,6 @@ namespace RaveAppAPI.Services.Models
         public DateTime? DtAlta { get; set; }
         [ColumnName("dtbaja")]
         public DateTime? DtBaja { get; set; }
-        [ColumnName("dsnombrefantasia")]
-        public string NombreFantasia { get; set; }
         [ColumnName("dsbio")]
         public string Bio { get; set; }
         [ColumnName("dspass")]
@@ -38,7 +36,7 @@ namespace RaveAppAPI.Services.Models
         public Socials Socials { get; set; }
         [ColumnName("dtnacimiento")]
         public DateTime? DtNacimiento { get; set; }
-        public Usuario(Domicilio domicilio, string nombre, string apellido, string correo, string cbu, string dni, string tel, int isActivo, DateTime? dtAlta, DateTime? dtBaja, string idUsuario, string nombreFantasia, string bio, List<RolesUsuario> roles, string? pass, List<Media> media, Socials socials, DateTime? dtNacimiento)
+        public Usuario(Domicilio domicilio, string nombre, string apellido, string correo, string cbu, string dni, string tel, int isActivo, DateTime? dtAlta, DateTime? dtBaja, string idUsuario, string bio, List<RolesUsuario> roles, string? pass, List<Media> media, Socials socials, DateTime? dtNacimiento)
         {
             IdUsuario = idUsuario;
             Domicilio = domicilio;
@@ -51,7 +49,6 @@ namespace RaveAppAPI.Services.Models
             IsActivo = isActivo;
             DtAlta = dtAlta;
             DtBaja = dtBaja;
-            NombreFantasia = nombreFantasia;
             Bio = bio;
             Roles = roles;
             Pass = pass;
@@ -75,7 +72,7 @@ namespace RaveAppAPI.Services.Models
                 return errors;
             }
 
-            return new Usuario(domicilio, nombre, apellido, correo, cbu, dni, tel, isActivo, dtAlta, dtBaja, idUsuario, nombreFantasia, bio, roles, pass, media, socials, dtNacimiento);
+            return new Usuario(domicilio, nombre, apellido, correo, cbu, dni, tel, isActivo, dtAlta, dtBaja, idUsuario, bio, roles, pass, media, socials, dtNacimiento);
         }
 
 

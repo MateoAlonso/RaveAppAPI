@@ -11,5 +11,6 @@ namespace RaveAppAPI.Services.Repository.Contracts
         ErrorOr<Deleted> DeleteArtista(string idArtista);
         ErrorOr<List<Artista>> GetArtistas(GetArtistaRequest request);
         int GetCantLikesArtista(string id);
+        ErrorOr<List<string>> GetImgLikesArtistas(string id);
     }
 }
