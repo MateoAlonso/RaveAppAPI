@@ -55,6 +55,15 @@ namespace RaveAppAPI.Controllers
                 created => Ok(MapArtistaResponse(getArtistaResult.Value)),
                 errors => Problem(errors));
         }
+        [HttpGet("GetImgLikesArtista")]
+        public IActionResult GetImgLikesArtista(string id)
+        {
+            ErrorOr<List<string>> getArtistaResult = _artistaService.GetImgLikesArtistas(id);
+
+            return getArtistaResult.Match(
+                usuarios => Ok(usuarios),
+                errors => Problem(errors));
+        }
         [HttpPut("UpdateArtista")]
         public IActionResult UpdateArtista(UpdateArtistaRequest request)
         {
