@@ -47,7 +47,6 @@ namespace RaveAppAPI.Services.Helpers
                 new ("p_nmDni", usuario.Dni),
                 new ("p_nmTelefono", usuario.Telefono),
                 new ("p_dsCbu", usuario.CBU),
-                new ("p_dsNombreFantasia", usuario.NombreFantasia),
                 new ("p_dsBio", usuario.Bio),
                 new ("p_dsPass", usuario.Pass),
                 new ("p_mdInstagram", usuario.Socials.MdInstagram),
@@ -119,7 +118,6 @@ namespace RaveAppAPI.Services.Helpers
                 new ("p_nmDni", usuario.Dni),
                 new ("p_nmTelefono", usuario.Telefono),
                 new ("p_dsCbu", usuario.CBU),
-                new ("p_dsNombreFantasia", usuario.NombreFantasia),
                 new ("p_dsBio", usuario.Bio),
                 new ("p_cdRolList", cdRolList),
                 new ("p_mdInstagram", usuario.Socials.MdInstagram),
@@ -375,6 +373,8 @@ namespace RaveAppAPI.Services.Helpers
                 new ("p_idFecha", fecha.IdFecha),
                 new ("p_dtInicio", fecha.Inicio),
                 new ("p_dtFin", fecha.Fin),
+                new ("p_dtInicioVenta", fecha.InicioVenta),
+                new ("p_dtFinVenta", fecha.FinVenta),
                 new ("p_cdEstado", fecha.Estado),
                 new ("p_ok", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output },
                 new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
@@ -470,7 +470,8 @@ namespace RaveAppAPI.Services.Helpers
             return new MySqlParameter[]
             {
                 new MySqlParameter ("p_idFecha", entrada.Fecha.IdFecha),
-                new MySqlParameter ("p_amPrecio", entrada.Precio)
+                new MySqlParameter ("p_amPrecio", entrada.Precio),
+                new MySqlParameter ("p_cdTipo", entrada.Tipo.CdTipo)
             };
         }
         public static MySqlParameter[] GetEntradasFechaParameters(GetEntradasFechaRequest request)
@@ -485,6 +486,7 @@ namespace RaveAppAPI.Services.Helpers
         #region Artista PCDS
         public const string PCDCreateArtista = "PCD_ARTISTAS_SetArtista";
         public const string PCDGetArtistas = "PCD_ARTISTAS_GetArtistas";
+        public const string PCDGetImgLikesArtistas = "PCD_ARTISTAS_GetImgLikesArtista";
         public const string PCDUpdateArtista = "PCD_ARTISTAS_UpdateArtista";
         public const string PCDCDeleteArtista = "PCD_ARTISTAS_DeleteArtista";
         public const string PCDCGetCantLikesArtista = "PCD_ARTISTAS_GetCantLikesArtista";
@@ -512,6 +514,10 @@ namespace RaveAppAPI.Services.Helpers
                 new MySqlParameter ("p_idUsuario", request.idUsuario),
                 new MySqlParameter ("p_isActivo", request.isActivo)
             };
+        }
+        public static MySqlParameter GetImgLikesArtistaParameters(string idArtista)
+        {
+            return new MySqlParameter("p_idArtista", idArtista);
         }
         public static MySqlParameter[] UpdateArtistaParameters(Artista artista)
         {

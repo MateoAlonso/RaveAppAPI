@@ -1,5 +1,6 @@
 ﻿using ErrorOr;
 using MySql.Data.MySqlClient;
+using Org.BouncyCastle.Asn1.Ocsp;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
@@ -106,6 +107,38 @@ namespace RaveAppAPI.Services.Repository
                 Logger.LogError(e.Message);
             }
             return res;
+        }
+
+        public ErrorOr<List<string>> GetImgLikesArtistas(string id)
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDGetImgLikesArtistas, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(ProcedureHelper.GetImgLikesArtistaParameters(id));
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            List<string> usuarios = ReaderMaper.ReaderToSimpleType<string>(reader).ToList();
+                            return usuarios;
+                        }
+                        else
+                        {
+                            return Error.NotFound();
+                        }
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
         }
 
         public ErrorOr<Updated> UpdateArtista(Artista artista)
