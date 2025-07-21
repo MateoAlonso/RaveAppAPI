@@ -61,7 +61,7 @@ namespace RaveAppAPI.Services.Models
 
         }
 
-        public static ErrorOr<Usuario> Crear(Domicilio domicilio, string nombre, string apellido, string correo, string cbu, string dni, string tel, string nombreFantasia, string bio, string pass, List<Media> media, Socials socials, DateTime? dtNacimiento, int isActivo = 1, DateTime? dtAlta = null, DateTime? dtBaja = null, string? idUsuario = null, List<RolesUsuario>? roles = null)
+        public static ErrorOr<Usuario> Crear(Domicilio domicilio, string nombre, string apellido, string correo, string cbu, string dni, string tel, string bio, string pass, List<Media> media, Socials socials, DateTime? dtNacimiento, int isActivo = 1, DateTime? dtAlta = null, DateTime? dtBaja = null, string? idUsuario = null, List<RolesUsuario>? roles = null)
         {
             List<Error> errors = new();
 
@@ -79,7 +79,7 @@ namespace RaveAppAPI.Services.Models
         public static ErrorOr<Usuario> From(CreateUsuarioRequest request)
         {
             Socials socials = request.Socials ?? new() { MdInstagram = string.Empty, MdSoundcloud = string.Empty, MdSpotify = string.Empty };
-            return Crear(request.domicilio, request.Nombre, request.Apellido, request.Correo, request.CBU, request.Dni, request.Telefono, request.NombreFantasia, request.Bio, request.Password, media: null, socials: socials, dtNacimiento: request.DtNacimiento);
+            return Crear(request.domicilio, request.Nombre, request.Apellido, request.Correo, request.CBU, request.Dni, request.Telefono, request.Bio, request.Password, media: null, socials: socials, dtNacimiento: request.DtNacimiento);
         }
 
         public static ErrorOr<Usuario> From(UpdateUsuarioRequest request)
@@ -87,7 +87,7 @@ namespace RaveAppAPI.Services.Models
             Socials socials = request.Socials ?? new() { MdInstagram = string.Empty, MdSoundcloud = string.Empty, MdSpotify = string.Empty };
             List<RolesUsuario> roles = new();
             request.CdRoles.ForEach(r => roles.Add(new() { CdRol = r }));
-            return Crear(request.domicilio, request.Nombre, request.Apellido, request.Correo, request.CBU, request.Dni, request.Telefono, request.NombreFantasia, request.Bio, null, idUsuario: request.IdUsuario, roles: roles, media: null, socials: socials, dtNacimiento: request.DtNacimiento);
+            return Crear(request.domicilio, request.Nombre, request.Apellido, request.Correo, request.CBU, request.Dni, request.Telefono, request.Bio, null, idUsuario: request.IdUsuario, roles: roles, media: null, socials: socials, dtNacimiento: request.DtNacimiento);
         }
     }
 }
