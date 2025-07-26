@@ -1,8 +1,8 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using MySql.Data.MySqlClient;
 using RaveAppAPI.Services.Models;
-using RaveAppAPI.Services.RequestModel.Entrada;
 using RaveAppAPI.Services.RequestModel.Artista;
+using RaveAppAPI.Services.RequestModel.Entrada;
 using RaveAppAPI.Services.RequestModel.Evento;
 using RaveAppAPI.Services.RequestModel.Fiesta;
 using RaveAppAPI.Services.RequestModel.Resenia;
@@ -483,6 +483,7 @@ namespace RaveAppAPI.Services.Helpers
             };
         }
         #endregion
+
         #region Artista PCDS
         public const string PCDCreateArtista = "PCD_ARTISTAS_SetArtista";
         public const string PCDGetArtistas = "PCD_ARTISTAS_GetArtistas";
@@ -538,7 +539,7 @@ namespace RaveAppAPI.Services.Helpers
         }
         public static MySqlParameter[] GetCantLikesArtistaParameters(string idArtista)
         {
-            return new MySqlParameter[] 
+            return new MySqlParameter[]
             {
                 new MySqlParameter ("p_idArtista", idArtista),
                 new MySqlParameter ("p_Cant", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output }
