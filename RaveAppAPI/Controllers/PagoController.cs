@@ -67,10 +67,21 @@ namespace RaveAppAPI.Controllers
         }
 
         [HttpPost("NotificacionHook")]
-        public IActionResult NotificacionHook(object request)
+        public IActionResult NotificacionHook(NotificacionRequest Request)
         {
-            dynamic jsonRequest = JsonSerializer.Deserialize<dynamic>(request.ToString());
-
+//            {
+//                "action": "payment.created",
+                //  "api_version": "v1",
+                //  "data": {
+                //                    "id": "121771934776"
+                //  },
+                //  "date_created": "2025-08-10T18:52:01Z",
+                //  "id": 123721568834,
+                //  "live_mode": true,
+                //  "type": "payment",
+                //  "user_id": "2577279652"
+                //}
+                //checkear pago?
             return Ok();
         }
     }
