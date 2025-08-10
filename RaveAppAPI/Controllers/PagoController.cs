@@ -4,7 +4,6 @@ using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Repository.Contracts;
 using RaveAppAPI.Services.RequestModel.Pago;
 using System.Net.Http.Headers;
-using System.Text.Json;
 
 namespace RaveAppAPI.Controllers
 {
@@ -67,22 +66,47 @@ namespace RaveAppAPI.Controllers
         }
 
         [HttpPost("NotificacionHook")]
-        public IActionResult NotificacionHook(NotificacionRequest Request)
+        public IActionResult NotificacionHook(NotificacionRequest request)
         {
-//            {
-//                "action": "payment.created",
-                //  "api_version": "v1",
-                //  "data": {
-                //                    "id": "121771934776"
-                //  },
-                //  "date_created": "2025-08-10T18:52:01Z",
-                //  "id": 123721568834,
-                //  "live_mode": true,
-                //  "type": "payment",
-                //  "user_id": "2577279652"
-                //}
-                //checkear pago?
+            //            {
+            //                "action": "payment.created",
+            //  "api_version": "v1",
+            //  "data": {
+            //                    "id": "121771934776"
+            //  },
+            //  "date_created": "2025-08-10T18:52:01Z",
+            //  "id": 123721568834,
+            //  "live_mode": true,
+            //  "type": "payment",
+            //  "user_id": "2577279652"
+            //}
+            var GetPaymentResult = GetPayment(request.Data.Id);
+            if (GetPaymentResult.IsError)
+            {
+                return Problem(GetPaymentResult.Errors);
+            }
+
             return Ok();
+        }
+
+        private ErrorOr<GetPaymentResponse> GetPayment(string paymentId)
+        {
+            HttpRequestMessage MPRequest = APIHelper.BuildRequest(
+                HttpMethod.Get,
+                _BaseUrlMPApi,
+                string.Format(APIHelper.GetPayment, paymentId),
+                auth: new AuthenticationHeaderValue("Bearer", EnvHelper.GetTokenMP()));
+            using (var client = new HttpClient())
+            {
+                var response = client.SendAsync(MPRequest);
+                response.Wait();
+                if (!response.Result.IsSuccessStatusCode)
+                {
+                    return Error.Failure();
+                }
+                var paymentResponse = APIHelper.MapResponse<GetPaymentResponse>(response.Result);
+                return paymentResponse;
+            }
         }
     }
 }

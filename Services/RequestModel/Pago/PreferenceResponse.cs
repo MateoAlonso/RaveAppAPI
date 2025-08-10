@@ -119,12 +119,6 @@ namespace RaveAppAPI.Services.RequestModel.Pago
         public string Id { get; set; }
     }
 
-    public class Metadata
-    {
-        [JsonProperty("id_compra")]
-        public string IdCompra { get; set; }
-    }
-
     public class ReceiverAddress
     {
         [JsonProperty("zip_code")]
