@@ -621,5 +621,20 @@ namespace RaveAppAPI.Services.Helpers
             return new MySqlParameter("p_idFiesta", request.IdFiesta);
         }
         #endregion
+
+        #region Compra PCDS
+        public const string FinalizarCompra = "PCD_COMPRA_FinalizarCompra";
+        #endregion
+
+        #region Compra Parameters
+        public static MySqlParameter[] FinalizarCompraParameters(string idCompra, int cdMedioPago)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_idCompra", idCompra),
+                new MySqlParameter ("p_cdMedioPago", cdMedioPago)
+            };
+        }
+        #endregion
     }
 }

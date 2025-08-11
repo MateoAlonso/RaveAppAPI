@@ -167,5 +167,4 @@ namespace RaveAppAPI.Services.RequestModel.Pago
         public ReceiverAddress ReceiverAddress { get; set; }
     }
 
-
 }

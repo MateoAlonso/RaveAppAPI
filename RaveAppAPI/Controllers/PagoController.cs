@@ -10,10 +10,12 @@ namespace RaveAppAPI.Controllers
     public class PagoController : ApiController
     {
         private readonly IPagoService _pagoService;
+        private readonly ILogService _logService;
         private readonly string _BaseUrlMPApi = EnvHelper.GetMPApi();
-        public PagoController(IPagoService pagoService)
+        public PagoController(IPagoService pagoService, ILogService logService)
         {
             _pagoService = pagoService;
+            _logService = logService;
         }
 
         [HttpPost("CrearPago")]
@@ -68,25 +70,22 @@ namespace RaveAppAPI.Controllers
         [HttpPost("NotificacionHook")]
         public IActionResult NotificacionHook(NotificacionRequest request)
         {
-            //            {
-            //                "action": "payment.created",
-            //  "api_version": "v1",
-            //  "data": {
-            //                    "id": "121771934776"
-            //  },
-            //  "date_created": "2025-08-10T18:52:01Z",
-            //  "id": 123721568834,
-            //  "live_mode": true,
-            //  "type": "payment",
-            //  "user_id": "2577279652"
-            //}
-            var GetPaymentResult = GetPayment(request.Data.Id);
-            if (GetPaymentResult.IsError)
+            var getPaymentResult = GetPayment(request.Data.Id);
+            if (getPaymentResult.IsError)
             {
-                return Problem(GetPaymentResult.Errors);
+                return Problem(getPaymentResult.Errors);
             }
-
-            return Ok();
+            var payment = getPaymentResult.Value;
+            //TODO loguear webhook y agregar al pcd el id de pago
+            if (payment.Status == PaymentStatus.Approved)
+            {
+                var finalizarCompraResult = _pagoService.FinalizarCompra(payment.Metadata.IdCompra, (int)MediosPagoEnum.MercadoPago);
+                if (!finalizarCompraResult.IsError)
+                {
+                    return Ok();
+                }
+            }
+            return Problem();
         }
 
         private ErrorOr<GetPaymentResponse> GetPayment(string paymentId)

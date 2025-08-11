@@ -20,6 +20,7 @@ try
     builder.Services.AddScoped<IMediaService, MediaService>();
     builder.Services.AddScoped<IReseniaService, ReseniaService>();
     builder.Services.AddScoped<IPagoService, PagoService>();
+    builder.Services.AddScoped<ILogService, LogService>();
 
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
