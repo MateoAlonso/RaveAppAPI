@@ -636,5 +636,23 @@ namespace RaveAppAPI.Services.Helpers
             };
         }
         #endregion
+
+        #region Log PCDS
+        public const string SetLogWebhookMP = "PCD_LOG_SetLogWebhookMP";
+        #endregion
+
+        #region Log Parameters
+        public static MySqlParameter[] SetLogWebhookMPParameters(string idCompra, string estadoPago, string detalleEstadoPago, decimal monto, long idPagoMP)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_idCompra", idCompra),
+                new MySqlParameter ("p_dsEstadoPago", estadoPago),
+                new MySqlParameter ("p_dsDetalleEstadoPago", detalleEstadoPago),
+                new MySqlParameter ("p_ammonto", monto),
+                new MySqlParameter ("p_idPagoMP", idPagoMP)
+            };
+        }
+        #endregion
     }
 }

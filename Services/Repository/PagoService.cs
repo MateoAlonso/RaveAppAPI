@@ -1,7 +1,6 @@
 ﻿using ErrorOr;
 using MySql.Data.MySqlClient;
 using RaveAppAPI.Services.Helpers;
-using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
 
 namespace RaveAppAPI.Services.Repository

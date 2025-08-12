@@ -1,4 +1,5 @@
 ﻿using ErrorOr;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Repository.Contracts;
@@ -18,7 +19,7 @@ namespace RaveAppAPI.Controllers
             _logService = logService;
         }
 
-        [HttpPost("CrearPago")]
+        [HttpPost("CrearPago"), Authorize]
         public IActionResult CreatePago(CreatePagoRequest request)
         {
             var createPagoResult = CreatePreference(request);
@@ -76,7 +77,7 @@ namespace RaveAppAPI.Controllers
                 return Problem(getPaymentResult.Errors);
             }
             var payment = getPaymentResult.Value;
-            //TODO loguear webhook y agregar al pcd el id de pago
+            _logService.LogWebhookMP(payment.Metadata.IdCompra, payment.Status, payment.StatusDetail, payment.TransactionAmount, payment.Id);
             if (payment.Status == PaymentStatus.Approved)
             {
                 var finalizarCompraResult = _pagoService.FinalizarCompra(payment.Metadata.IdCompra, (int)MediosPagoEnum.MercadoPago);
