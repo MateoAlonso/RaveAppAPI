@@ -1,8 +1,8 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using MySql.Data.MySqlClient;
 using RaveAppAPI.Services.Models;
-using RaveAppAPI.Services.RequestModel.Entrada;
 using RaveAppAPI.Services.RequestModel.Artista;
+using RaveAppAPI.Services.RequestModel.Entrada;
 using RaveAppAPI.Services.RequestModel.Evento;
 using RaveAppAPI.Services.RequestModel.Fiesta;
 using RaveAppAPI.Services.RequestModel.Resenia;
@@ -483,6 +483,7 @@ namespace RaveAppAPI.Services.Helpers
             };
         }
         #endregion
+
         #region Artista PCDS
         public const string PCDCreateArtista = "PCD_ARTISTAS_SetArtista";
         public const string PCDGetArtistas = "PCD_ARTISTAS_GetArtistas";
@@ -538,7 +539,7 @@ namespace RaveAppAPI.Services.Helpers
         }
         public static MySqlParameter[] GetCantLikesArtistaParameters(string idArtista)
         {
-            return new MySqlParameter[] 
+            return new MySqlParameter[]
             {
                 new MySqlParameter ("p_idArtista", idArtista),
                 new MySqlParameter ("p_Cant", MySqlDbType.Int32) { Direction = System.Data.ParameterDirection.Output }
@@ -618,6 +619,39 @@ namespace RaveAppAPI.Services.Helpers
         public static MySqlParameter GetAvgReseniaParameters(GetAvgReseniaRequest request)
         {
             return new MySqlParameter("p_idFiesta", request.IdFiesta);
+        }
+        #endregion
+
+        #region Compra PCDS
+        public const string FinalizarCompra = "PCD_COMPRA_FinalizarCompra";
+        #endregion
+
+        #region Compra Parameters
+        public static MySqlParameter[] FinalizarCompraParameters(string idCompra, int cdMedioPago)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_idCompra", idCompra),
+                new MySqlParameter ("p_cdMedioPago", cdMedioPago)
+            };
+        }
+        #endregion
+
+        #region Log PCDS
+        public const string SetLogWebhookMP = "PCD_LOG_SetLogWebhookMP";
+        #endregion
+
+        #region Log Parameters
+        public static MySqlParameter[] SetLogWebhookMPParameters(string idCompra, string estadoPago, string detalleEstadoPago, decimal monto, long idPagoMP)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_idCompra", idCompra),
+                new MySqlParameter ("p_dsEstadoPago", estadoPago),
+                new MySqlParameter ("p_dsDetalleEstadoPago", detalleEstadoPago),
+                new MySqlParameter ("p_ammonto", monto),
+                new MySqlParameter ("p_idPagoMP", idPagoMP)
+            };
         }
         #endregion
     }

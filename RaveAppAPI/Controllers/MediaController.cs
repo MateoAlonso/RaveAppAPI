@@ -1,6 +1,7 @@
-﻿using Amazon.S3.Model;
+﻿using Amazon;
+using Amazon.Runtime;
 using Amazon.S3;
-using Amazon;
+using Amazon.S3.Model;
 using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,10 +9,7 @@ using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
 using RaveAppAPI.Services.RequestModel.Media;
-using Amazon.Runtime;
-using Amazon.S3.Model.Internal.MarshallTransformations;
 using System.Net.Http.Headers;
-using System.IO;
 
 namespace RaveAppAPI.Controllers
 {
@@ -46,7 +44,7 @@ namespace RaveAppAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateMedia([FromForm]CreateMediaRequest request)
+        public async Task<IActionResult> CreateMedia([FromForm] CreateMediaRequest request)
         {
             ErrorOr<Media> requestToMediaResult = Media.From(request);
 
@@ -129,7 +127,7 @@ namespace RaveAppAPI.Controllers
                 Key = id
             };
 
-            using (var client = new AmazonS3Client(credentials, config)) 
+            using (var client = new AmazonS3Client(credentials, config))
             {
                 try
                 {
@@ -139,7 +137,7 @@ namespace RaveAppAPI.Controllers
                 {
                     return Problem(e.Message);
                 }
-            
+
             }
 
             ErrorOr<Deleted> deleteMediaResult = _mediaService.DeleteMedia(id);
@@ -173,7 +171,8 @@ namespace RaveAppAPI.Controllers
                 using (var client = new AmazonS3Client(credentials, config))
                 {
                     return client.GetPreSignedURL(request);
-                };
+                }
+                ;
             }
             catch (Exception e)
             {
