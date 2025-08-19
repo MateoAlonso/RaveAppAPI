@@ -40,12 +40,18 @@ namespace RaveAppAPI.Controllers
                         Id = request.IdCompra,
                         Title = "Compra entradas",
                         Quantity = 1,
-                        UnitPrice = request.Monto
+                        UnitPrice = request.Subtotal + request.CargoServicio
                     }
                 },
                 Metadata = new Metadata
                 {
                     IdCompra = request.IdCompra
+                },
+                BackUrls = new BackUrls
+                {
+                    Success = request.BackUrl,
+                    Failure = request.BackUrl,
+                    Pending = request.BackUrl
                 }
             };
             HttpRequestMessage MPRequest = APIHelper.BuildRequest(
