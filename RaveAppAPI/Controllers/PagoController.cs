@@ -52,7 +52,41 @@ namespace RaveAppAPI.Controllers
                     Success = request.BackUrl,
                     Failure = request.BackUrl,
                     Pending = request.BackUrl
-                }
+                },
+                PaymentMethods = new PaymentMethods
+                {
+                    ExcludedPaymentTypes = new List<ExcludedPaymentType>
+                    {
+                        new ExcludedPaymentType
+                        {
+                            Id = PaymentTypes.Ticket
+                        },
+                        new ExcludedPaymentType
+                        {
+                            Id = PaymentTypes.DigitalCurrency
+                        },
+                        new ExcludedPaymentType
+                        {
+                            Id = PaymentTypes.CryptoTransfer
+                        },
+                        new ExcludedPaymentType
+                        {
+                            Id = PaymentTypes.BankTransfer
+                        },
+                        new ExcludedPaymentType
+                        {
+                            Id = PaymentTypes.VoucherCard
+                        }
+                    },
+                    Installments = 1,
+                    DefaultPaymentMethodId = PaymentTypes.AccountMoney
+                },
+                ExternalReference = request.IdCompra,
+                Expires = true,
+                ExpirationDateFrom = DateTime.UtcNow,
+                ExpirationDateTo = DateTime.UtcNow.AddMinutes(10),
+                StatementDescriptor = "RaveApp",
+                AutoReturn = "approved"
             };
             HttpRequestMessage MPRequest = APIHelper.BuildRequest(
                 HttpMethod.Post,
