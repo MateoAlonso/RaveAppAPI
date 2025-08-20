@@ -456,12 +456,14 @@ namespace RaveAppAPI.Services.Helpers
         }
         public static MySqlParameter[] ReservarEntradasParameters(ReservarEntradasRequest request)
         {
+            string cantidad = string.Join(",", request.Entradas.Select(e => e.Cantidad));
+            string tipoEntrada = string.Join(",", request.Entradas.Select(e => e.TipoEntrada));
             return new MySqlParameter[]
             {
-                new MySqlParameter ("p_nmCantidad", request.Cantidad),
+                new MySqlParameter ("p_nmCantidad", cantidad),
                 new MySqlParameter ("p_idUsuario", request.IdUsuario),
                 new MySqlParameter ("p_idFecha", request.IdFecha),
-                new MySqlParameter ("p_cdTipoEntrada", request.TipoEntrada),
+                new MySqlParameter ("p_cdTipoEntrada", tipoEntrada),
                 new MySqlParameter ("p_idCompra", MySqlDbType.VarChar, 36) { Direction = System.Data.ParameterDirection.Output }
             };
         }

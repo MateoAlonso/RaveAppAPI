@@ -174,6 +174,7 @@ namespace RaveAppAPI.Services.Repository
                     dbcon.Open();
                     MySqlCommand cmd = new(ProcedureHelper.PCDUpdateEntradas, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    //TODO Cambios DB Reservar entradas
                     cmd.Parameters.AddRange(ProcedureHelper.UpdateEntradasParameters(entrada));
                     cmd.ExecuteNonQuery();
                     return Result.Updated;
