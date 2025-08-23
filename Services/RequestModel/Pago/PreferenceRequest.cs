@@ -121,10 +121,10 @@ namespace RaveAppAPI.Services.RequestModel.Pago
     public class PaymentMethods
     {
         [JsonProperty("excluded_payment_types")]
-        public List<object> ExcludedPaymentTypes { get; set; }
+        public List<ExcludedPaymentType> ExcludedPaymentTypes { get; set; }
 
         [JsonProperty("excluded_payment_methods")]
-        public List<object> ExcludedPaymentMethods { get; set; }
+        public List<ExcludedPaymentMethod> ExcludedPaymentMethods { get; set; }
 
         [JsonProperty("installments")]
         public int Installments { get; set; }
