@@ -1,6 +1,6 @@
 ﻿namespace RaveAppAPI.Services.Helpers
 {
-    public class PaymentStatus
+    public static class PaymentStatus
     {
         public const string Pending = "pending";
         public const string Approved = "approved";

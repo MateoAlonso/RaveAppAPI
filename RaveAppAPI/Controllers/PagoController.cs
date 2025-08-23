@@ -52,7 +52,41 @@ namespace RaveAppAPI.Controllers
                     Success = request.BackUrl,
                     Failure = request.BackUrl,
                     Pending = request.BackUrl
-                }
+                },
+                PaymentMethods = new PaymentMethods
+                {
+                    ExcludedPaymentTypes = new List<ExcludedPaymentType>
+                    {
+                        new ExcludedPaymentType
+                        {
+                            Id = PaymentTypes.Ticket
+                        },
+                        new ExcludedPaymentType
+                        {
+                            Id = PaymentTypes.DigitalCurrency
+                        },
+                        new ExcludedPaymentType
+                        {
+                            Id = PaymentTypes.CryptoTransfer
+                        },
+                        new ExcludedPaymentType
+                        {
+                            Id = PaymentTypes.BankTransfer
+                        },
+                        new ExcludedPaymentType
+                        {
+                            Id = PaymentTypes.VoucherCard
+                        }
+                    },
+                    Installments = 1,
+                    DefaultPaymentMethodId = PaymentTypes.AccountMoney
+                },
+                ExternalReference = request.IdCompra,
+                Expires = true,
+                ExpirationDateFrom = DateTime.UtcNow,
+                ExpirationDateTo = DateTime.UtcNow.AddMinutes(10),
+                StatementDescriptor = "RaveApp",
+                AutoReturn = "approved"
             };
             HttpRequestMessage MPRequest = APIHelper.BuildRequest(
                 HttpMethod.Post,
@@ -87,12 +121,12 @@ namespace RaveAppAPI.Controllers
             if (payment.Status == PaymentStatus.Approved)
             {
                 var finalizarCompraResult = _pagoService.FinalizarCompra(payment.Metadata.IdCompra, (int)MediosPagoEnum.MercadoPago);
-                if (!finalizarCompraResult.IsError)
+                if (finalizarCompraResult.IsError)
                 {
-                    return Ok();
+                    return Problem();
                 }
             }
-            return Problem();
+            return Ok();
         }
 
         private ErrorOr<GetPaymentResponse> GetPayment(string paymentId)
