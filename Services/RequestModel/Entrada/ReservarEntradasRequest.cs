@@ -1,4 +1,4 @@
 ﻿namespace RaveAppAPI.Services.RequestModel.Entrada
 {
-    public record ReservarEntradasRequest(int Cantidad, string IdUsuario, string IdFecha, int TipoEntrada);
+    public record ReservarEntradasRequest(List<ReservarEntradaDTO> Entradas, string IdUsuario, string IdFecha);
 }
