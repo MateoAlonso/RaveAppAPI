@@ -121,12 +121,12 @@ namespace RaveAppAPI.Controllers
             if (payment.Status == PaymentStatus.Approved)
             {
                 var finalizarCompraResult = _pagoService.FinalizarCompra(payment.Metadata.IdCompra, (int)MediosPagoEnum.MercadoPago);
-                if (!finalizarCompraResult.IsError)
+                if (finalizarCompraResult.IsError)
                 {
-                    return Ok();
+                    return Problem();
                 }
             }
-            return Problem();
+            return Ok();
         }
 
         private ErrorOr<GetPaymentResponse> GetPayment(string paymentId)
