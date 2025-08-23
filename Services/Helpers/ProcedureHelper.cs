@@ -1,5 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.RequestModel.Artista;
 using RaveAppAPI.Services.RequestModel.Entrada;
@@ -456,12 +457,12 @@ namespace RaveAppAPI.Services.Helpers
         }
         public static MySqlParameter[] ReservarEntradasParameters(ReservarEntradasRequest request)
         {
+            string jsonEntradas = JsonConvert.SerializeObject(request.Entradas);
             return new MySqlParameter[]
             {
-                new MySqlParameter ("p_nmCantidad", request.Cantidad),
+                new MySqlParameter ("p_jsonEntradas", jsonEntradas),
                 new MySqlParameter ("p_idUsuario", request.IdUsuario),
                 new MySqlParameter ("p_idFecha", request.IdFecha),
-                new MySqlParameter ("p_cdTipoEntrada", request.TipoEntrada),
                 new MySqlParameter ("p_idCompra", MySqlDbType.VarChar, 36) { Direction = System.Data.ParameterDirection.Output }
             };
         }
