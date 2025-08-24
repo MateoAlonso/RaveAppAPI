@@ -9,6 +9,27 @@ namespace RaveAppAPI.Services.Repository
     {
         private readonly string connectionString = EnvHelper.GetConnectionString();
 
+        public ErrorOr<Updated> AnularCompra(string idCompra)
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.AnularCompra, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(ProcedureHelper.AnularCompraParameters(idCompra));
+                    cmd.ExecuteNonQuery();
+                    return Result.Updated;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
+        }
+
         public ErrorOr<Updated> FinalizarCompra(string idCompra, int cdMedioPago)
         {
             try
@@ -18,7 +39,7 @@ namespace RaveAppAPI.Services.Repository
                     dbcon.Open();
                     MySqlCommand cmd = new(ProcedureHelper.FinalizarCompra, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddRange(ProcedureHelper.FinalizarCompraParameters(idCompra, cdMedioPago));
+                    cmd.Parameters.Add(ProcedureHelper.FinalizarCompraParameters(idCompra, cdMedioPago));
                     cmd.ExecuteNonQuery();
                     return Result.Updated;
                 }
@@ -27,6 +48,46 @@ namespace RaveAppAPI.Services.Repository
             {
                 Logger.LogError(e.Message);
                 return Error.Unexpected();
+            }
+        }
+
+        public ErrorOr<Updated> PendienteCompra(string idCompra, decimal subTotal, decimal cargoServicio)
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PendienteCompra, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddRange(ProcedureHelper.PendienteCompraParameters(idCompra, subTotal, cargoServicio));
+                    cmd.ExecuteNonQuery();
+                    return Result.Updated;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
+        }
+
+        public void RefrescarTimerReserva(string idCompra)
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.RefreshTimerReserva, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(ProcedureHelper.RefreshTimerReservaParameters(idCompra));
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
             }
         }
     }
