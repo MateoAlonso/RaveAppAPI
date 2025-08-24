@@ -18,7 +18,7 @@ namespace RaveAppAPI.Services.Repository
                     dbcon.Open();
                     MySqlCommand cmd = new(ProcedureHelper.AnularCompra, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.Add(ProcedureHelper.PendienteCompraParameters(idCompra));
+                    cmd.Parameters.Add(ProcedureHelper.AnularCompraParameters(idCompra));
                     cmd.ExecuteNonQuery();
                     return Result.Updated;
                 }

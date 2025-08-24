@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Repository.Contracts;
 using RaveAppAPI.Services.RequestModel.Pago;
-using Serilog;
 using System.Net.Http.Headers;
 
 namespace RaveAppAPI.Controllers
