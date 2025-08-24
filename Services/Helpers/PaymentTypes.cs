@@ -1,4 +1,4 @@
-﻿namespace RaveAppAPI.Services.Helpers
+namespace RaveAppAPI.Services.Helpers
 {
     public static class PaymentTypes
     {
