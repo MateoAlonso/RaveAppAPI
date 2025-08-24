@@ -60,7 +60,7 @@ namespace RaveAppAPI.Services.Repository
                     dbcon.Open();
                     MySqlCommand cmd = new(ProcedureHelper.PendienteCompra, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.Add(ProcedureHelper.PendienteCompraParameters(idCompra, subTotal, cargoServicio));
+                    cmd.Parameters.AddRange(ProcedureHelper.PendienteCompraParameters(idCompra, subTotal, cargoServicio));
                     cmd.ExecuteNonQuery();
                     return Result.Updated;
                 }
