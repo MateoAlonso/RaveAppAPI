@@ -623,11 +623,14 @@ namespace RaveAppAPI.Services.Helpers
         }
         #endregion
 
-        #region Compra PCDS
+        #region Compra/Pago PCDS
         public const string FinalizarCompra = "PCD_COMPRA_FinalizarCompra";
+        public const string PendienteCompra = "PCD_COMPRA_SetCompraPendiente";
+        public const string AnularCompra = "PCD_COMPRA_AnularCompra";
+        public const string RefreshTimerReserva = "PCD_COMPRA_RefreshTimerReserva";
         #endregion
 
-        #region Compra Parameters
+        #region Compra/Pago Parameters
         public static MySqlParameter[] FinalizarCompraParameters(string idCompra, int cdMedioPago)
         {
             return new MySqlParameter[]
@@ -635,6 +638,23 @@ namespace RaveAppAPI.Services.Helpers
                 new MySqlParameter ("p_idCompra", idCompra),
                 new MySqlParameter ("p_cdMedioPago", cdMedioPago)
             };
+        }
+        public static MySqlParameter[] PendienteCompraParameters(string idCompra, decimal subTotal, decimal cargoServicio)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_idCompra", idCompra),
+                new MySqlParameter ("p_amSubTotal", subTotal),
+                new MySqlParameter ("p_amServicio", cargoServicio)
+            };
+        }
+        public static MySqlParameter AnularCompraParameters(string idCompra)
+        {
+            return new MySqlParameter("p_idCompra", idCompra);
+        }
+        public static MySqlParameter RefreshTimerReservaParameters(string idCompra)
+        {
+            return new MySqlParameter("p_idCompra", idCompra);
         }
         #endregion
 

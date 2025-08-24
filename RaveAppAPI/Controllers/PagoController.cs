@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Repository.Contracts;
 using RaveAppAPI.Services.RequestModel.Pago;
+using Serilog;
 using System.Net.Http.Headers;
 
 namespace RaveAppAPI.Controllers
@@ -23,6 +24,12 @@ namespace RaveAppAPI.Controllers
         public IActionResult CreatePago(CreatePagoRequest request)
         {
             var createPagoResult = CreatePreference(request);
+
+            if (!createPagoResult.IsError)
+            {
+                _pagoService.RefrescarTimerReserva(request.IdCompra);
+                _pagoService.PendienteCompra(request.IdCompra, request.Subtotal, request.CargoServicio);
+            }
 
             return createPagoResult.Match(
                 pago => Ok(pago),
@@ -84,7 +91,7 @@ namespace RaveAppAPI.Controllers
                 ExternalReference = request.IdCompra,
                 Expires = true,
                 ExpirationDateFrom = DateTime.UtcNow,
-                ExpirationDateTo = DateTime.UtcNow.AddMinutes(10),
+                ExpirationDateTo = DateTime.UtcNow.AddMinutes(5),
                 StatementDescriptor = "RaveApp",
                 AutoReturn = "approved"
             };
@@ -118,19 +125,42 @@ namespace RaveAppAPI.Controllers
             }
             var payment = getPaymentResult.Value;
             _logService.LogWebhookMP(payment.Metadata.IdCompra, payment.Status, payment.StatusDetail, payment.TransactionAmount, payment.Id);
-            if (payment.Status == PaymentStatus.Approved)
+            if (!ProcessPayment(payment.Status, payment.Metadata.IdCompra))
             {
-                var finalizarCompraResult = _pagoService.FinalizarCompra(payment.Metadata.IdCompra, (int)MediosPagoEnum.MercadoPago);
-                if (finalizarCompraResult.IsError)
-                {
-                    return Problem();
-                }
+                return Problem();
             }
             return Ok();
         }
 
+        private bool ProcessPayment(string status, string idCompra)
+        {
+            switch (status)
+            {
+                case PaymentStatus.Approved:
+                case PaymentStatus.Authorized:
+                    return !_pagoService.FinalizarCompra(idCompra, (int)MediosPagoEnum.MercadoPago).IsError;
+                case PaymentStatus.Rejected:
+                case PaymentStatus.Cancelled:
+                case PaymentStatus.Refunded:
+                case PaymentStatus.ChargedBack:
+                    return !_pagoService.AnularCompra(idCompra).IsError;
+                case PaymentStatus.Pending:
+                    return true; // La compra ya esta pendiente, no se hace nada
+                default:
+                    return false;
+            }
+        }
+
         private ErrorOr<GetPaymentResponse> GetPayment(string paymentId)
         {
+            try
+            {
+
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+            }
             HttpRequestMessage MPRequest = APIHelper.BuildRequest(
                 HttpMethod.Get,
                 _BaseUrlMPApi,
@@ -142,6 +172,7 @@ namespace RaveAppAPI.Controllers
                 response.Wait();
                 if (!response.Result.IsSuccessStatusCode)
                 {
+                    Logger.LogError($"Error recuperando pago para ID {paymentId}: {response.Result.ReasonPhrase}");
                     return Error.Failure();
                 }
                 var paymentResponse = APIHelper.MapResponse<GetPaymentResponse>(response.Result);
