@@ -26,6 +26,7 @@ namespace RaveAppAPI.Services.Helpers
         public const string PCDToggleEventoFavorito = "PCD_USUARIOS_ToggleEventoFavorito";
         public const string PCDToggleLikeArtista = "PCD_USUARIOS_ToggleLikeArtista";
         public const string PCDGetEventosFavoritos = "PCD_USUARIOS_GetEventosFavoritos";
+        public const string PCDGetEntradas = "PCD_USUARIOS_GetEntradas";
         #endregion
 
         #region Usuario Parameters
@@ -68,9 +69,9 @@ namespace RaveAppAPI.Services.Helpers
                 new ("p_error", MySqlDbType.VarChar, 200) { Direction = System.Data.ParameterDirection.Output }
             };
         }
-        public static MySqlParameter GetUsuarioByIdParameters(string id)
+        public static MySqlParameter GetEntradasParameters(string id)
         {
-            return new MySqlParameter("p_idusuario", id);
+            return new MySqlParameter("p_idUsuario", id);
         }
         public static MySqlParameter[] GetUsuarioParameters(string idUsuario, string mail, bool? isActivo, int? rol)
         {
