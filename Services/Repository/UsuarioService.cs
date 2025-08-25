@@ -314,5 +314,37 @@ namespace RaveAppAPI.Services.Repository
                 return Error.Unexpected();
             }
         }
+
+        public ErrorOr<List<GetEntradasUsuarioDTO>> GetEntradas(string idUsuario)
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDGetEntradas, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(ProcedureHelper.GetEntradasParameters(idUsuario));
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            List<GetEntradasUsuarioDTO> roles = ReaderMaper.ReaderToObject<GetEntradasUsuarioDTO>(reader).ToList();
+                            return roles;
+                        }
+                        else
+                        {
+                            return Error.NotFound();
+                        }
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
+        }
     }
 }
