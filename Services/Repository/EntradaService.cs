@@ -1,5 +1,6 @@
 ﻿using ErrorOr;
 using MySql.Data.MySqlClient;
+using Org.BouncyCastle.Asn1.Ocsp;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
@@ -99,6 +100,37 @@ namespace RaveAppAPI.Services.Repository
                         {
                             List<Estado> estados = ReaderMaper.ReaderToObject<Estado>(reader).ToList();
                             return estados;
+                        }
+                        else
+                        {
+                            return Error.NotFound();
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
+        }
+
+        public ErrorOr<List<GetReservaActivaDTO>> GetReservaActiva(string idUsuario)
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDGetReservaActiva, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(ProcedureHelper.GetReservaActivaParameters(idUsuario));
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            List<GetReservaActivaDTO> reserva = ReaderMaper.ReaderToObject<GetReservaActivaDTO>(reader).ToList();
+                            return reserva;
                         }
                         else
                         {

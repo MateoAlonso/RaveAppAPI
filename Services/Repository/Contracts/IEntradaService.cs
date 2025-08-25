@@ -13,5 +13,6 @@ namespace RaveAppAPI.Services.Repository.Contracts
         ErrorOr<List<Estado>> GetEstadosEntrada();
         ErrorOr<List<Tipo>> GetTiposEntrada();
         ErrorOr<Updated> UpdateEntrada(Entrada request);
+        ErrorOr<List<GetReservaActivaDTO>> GetReservaActiva(string idUsuario);
     }
 }
