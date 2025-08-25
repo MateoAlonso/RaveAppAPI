@@ -438,6 +438,7 @@ namespace RaveAppAPI.Services.Helpers
         public const string PCDGetTipoEntradas = "PCD_ENTRADAS_GetTipoEntradas";
         public const string PCDGetEstadosEntrada = "PCD_ENTRADAS_GetEstadosEntrada";
         public const string PCDUpdateEntradas = "PCD_ENTRADAS_UpdateEntradas";
+        public const string PCDGetReservaActiva = "PCD_ENTRADAS_GetReservaActiva";
         #endregion
 
         #region Entrada Parameters
@@ -454,6 +455,10 @@ namespace RaveAppAPI.Services.Helpers
         public static MySqlParameter CancelarReservaParameters(string idCompra)
         {
             return new MySqlParameter("p_idCompra", idCompra);
+        }
+        public static MySqlParameter GetReservaActivaParameters(string idUsuario)
+        {
+            return new MySqlParameter("p_idUsuario", idUsuario);
         }
         public static MySqlParameter[] ReservarEntradasParameters(ReservarEntradasRequest request)
         {

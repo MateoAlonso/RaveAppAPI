@@ -57,6 +57,15 @@ namespace RaveAppAPI.Controllers
                 updated => NoContent(),
                 errors => Problem(errors));
         }
+        [HttpGet("GetReservaActiva")]
+        public IActionResult GetReservaActiva(string idUsuario)
+        {
+            ErrorOr<List<GetReservaActivaDTO>> getReservaActivaResult = _entradaService.GetReservaActiva(idUsuario);
+
+            return getReservaActivaResult.Match(
+                reserva => Ok(reserva),
+                errors => Problem(errors));
+        }
         [HttpGet("GetEstadosEntrada")]
         public IActionResult GetEstadosEntrada()
         {
