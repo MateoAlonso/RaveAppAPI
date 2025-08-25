@@ -148,7 +148,15 @@ namespace RaveAppAPI.Controllers
                 eventos => Ok(MapEventosFavoritosResponse(eventos)),
                 errors => Problem(errors));
         }
+        [HttpGet("GetEntradas")]
+        public IActionResult GetEntradas(string idUsuario)
+        {
+            ErrorOr<List<GetEntradasUsuarioDTO>> getEntradasResult = _usuarioService.GetEntradas(idUsuario);
 
+            return getEntradasResult.Match(
+                entradas => Ok(entradas),
+                errors => Problem(errors));
+        }
         private static GetEventosFavoritosResponse MapEventosFavoritosResponse(List<string> eventos)
         {
             return new GetEventosFavoritosResponse(eventos);

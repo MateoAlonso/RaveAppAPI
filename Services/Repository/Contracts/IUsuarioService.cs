@@ -18,5 +18,6 @@ namespace RaveAppAPI.Services.Repository.Contracts
         ErrorOr<Updated> EventoFavorito(EventoFavoritoRequest request);
         ErrorOr<Updated> ArtistaFavorito(ArtistaFavoritoRequest request);
         ErrorOr<List<string>> GetEventosFavoritos(string idUsuario);
+        ErrorOr<List<GetEntradasUsuarioDTO>> GetEntradas(string idUsuario);
     }
 }
