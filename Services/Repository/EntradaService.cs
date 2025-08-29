@@ -122,7 +122,7 @@ namespace RaveAppAPI.Services.Repository
                 using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
-                    MySqlCommand cmd = new(ProcedureHelper.PCDGetEntradas, dbcon);
+                    MySqlCommand cmd = new(ProcedureHelper.PCDGetReservaActiva, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.Parameters.Add(ProcedureHelper.GetEntradasParameters(idUsuario));
                     using (MySqlDataReader reader = cmd.ExecuteReader())
