@@ -94,10 +94,10 @@ namespace RaveAppAPI.Controllers
                 StatementDescriptor = "RaveApp",
                 AutoReturn = "approved"
             };
-            HttpRequestMessage MPRequest = APIHelper.BuildRequest(
+            HttpRequestMessage MPRequest = MpApiHelper.BuildRequest(
                 HttpMethod.Post,
                 _BaseUrlMPApi,
-                APIHelper.CreatePreference,
+                MpApiHelper.CreatePreference,
                 prefReqBody,
                 new AuthenticationHeaderValue("Bearer", EnvHelper.GetTokenMP())
             );
@@ -109,7 +109,7 @@ namespace RaveAppAPI.Controllers
                 {
                     return Error.Failure();
                 }
-                var PrefResponse = APIHelper.MapResponse<PreferenceResponse>(response.Result);
+                var PrefResponse = MpApiHelper.MapResponse<PreferenceResponse>(response.Result);
                 return new CreatePagoResponse(PrefResponse.InitPoint);
             }
         }
@@ -160,10 +160,10 @@ namespace RaveAppAPI.Controllers
             {
                 Logger.LogError(e.Message);
             }
-            HttpRequestMessage MPRequest = APIHelper.BuildRequest(
+            HttpRequestMessage MPRequest = MpApiHelper.BuildRequest(
                 HttpMethod.Get,
                 _BaseUrlMPApi,
-                string.Format(APIHelper.GetPayment, paymentId),
+                string.Format(MpApiHelper.GetPayment, paymentId),
                 auth: new AuthenticationHeaderValue("Bearer", EnvHelper.GetTokenMP()));
             using (var client = new HttpClient())
             {
@@ -174,7 +174,7 @@ namespace RaveAppAPI.Controllers
                     Logger.LogError($"Error recuperando pago para ID {paymentId}: {response.Result.ReasonPhrase}");
                     return Error.Failure();
                 }
-                var paymentResponse = APIHelper.MapResponse<GetPaymentResponse>(response.Result);
+                var paymentResponse = MpApiHelper.MapResponse<GetPaymentResponse>(response.Result);
                 return paymentResponse;
             }
         }

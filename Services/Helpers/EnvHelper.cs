@@ -66,5 +66,41 @@
             return Environment.GetEnvironmentVariable("RAVEAPP_MPNotifSecret");
 #endif
         }
+
+        public static string GetSESAccessKey()
+        {
+#if DEBUG
+            return Environment.GetEnvironmentVariable("RAVEAPP_SESAccessKey", EnvironmentVariableTarget.Machine);
+#else
+            return Environment.GetEnvironmentVariable("RAVEAPP_SESAccessKey");
+#endif
+        }
+
+        public static string GetSESSecretKey()
+        {
+#if DEBUG
+            return Environment.GetEnvironmentVariable("RAVEAPP_SESSecretKey", EnvironmentVariableTarget.Machine);
+#else
+            return Environment.GetEnvironmentVariable("RAVEAPP_SESSecretKey");
+#endif
+        }
+
+        public static string GetJWTKey()
+        {
+#if DEBUG
+            return Environment.GetEnvironmentVariable("RAVEAPP_SigningKey", EnvironmentVariableTarget.Machine);
+#else
+            return Environment.GetEnvironmentVariable("RAVEAPP_SigningKey");
+#endif
+        }
+
+        public static string GetJWTIssuer()
+        {
+#if DEBUG
+            return Environment.GetEnvironmentVariable("RAVEAPP_ValidIssuer", EnvironmentVariableTarget.Machine);
+#else
+            return Environment.GetEnvironmentVariable("RAVEAPP_ValidIssuer");
+#endif
+        }
     }
 }
