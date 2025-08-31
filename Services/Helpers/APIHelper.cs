@@ -4,11 +4,8 @@ using System.Text;
 
 namespace RaveAppAPI.Services.Helpers
 {
-    public static class APIHelper
+    public class ApiHelper
     {
-        public const string CreatePreference = "/checkout/preferences";
-        public const string GetPayment = "/v1/payments/{0}";
-        public const string RefundPayment = "/v1/payments/{0}/refunds";
         public static HttpRequestMessage BuildRequest(HttpMethod verb, string url, string endpoint, object payload = null, AuthenticationHeaderValue auth = null, Dictionary<string, string?> headers = null)
         {
             HttpRequestMessage request = new HttpRequestMessage() { Method = verb, RequestUri = new Uri($"{url}{endpoint}") };
