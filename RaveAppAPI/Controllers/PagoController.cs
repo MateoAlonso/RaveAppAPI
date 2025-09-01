@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RaveAppAPI.Services.Helpers;
+using RaveAppAPI.Services.Repository;
 using RaveAppAPI.Services.Repository.Contracts;
 using RaveAppAPI.Services.RequestModel.Pago;
 using System.Net.Http.Headers;
@@ -137,7 +138,14 @@ namespace RaveAppAPI.Controllers
             {
                 case PaymentStatus.Approved:
                 case PaymentStatus.Authorized:
-                    return !_pagoService.FinalizarCompra(idCompra, (int)MediosPagoEnum.MercadoPago).IsError;
+                    var finalizarCompraResult = _pagoService.FinalizarCompra(idCompra, (int)MediosPagoEnum.MercadoPago);
+                    if (finalizarCompraResult.IsError)
+                    {
+                        return false;
+                    }
+                    EntradaController entradaController = new EntradaController(new EntradaService());
+                    entradaController.GenerarQrEntradas(finalizarCompraResult.Value);
+                    return true;
                 case PaymentStatus.Rejected:
                 case PaymentStatus.Cancelled:
                 case PaymentStatus.Refunded:

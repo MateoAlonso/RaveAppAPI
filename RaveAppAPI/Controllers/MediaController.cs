@@ -5,6 +5,7 @@ using Amazon.S3.Model;
 using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Asn1.Ocsp;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
@@ -179,7 +180,52 @@ namespace RaveAppAPI.Controllers
                 return string.Empty;
             }
         }
+        public async Task<ErrorOr<Created>> CrearMediaQrEntrada(byte[] QrEntrada, string idEntrada)
+        {
+            try
+            {
+                var credentials = new BasicAWSCredentials(_accessKey, _secretKey);
 
+                var config = new AmazonS3Config
+                {
+                    RegionEndpoint = RegionEndpoint.USEast1,
+                    ServiceURL = _r2Endpoint,
+                    ForcePathStyle = true
+                };
+
+                var preSignedRequest = new GetPreSignedUrlRequest
+                {
+                    BucketName = _bucketName,
+                    Key = idEntrada,
+                    Verb = HttpVerb.PUT,
+                    Expires = DateTime.UtcNow.AddMinutes(5)
+                };
+
+                string url;
+                using (var client = new AmazonS3Client(credentials, config))
+                {
+                    url = client.GetPreSignedURL(preSignedRequest);
+                }
+  
+                using (var httpClient = new HttpClient())
+                {
+                    var content = new ByteArrayContent(QrEntrada);
+                    content.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+                    var response = await httpClient.PutAsync(url, content);
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        return Error.Unexpected("Ocurrio un error al subir imagen al bucket");
+                    }
+                }
+                return Result.Created;
+                
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected(e.Message);
+            }
+        }
         private CreatedAtActionResult CreatedAtCreateMedia(Media media)
         {
             return CreatedAtAction(nameof(CreateMedia),

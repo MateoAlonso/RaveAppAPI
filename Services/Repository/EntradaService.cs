@@ -197,6 +197,25 @@ namespace RaveAppAPI.Services.Repository
             }
         }
 
+        public void SetQrEntrada(string entrada, string qrUuid)
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDSetQREntrada, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddRange(ProcedureHelper.SetQrEntradaParameters(entrada, qrUuid));
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+            }
+        }
+
         public ErrorOr<Updated> UpdateEntrada(Entrada entrada)
         {
             try
