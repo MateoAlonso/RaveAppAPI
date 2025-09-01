@@ -37,6 +37,10 @@ namespace RaveAppAPI.Services.Models
         {
             return Crear(null, request.IdEntidadMedia, request.Video);
         }
+        public static ErrorOr<Media> From(string IdEntidadMedia)
+        {
+            return Crear(null, IdEntidadMedia, null);
+        }
     }
 
 }

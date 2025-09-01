@@ -14,5 +14,6 @@ namespace RaveAppAPI.Services.Repository.Contracts
         ErrorOr<List<Tipo>> GetTiposEntrada();
         ErrorOr<Updated> UpdateEntrada(Entrada request);
         ErrorOr<List<GetReservaActivaDTO>> GetReservaActiva(string idUsuario);
+        void SetQrEntrada(string entrada, string qrUuid);
     }
 }
