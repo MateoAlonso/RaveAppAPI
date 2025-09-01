@@ -102,5 +102,14 @@
             return Environment.GetEnvironmentVariable("RAVEAPP_ValidIssuer");
 #endif
         }
+
+        public static string GetMailgunToken()
+        {
+#if DEBUG
+            return Environment.GetEnvironmentVariable("RAVEAPP_MailGunToken", EnvironmentVariableTarget.Machine);
+#else
+            return Environment.GetEnvironmentVariable("RAVEAPP_MailGunToken");
+#endif
+        }
     }
 }
