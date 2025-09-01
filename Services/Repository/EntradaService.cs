@@ -121,7 +121,7 @@ namespace RaveAppAPI.Services.Repository
                 using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
-                    MySqlCommand cmd = new(ProcedureHelper.PCDGetEntradas, dbcon);
+                    MySqlCommand cmd = new(ProcedureHelper.PCDGetReservaActiva, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.Parameters.Add(ProcedureHelper.GetEntradasParameters(idUsuario));
                     using (MySqlDataReader reader = cmd.ExecuteReader())
@@ -193,6 +193,25 @@ namespace RaveAppAPI.Services.Repository
             {
                 Logger.LogError(e.Message);
                 return Error.Unexpected();
+            }
+        }
+
+        public void SetQrEntrada(string entrada, string qrUuid)
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDSetQREntrada, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddRange(ProcedureHelper.SetQrEntradaParameters(entrada, qrUuid));
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
             }
         }
 

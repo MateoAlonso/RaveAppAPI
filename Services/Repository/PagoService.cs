@@ -30,7 +30,7 @@ namespace RaveAppAPI.Services.Repository
             }
         }
 
-        public ErrorOr<Updated> FinalizarCompra(string idCompra, int cdMedioPago)
+        public ErrorOr<List<string>> FinalizarCompra(string idCompra, int cdMedioPago)
         {
             try
             {
@@ -39,9 +39,19 @@ namespace RaveAppAPI.Services.Repository
                     dbcon.Open();
                     MySqlCommand cmd = new(ProcedureHelper.FinalizarCompra, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.Add(ProcedureHelper.FinalizarCompraParameters(idCompra, cdMedioPago));
-                    cmd.ExecuteNonQuery();
-                    return Result.Updated;
+                    cmd.Parameters.AddRange(ProcedureHelper.FinalizarCompraParameters(idCompra, cdMedioPago));
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            List<string> entradas = ReaderMaper.ReaderToSimpleType<string>(reader).ToList();
+                            return entradas;
+                        }
+                        else
+                        {
+                            return Error.NotFound();
+                        }
+                    }
                 }
             }
             catch (Exception e)

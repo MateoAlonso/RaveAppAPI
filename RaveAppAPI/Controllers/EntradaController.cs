@@ -1,7 +1,9 @@
 ﻿using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using QRCoder;
 using RaveAppAPI.Services.Models;
+using RaveAppAPI.Services.Repository;
 using RaveAppAPI.Services.Repository.Contracts;
 using RaveAppAPI.Services.RequestModel.Entrada;
 
@@ -100,6 +102,25 @@ namespace RaveAppAPI.Controllers
             return updateEntradaResult.Match(
                 updated => NoContent(),
                 errors => Problem(errors));
+        }
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async void GenerarQrEntradas(List<string> entradas)
+        {
+            foreach (var entrada in entradas)
+            {
+                string uuid = Guid.NewGuid().ToString();
+                string QrContent = $"{entrada},{uuid}";
+                QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                QRCodeData qrCodeData = qrGenerator.CreateQrCode(QrContent, QRCodeGenerator.ECCLevel.Q);
+                var qrCodePngData = new PngByteQRCode(qrCodeData);
+                var qrCode = qrCodePngData.GetGraphic(20);
+                MediaController media = new MediaController(new MediaService());
+                var res = await media.CrearMediaQrEntrada(qrCode, entrada);
+                if (!res.IsError)
+                {
+                    _entradaService.SetQrEntrada(entrada, uuid);
+                }
+            }
         }
         private IActionResult CreatedAtCreateEntrada(Entrada entrada)
         {
