@@ -9,7 +9,7 @@ using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
 using RaveAppAPI.Services.RequestModel.Media;
-using System.Net.Http.Headers;
+using System.Net;
 
 namespace RaveAppAPI.Controllers
 {
@@ -69,33 +69,24 @@ namespace RaveAppAPI.Controllers
                         ForcePathStyle = true
                     };
 
-                    var preSignedRequest = new GetPreSignedUrlRequest
-                    {
-                        BucketName = _bucketName,
-                        Key = media.IdMedia,
-                        Verb = HttpVerb.PUT,
-                        Expires = DateTime.UtcNow.AddMinutes(5)
-                    };
-
-                    string url;
-                    using (var client = new AmazonS3Client(credentials, config))
-                    {
-                        url = client.GetPreSignedURL(preSignedRequest);
-                    }
+                    using var client = new AmazonS3Client(credentials, config);
 
                     using (var memStream = new MemoryStream())
                     {
                         await request.File.CopyToAsync(memStream);
-                        using (var httpClient = new HttpClient())
+
+                        var putRequest = new PutObjectRequest
                         {
-                            var content = new ByteArrayContent(memStream.ToArray());
-                            content.Headers.ContentType = new MediaTypeHeaderValue(request.File.ContentType);
-                            var response = httpClient.PutAsync(url, content);
-                            response.Wait();
-                            if (!response.Result.IsSuccessStatusCode)
-                            {
-                                return Problem("Ocurrio un error al subir imagen al bucket");
-                            }
+                            BucketName = _bucketName,
+                            Key = media.IdMedia,
+                            InputStream = memStream,
+                            ContentType = request.File.ContentType
+                        };
+
+                        var result = await client.PutObjectAsync(putRequest);
+                        if (result.HttpStatusCode != HttpStatusCode.OK)
+                        {
+                            return Problem("Ocurrio un error al subir imagen al bucket");
                         }
                     }
                 }
@@ -176,10 +167,69 @@ namespace RaveAppAPI.Controllers
             }
             catch (Exception e)
             {
+                Logger.LogError(e.Message);
                 return string.Empty;
             }
         }
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<ErrorOr<Created>> CrearMediaQrEntrada(byte[] QrEntrada, string idEntrada)
+        {
+            try
+            {
+                ErrorOr<Media> requestToMediaResult = Media.From(idEntrada);
 
+                if (requestToMediaResult.IsError)
+                {
+                    return requestToMediaResult.Errors;
+                }
+
+                var media = requestToMediaResult.Value;
+                ErrorOr<Created> createMediaResult = _mediaService.CreateMedia(media);
+
+                if (createMediaResult.IsError)
+                {
+                    return createMediaResult.Errors;
+                }
+                using var stream = new MemoryStream(QrEntrada);
+
+                var credentials = new BasicAWSCredentials(_accessKey, _secretKey);
+
+                var config = new AmazonS3Config
+                {
+                    RegionEndpoint = RegionEndpoint.USEast1,
+                    ServiceURL = _r2Endpoint,
+                    ForcePathStyle = true
+                };
+
+                var putRequest = new PutObjectRequest
+                {
+                    BucketName = _bucketName,
+                    Key = idEntrada,
+                    InputStream = stream,
+                    ContentType = "image/png",
+                    DisablePayloadSigning = true,
+                    DisableDefaultChecksumValidation = true
+                };
+                putRequest.MD5Digest = Convert.ToBase64String(System.Security.Cryptography.MD5.HashData(QrEntrada));
+
+                using (var client = new AmazonS3Client(credentials, config))
+                {
+                    var result = await client.PutObjectAsync(putRequest);
+                    if (result.HttpStatusCode != HttpStatusCode.OK)
+                    {
+                        return Error.Unexpected("Ocurrio un error al subir imagen al bucket");
+                    }
+                }
+
+                return Result.Created;
+
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected(e.Message);
+            }
+        }
         private CreatedAtActionResult CreatedAtCreateMedia(Media media)
         {
             return CreatedAtAction(nameof(CreateMedia),
