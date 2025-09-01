@@ -1,7 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
-using Org.BouncyCastle.Asn1.Ocsp;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.RequestModel.Artista;
 using RaveAppAPI.Services.RequestModel.Entrada;
