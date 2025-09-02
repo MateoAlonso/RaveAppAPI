@@ -4,11 +4,8 @@ using System.Text;
 
 namespace RaveAppAPI.Services.Helpers
 {
-    public static class APIHelper
+    public class ApiHelper
     {
-        public const string CreatePreference = "/checkout/preferences";
-        public const string GetPayment = "/v1/payments/{0}";
-        public const string RefundPayment = "/v1/payments/{0}/refunds";
         public static HttpRequestMessage BuildRequest(HttpMethod verb, string url, string endpoint, object payload = null, AuthenticationHeaderValue auth = null, Dictionary<string, string?> headers = null)
         {
             HttpRequestMessage request = new HttpRequestMessage() { Method = verb, RequestUri = new Uri($"{url}{endpoint}") };
@@ -17,6 +14,50 @@ namespace RaveAppAPI.Services.Helpers
                 StringContent content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
                 request.Content = content;
             }
+            request.Headers.Authorization = auth;
+            if (headers != null)
+            {
+                foreach (var header in headers)
+                {
+                    request.Headers.Add(header.Key, header.Value);
+                }
+            }
+            return request;
+        }
+        public static HttpRequestMessage BuildRequest(HttpMethod verb, string url, string endpoint, Dictionary<string, object> formData, AuthenticationHeaderValue auth = null, Dictionary<string, string?> headers = null)
+        {
+            HttpRequestMessage request = new HttpRequestMessage() { Method = verb, RequestUri = new Uri($"{url}{endpoint}") };
+
+            var content = new MultipartFormDataContent();
+            foreach (var item in formData)
+            {
+                switch (item.Value)
+                {
+                    case string str:
+                        content.Add(new StringContent(str), item.Key);
+                        break;
+                    case byte[] bytes:
+                        var fileContent = new ByteArrayContent(bytes);
+                        fileContent.Headers.ContentType =
+                            new MediaTypeHeaderValue("application/octet-stream");
+                        content.Add(fileContent, item.Key, "file.bin");
+                        break;
+                    case Stream stream:
+                        var streamContent = new StreamContent(stream);
+                        content.Add(streamContent, item.Key, "file.bin");
+                        break;
+                    case IEnumerable<string> list:
+                        foreach (var val in list)
+                        {
+                            content.Add(new StringContent(val), item.Key);
+                        }
+                        break;
+                    default:
+                        content.Add(new StringContent(item.Value.ToString() ?? string.Empty), item.Key);
+                        break;
+                }
+            }
+            request.Content = content;
             request.Headers.Authorization = auth;
             if (headers != null)
             {
