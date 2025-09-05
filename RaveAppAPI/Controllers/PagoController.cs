@@ -116,6 +116,7 @@ namespace RaveAppAPI.Controllers
         }
 
         [HttpPost("NotificacionHook")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult NotificacionHook(NotificacionRequest request)
         {
             var getPaymentResult = GetPayment(request.Data.Id);
