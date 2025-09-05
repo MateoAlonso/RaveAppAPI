@@ -4,8 +4,8 @@ namespace RaveAppAPI.Services.Models
 {
     public class GetEntradasUsuarioDTO
     {
-        [ColumnName("mdqr")]
-        public string QR { get; set; }
+        [ColumnName("identrada")]
+        public string IdEntrada { get; set; }
         [ColumnName("cdestado")]
         public int CdEstado { get; set; }
         [ColumnName("dsestado")]
@@ -18,5 +18,7 @@ namespace RaveAppAPI.Services.Models
         public string IdFecha { get; set; }
         [ColumnName("amprecio")]
         public decimal Precio { get; set; }
+        [ColumnName("idevento")]
+        public string IdEvento { get; set; }
     }
 }
