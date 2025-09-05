@@ -94,5 +94,44 @@ namespace RaveAppAPI.Controllers
                 return Problem(e.Message);
             }
         }
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async void EnviarMailsQR(PassRecoveryEmailRequest request)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    request.TemplateData.RecoveryUrl = $"{request.TemplateData.RecoveryUrl}?token={JwtHelper.GenerateToken(_jwtKey, _jwtIssuer, 15)}";
+
+                    string templateData = JsonConvert.SerializeObject(request.TemplateData);
+
+                    Dictionary<string, object> formData = new Dictionary<string, object>();
+                    formData.Add("from", FromEmail);
+                    formData.Add("to", new List<string> { request.To });
+                    formData.Add("template", PassRecoveryTemplate);
+                    formData.Add("t:variables", templateData);
+
+                    var sendRequest = ApiMailHelper.BuildRequest(
+                        HttpMethod.Post,
+                        BaseUrl,
+                        String.Format(MessagesEndpoint, DomainName),
+                        formData,
+                         new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"api:{_MailgunToken}"))));
+
+                    var response = client.SendAsync(sendRequest).GetAwaiter().GetResult();
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        return Problem();
+                    }
+                }
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Problem(e.Message);
+            }
+        }
     }
 }
