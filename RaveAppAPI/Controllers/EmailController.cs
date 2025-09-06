@@ -5,6 +5,7 @@ using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.RequestModel.Mail;
 using System.Net.Http.Headers;
 using System.Text;
+using static RaveAppAPI.Services.Helpers.ApiMailHelper;
 
 namespace RaveAppAPI.Controllers
 {

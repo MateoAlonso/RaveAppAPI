@@ -80,9 +80,11 @@ namespace RaveAppAPI.Controllers
                             BucketName = _bucketName,
                             Key = media.IdMedia,
                             InputStream = memStream,
-                            ContentType = request.File.ContentType
+                            ContentType = request.File.ContentType,
+                            DisablePayloadSigning = true,
+                            DisableDefaultChecksumValidation = true
                         };
-
+                        putRequest.MD5Digest = Convert.ToBase64String(System.Security.Cryptography.MD5.HashData(memStream.ToArray()));
                         var result = await client.PutObjectAsync(putRequest);
                         if (result.HttpStatusCode != HttpStatusCode.OK)
                         {
