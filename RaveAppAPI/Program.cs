@@ -74,9 +74,9 @@ try
     });
 
     var app = builder.Build();
+    app.UseCors("Allow");
     app.UseAuthentication();
     app.UseAuthorization();
-    app.UseCors("Allow");
     // Configure the HTTP request pipeline.
 
     //app.UseExceptionHandler(
