@@ -690,5 +690,16 @@ namespace RaveAppAPI.Services.Helpers
             };
         }
         #endregion
+
+        #region Email PCDS
+        public const string PCDEmailQr = "PCD_EMAIL_GetQrEntradas";
+        #endregion
+
+        #region Email Parameters
+        public static MySqlParameter EmailQrParameters(string idCompra)
+        {
+            return new MySqlParameter("p_idCompra", idCompra);
+        }
+        #endregion
     }
 }
