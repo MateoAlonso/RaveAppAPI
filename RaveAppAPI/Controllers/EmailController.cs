@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Amazon.Runtime.Internal;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Asn1.Ocsp;
 using RaveAppAPI.Services.Helpers;
+using RaveAppAPI.Services.Repository;
+using RaveAppAPI.Services.Repository.Contracts;
 using RaveAppAPI.Services.RequestModel.Mail;
 using System.Net.Http.Headers;
 using System.Text;
@@ -15,6 +19,12 @@ namespace RaveAppAPI.Controllers
         private readonly string _jwtKey = EnvHelper.GetJWTKey();
         private readonly string _jwtIssuer = EnvHelper.GetJWTIssuer();
         private readonly string _MailgunToken = EnvHelper.GetMailgunToken();
+        private readonly IEmailService _emailService;
+
+        public EmailController(EmailService emailService)
+        {
+            _emailService = emailService;
+        }
 
         [HttpPost("EnviarConfirmarEmail")]
         public async Task<IActionResult> EnviarConfirmarEmail(ConfirmarEmailRequest request)
@@ -27,11 +37,13 @@ namespace RaveAppAPI.Controllers
 
                     string templateData = JsonConvert.SerializeObject(request.TemplateData);
 
-                    Dictionary<string, object> formData = new Dictionary<string, object>();
-                    formData.Add("from", FromEmail);
-                    formData.Add("to", new List<string> { request.To });
-                    formData.Add("template", ConfirmarMailTemplate);
-                    formData.Add("t:variables", templateData);
+                    MultipartFormDataContent formData = new MultipartFormDataContent
+                    {
+                        { new StringContent(FromEmail), "from" },
+                        { new StringContent(request.To), "to" },
+                        { new StringContent(ConfirmarMailTemplate), "template" },
+                        { new StringContent(templateData), "t:variables" }
+                    };
 
                     var sendRequest = ApiMailHelper.BuildRequest(
                         HttpMethod.Post,
@@ -66,11 +78,13 @@ namespace RaveAppAPI.Controllers
 
                     string templateData = JsonConvert.SerializeObject(request.TemplateData);
 
-                    Dictionary<string, object> formData = new Dictionary<string, object>();
-                    formData.Add("from", FromEmail);
-                    formData.Add("to", new List<string> { request.To });
-                    formData.Add("template", PassRecoveryTemplate);
-                    formData.Add("t:variables", templateData);
+                    MultipartFormDataContent formData = new MultipartFormDataContent
+                    {
+                        { new StringContent(FromEmail), "from" },
+                        { new StringContent(request.To), "to" },
+                        { new StringContent(PassRecoveryTemplate), "template" },
+                        { new StringContent(templateData), "t:variables" }
+                    };
 
                     var sendRequest = ApiMailHelper.BuildRequest(
                         HttpMethod.Post,
@@ -92,6 +106,60 @@ namespace RaveAppAPI.Controllers
             {
                 Logger.LogError(e.Message);
                 return Problem(e.Message);
+            }
+        }
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async void EnviarMailsQR(string idCompra)
+        {
+            try
+            {
+                var emailData = _emailService.GetEmailQrData(idCompra);
+                if (emailData.IsError)
+                {
+                    return;
+                }
+                var emailDataResult = emailData.Value;
+
+                string nombreEvento = emailDataResult.First().NombreEvento;
+                string fechaEvento = emailDataResult.First().DtInicioFecha.ToString("f");
+                string To = emailDataResult.First().To;
+                string qrHtmlSection = string.Empty;
+                MultipartFormDataContent formData = new MultipartFormDataContent
+                {
+                    { new StringContent(FromEmail), "from" },
+                    { new StringContent(To), "to" },
+                    { new StringContent($"Entradas - {nombreEvento}"), "subject" }
+                };
+                foreach (var qrEmail in emailDataResult)
+                {
+                    qrHtmlSection += ApiMailHelper.BuildQrSection($"QR_{qrEmail.IdEntrada}", qrEmail.TipoEntrada);
+                    string qrContent = $"{qrEmail.IdEntrada},{qrEmail.MdQr}";
+                    var qrCode = QRHelper.GenerateQRCode(qrContent);
+                    formData.Add(new ByteArrayContent(qrCode), "inline", $"QR_{qrEmail.IdEntrada}");
+                }
+                string html = ApiMailHelper.BuildQrEmail(nombreEvento, fechaEvento, qrHtmlSection);
+                formData.Add(new StringContent(html), "html");
+
+                using (HttpClient client = new HttpClient())
+                {
+                    var sendRequest = ApiMailHelper.BuildRequest(
+                        HttpMethod.Post,
+                        BaseUrl,
+                        String.Format(MessagesEndpoint, DomainName),
+                        formData,
+                            new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"api:{_MailgunToken}"))));
+
+                    var response = await client.SendAsync(sendRequest);
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        string content = await response.Content.ReadAsStringAsync();
+                        Logger.LogError($"Error enviando mails QR: {(int)response.StatusCode} - {content}");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
             }
         }
     }

@@ -116,6 +116,7 @@ namespace RaveAppAPI.Controllers
         }
 
         [HttpPost("NotificacionHook")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult NotificacionHook(NotificacionRequest request)
         {
             var getPaymentResult = GetPayment(request.Data.Id);
@@ -145,6 +146,8 @@ namespace RaveAppAPI.Controllers
                     }
                     EntradaController entradaController = new EntradaController(new EntradaService());
                     entradaController.GenerarQrEntradas(finalizarCompraResult.Value);
+                    EmailController emailController = new EmailController(new EmailService());
+                    emailController.EnviarMailsQR(idCompra);
                     return true;
                 case PaymentStatus.Rejected:
                 case PaymentStatus.Cancelled:
