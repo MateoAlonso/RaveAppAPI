@@ -1,7 +1,7 @@
 ﻿using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using QRCoder;
+using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository;
 using RaveAppAPI.Services.Repository.Contracts;
@@ -110,10 +110,7 @@ namespace RaveAppAPI.Controllers
             {
                 string uuid = Guid.NewGuid().ToString();
                 string QrContent = $"{entrada},{uuid}";
-                QRCodeGenerator qrGenerator = new QRCodeGenerator();
-                QRCodeData qrCodeData = qrGenerator.CreateQrCode(QrContent, QRCodeGenerator.ECCLevel.Q);
-                var qrCodePngData = new PngByteQRCode(qrCodeData);
-                var qrCode = qrCodePngData.GetGraphic(20);
+                var qrCode = QRHelper.GenerateQRCode(QrContent);
                 MediaController media = new MediaController(new MediaService());
                 var res = await media.CrearMediaQrEntrada(qrCode, entrada);
                 if (!res.IsError)
