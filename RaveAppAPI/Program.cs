@@ -22,6 +22,7 @@ try
     builder.Services.AddScoped<IPagoService, PagoService>();
     builder.Services.AddScoped<ILogService, LogService>();
     builder.Services.AddScoped<IEmailService, EmailService>();
+    builder.Services.AddScoped<IReporteService, ReporteService>();
 
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
@@ -75,9 +76,9 @@ try
     });
 
     var app = builder.Build();
+    app.UseCors("Allow");
     app.UseAuthentication();
     app.UseAuthorization();
-    app.UseCors("Allow");
     // Configure the HTTP request pipeline.
 
     //app.UseExceptionHandler(
