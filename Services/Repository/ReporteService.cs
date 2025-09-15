@@ -1,30 +1,30 @@
 ﻿using ErrorOr;
 using MySql.Data.MySqlClient;
 using RaveAppAPI.Services.Helpers;
+using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
-using RaveAppAPI.Services.RequestModel.Mail;
 
 namespace RaveAppAPI.Services.Repository
 {
-    public class EmailService : IEmailService
+    public class ReporteService : IReporteService
     {
         private readonly string connectionString = EnvHelper.GetConnectionString();
-        public ErrorOr<List<EmailQrRequest>> GetEmailQrData(string idCompra)
+        public ErrorOr<List<VentasEventoDTO>> GetReporteVentasEvento(string idEvento)
         {
             try
             {
                 using (MySqlConnection dbcon = new(connectionString))
                 {
                     dbcon.Open();
-                    MySqlCommand cmd = new(ProcedureHelper.PCDEmailQr, dbcon);
+                    MySqlCommand cmd = new(ProcedureHelper.GetVentasEvento, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.Add(ProcedureHelper.EmailQrParameters(idCompra));
+                    cmd.Parameters.Add(ProcedureHelper.GetVentasEventoParameters(idEvento));
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)
                         {
-                            List<EmailQrRequest> emails = ReaderMaper.ReaderToObjectRecursive<EmailQrRequest>(reader).ToList();
-                            return emails;
+                            List<VentasEventoDTO> ventas = ReaderMaper.ReaderToObjectRecursive<VentasEventoDTO>(reader).ToList();
+                            return ventas;
                         }
                         else
                         {

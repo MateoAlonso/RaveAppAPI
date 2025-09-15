@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using RaveAppAPI.Services.Helpers;
+﻿using RaveAppAPI.Services.Helpers;
 
 namespace RaveAppAPI.Services.RequestModel.Mail
 {

@@ -47,7 +47,7 @@
                     </body>
                 </html>";
         }
-        public static string BuildQrSection(string inlineQr, string tipoEntrada) 
+        public static string BuildQrSection(string inlineQr, string tipoEntrada)
         {
             return $@"<p><strong>{tipoEntrada}</strong></p>
                         <img src=""cid:{inlineQr}"" width=""200"" height=""200"" />";
