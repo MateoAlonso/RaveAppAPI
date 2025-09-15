@@ -701,5 +701,16 @@ namespace RaveAppAPI.Services.Helpers
             return new MySqlParameter("p_idCompra", idCompra);
         }
         #endregion
+
+        #region Reporte PCDS
+        public const string GetVentasEvento = "PCD_REPORTE_GetVentasEvento";
+        #endregion
+
+        #region Reporte Parameters
+        public static MySqlParameter GetVentasEventoParameters(string idEvento)
+        {
+            return new MySqlParameter("p_idEvento", idEvento);
+        }
+        #endregion
     }
 }
