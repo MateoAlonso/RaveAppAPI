@@ -97,6 +97,24 @@ namespace RaveAppAPI.Controllers
                 updated => NoContent(),
                 errors => Problem(errors));
         }
+        [HttpPut("ConfirmarCuenta")]
+        public IActionResult ConfirmarCuenta(ConfirmarCuentaRequest request)
+        {
+            ErrorOr<Updated> confirmarCuentaResult = default;
+
+            if (JwtHelper.ValidateToken(request.Token, _jwtKey, _jwtIssuer))
+            {
+                confirmarCuentaResult = _usuarioService.ConfirmarCuenta(request.Correo);
+            }
+            else
+            {
+                confirmarCuentaResult = Error.Validation("Token inválido o expirado");
+            }
+
+            return confirmarCuentaResult.Match(
+                updated => NoContent(),
+                errors => Problem(errors));
+        }
         [HttpPut("UpdateUsuario")]
         public IActionResult UpdateUsuario(UpdateUsuarioRequest request)
         {
