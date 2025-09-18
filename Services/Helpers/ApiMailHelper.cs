@@ -60,14 +60,13 @@
                     <meta charset='UTF-8'>
                     <title>RaveApp - {titulo}</title>
                     <style>
-                      body {{font - family: Arial, sans-serif; color: #333; background-color: #f9f9f9; }}
-                      .container {{max - width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 12px; padding: 20px; background: #fff; }}
-                      .header {{text - align: center; padding-bottom: 20px; border-bottom: 1px solid #eee; }}
-                      .title {{font - size: 22px; font-weight: bold; color: #2c3e50; }}
-                      .btn {{display: inline-block; margin: 20px 0; padding: 12px 20px; background: #28a745; color: #fff; text-decoration: none; border-radius: 6px; }}
-                      .btn:hover 
-                            {{background: #218838; }}
-                      .footer {{font - size: 12px; color: #888; text-align: center; margin-top: 30px; }}
+                      body {{ font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; }}
+                      .container {{ max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 12px; padding: 20px; background: #fff; }}
+                      .header {{ text-align: center; padding-bottom: 20px; border-bottom: 1px solid #eee; }}
+                      .title {{ font-size: 22px; font-weight: bold; color: #2c3e50; }}
+                      .btn {{ display: inline-block; margin: 20px 0; padding: 12px 20px; background: #28a745; color: #fff; text-decoration: none; border-radius: 6px; }}
+                      .btn:hover {{ background: #218838; }}
+                      .footer {{ font-size: 12px; color: #888; text-align: center; margin-top: 30px; }}
                     </style>
                   </head>
                   <body>
