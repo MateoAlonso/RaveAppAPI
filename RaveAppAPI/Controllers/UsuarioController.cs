@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RaveAppAPI.Contracts.User;
+using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
 using RaveAppAPI.Services.RequestModel.Artista;
@@ -14,6 +15,8 @@ namespace RaveAppAPI.Controllers
     {
         private readonly IUsuarioService _usuarioService;
         private readonly IMediaService _mediaService;
+        private readonly string _jwtKey = EnvHelper.GetJWTKey();
+        private readonly string _jwtIssuer = EnvHelper.GetJWTIssuer();
 
         public UsuarioController(IUsuarioService usuarioService, IMediaService mediaService)
         {
@@ -79,7 +82,16 @@ namespace RaveAppAPI.Controllers
         [HttpPut("RecoverPass")]
         public IActionResult RecoverPass([FromQuery] RecoverPassUsuarioRequest request)
         {
-            ErrorOr<Updated> recoverPassResult = _usuarioService.RecoverPass(request);
+            ErrorOr<Updated> recoverPassResult = default;
+
+            if (JwtHelper.ValidateToken(request.Token, _jwtKey, _jwtIssuer))
+            {
+                recoverPassResult = _usuarioService.RecoverPass(request);
+            }
+            else
+            {
+                recoverPassResult = Error.Validation("Token inválido o expirado");
+            }
 
             return recoverPassResult.Match(
                 updated => NoContent(),

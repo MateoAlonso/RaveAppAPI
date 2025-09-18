@@ -46,22 +46,30 @@ namespace RaveAppAPI.Services.Helpers
             var token = handler.CreateToken(tokenDescriptor);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-        public static ClaimsPrincipal ValidateToken(string token, string key, string issuer)
+        public static bool ValidateToken(string token, string key, string issuer)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var validkey = Encoding.UTF8.GetBytes(key);
-
-            var validationParams = new TokenValidationParameters
+            try
             {
-                ValidateIssuer = true,
-                ValidIssuer = issuer,
-                ValidateAudience = false,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(validkey),
-                ValidateLifetime = true
-            };
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var validkey = Encoding.UTF8.GetBytes(key);
 
-            return tokenHandler.ValidateToken(token, validationParams, out _);
+                var validationParams = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = issuer,
+                    ValidateAudience = false,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(validkey),
+                    ValidateLifetime = true
+                };
+
+                tokenHandler.ValidateToken(token, validationParams, out _);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
