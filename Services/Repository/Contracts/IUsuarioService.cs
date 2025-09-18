@@ -15,6 +15,7 @@ namespace RaveAppAPI.Services.Repository.Contracts
         ErrorOr<bool> Login(LoginUsuarioRequest request);
         ErrorOr<Updated> ResetPass(ResetPassUsuarioRequest request);
         ErrorOr<Updated> RecoverPass(RecoverPassUsuarioRequest request);
+        ErrorOr<Updated> ConfirmarCuenta(string correo);
         ErrorOr<Updated> EventoFavorito(EventoFavoritoRequest request);
         ErrorOr<Updated> ArtistaFavorito(ArtistaFavoritoRequest request);
         ErrorOr<List<string>> GetEventosFavoritos(string idUsuario);

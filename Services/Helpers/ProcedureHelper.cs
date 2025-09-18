@@ -27,6 +27,7 @@ namespace RaveAppAPI.Services.Helpers
         public const string PCDToggleLikeArtista = "PCD_USUARIOS_ToggleLikeArtista";
         public const string PCDGetEventosFavoritos = "PCD_USUARIOS_GetEventosFavoritos";
         public const string PCDGetEntradas = "PCD_USUARIOS_GetEntradas";
+        public const string PCDConfirmarCuenta = "PCD_USUARIOS_ConfirmarCuenta";
         #endregion
 
         #region Usuario Parameters
@@ -176,6 +177,10 @@ namespace RaveAppAPI.Services.Helpers
         public static MySqlParameter GetEventosFavoritosParameters(string idusuario)
         {
             return new MySqlParameter("p_idUsuario", idusuario);
+        }
+        public static MySqlParameter ConfirmarCuentaParameters(string correo)
+        {
+            return new MySqlParameter("p_dsCorreo", correo);
         }
         #endregion
 
