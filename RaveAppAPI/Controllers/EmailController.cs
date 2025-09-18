@@ -19,7 +19,7 @@ namespace RaveAppAPI.Controllers
         private readonly string _MailgunToken = EnvHelper.GetMailgunToken();
         private readonly IEmailService _emailService;
 
-        public EmailController(EmailService emailService)
+        public EmailController(IEmailService emailService)
         {
             _emailService = emailService;
         }
