@@ -19,7 +19,7 @@ namespace RaveAppAPI.Controllers
         private readonly string _MailgunToken = EnvHelper.GetMailgunToken();
         private readonly IEmailService _emailService;
 
-        public EmailController(EmailService emailService)
+        public EmailController(IEmailService emailService)
         {
             _emailService = emailService;
         }
@@ -104,6 +104,44 @@ namespace RaveAppAPI.Controllers
             {
                 Logger.LogError(e.Message);
                 return Problem(e.Message);
+            }
+        }
+        [HttpPost("EnvioMailGenerico")]
+        public async Task<IActionResult> EnvioMailGenerico(EnvioEmailGenericoRequest request)
+        {
+            try
+            {
+                string html = ApiMailHelper.BuildEmailGenerico(request.Titulo, request.Cuerpo, request.BotonUrl, request.BotonTexto);
+                MultipartFormDataContent formData = new MultipartFormDataContent
+                {
+                    { new StringContent(FromEmail), "from" },
+                    { new StringContent(request.To), "to" },
+                    { new StringContent($"{request.Titulo}"), "subject" },
+                    { new StringContent(html), "html" }
+                };
+                using (HttpClient client = new HttpClient())
+                {
+                    var sendRequest = ApiMailHelper.BuildRequest(
+                        HttpMethod.Post,
+                        BaseUrl,
+                        String.Format(MessagesEndpoint, DomainName),
+                        formData,
+                            new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"api:{_MailgunToken}"))));
+
+                    var response = await client.SendAsync(sendRequest);
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        string content = await response.Content.ReadAsStringAsync();
+                        Logger.LogError($"Error enviando mail generico: {(int)response.StatusCode} - {content}");
+                        return Problem();
+                    }
+                    return Ok();
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Problem();
             }
         }
         [ApiExplorerSettings(IgnoreApi = true)]
