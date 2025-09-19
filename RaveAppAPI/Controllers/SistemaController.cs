@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RaveAppAPI.Services.Repository.Contracts;
 
 namespace RaveAppAPI.Controllers
 {
+    [Authorize]
     public class SistemaController : ApiController
     {
         private readonly ISistemaService _sistemaService;
@@ -22,6 +24,16 @@ namespace RaveAppAPI.Controllers
         {
             return _sistemaService.GetDBHealth().Match(
                             health => Ok(health),
+                            errors => Problem(errors));
+        }
+        
+        [HttpGet("GetParametro")]
+        public IActionResult GetParametro(string parametro)
+        {
+            var getParametroResult = _sistemaService.GetParametro(parametro);
+
+            return getParametroResult.Match(
+                            parametro => Ok(parametro),
                             errors => Problem(errors));
         }
     }
