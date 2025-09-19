@@ -13,7 +13,7 @@ try
     builder.Services.AddScoped<IUsuarioService, UsuarioService>();
     builder.Services.AddScoped<INoticiaService, NoticiaService>();
     builder.Services.AddScoped<IEventoService, EventoService>();
-    builder.Services.AddScoped<IHealthService, HealthService>();
+    builder.Services.AddScoped<ISistemaService, SistemaService>();
     builder.Services.AddScoped<IFiestaService, FiestaService>();
     builder.Services.AddScoped<IEntradaService, EntradaService>();
     builder.Services.AddScoped<IArtistaService, ArtistaService>();
