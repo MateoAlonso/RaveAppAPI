@@ -434,6 +434,7 @@ namespace RaveAppAPI.Services.Helpers
         public const string PCDUpdateEntradas = "PCD_ENTRADAS_UpdateEntradas";
         public const string PCDGetReservaActiva = "PCD_ENTRADAS_GetReservaActiva";
         public const string PCDSetQREntrada = "PCD_ENTRADAS_SetQREntrada";
+        public const string PCDControlarEntrada = "PCD_ENTRADAS_ControlarEntrada";
         #endregion
 
         #region Entrada Parameters
@@ -489,6 +490,15 @@ namespace RaveAppAPI.Services.Helpers
             {
                 new MySqlParameter ("p_idEntrada", idEntrada),
                 new MySqlParameter ("p_mdQr", qrUuid)
+            };
+        }
+        public static MySqlParameter[] ControlarEntradaParameters(ControlarEntradaRequest request)
+        {
+            return new MySqlParameter[]
+            {
+                new MySqlParameter ("p_idEntrada", request.idEntrada),
+                new MySqlParameter ("p_mdQr", request.mdQr),
+                new MySqlParameter ("p_ok", MySqlDbType.Int32, 36) { Direction = System.Data.ParameterDirection.Output }
             };
         }
         #endregion

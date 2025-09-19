@@ -26,7 +26,7 @@ namespace RaveAppAPI.Controllers
                             health => Ok(health),
                             errors => Problem(errors));
         }
-        
+
         [HttpGet("GetParametro")]
         public IActionResult GetParametro(string parametro)
         {

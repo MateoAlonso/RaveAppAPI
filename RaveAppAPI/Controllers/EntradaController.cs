@@ -103,6 +103,14 @@ namespace RaveAppAPI.Controllers
                 updated => NoContent(),
                 errors => Problem(errors));
         }
+        [HttpPut("ControlarEntrada")]
+        public IActionResult ControlarEntrada(ControlarEntradaRequest request)
+        {
+            ErrorOr<bool> reservarEntradasResult = _entradaService.ControlarEntrada(request);
+            return reservarEntradasResult.Match(
+                control => Ok(control),
+                errors => Problem(errors));
+        }
         [ApiExplorerSettings(IgnoreApi = true)]
         public async void GenerarQrEntradas(List<string> entradas)
         {
