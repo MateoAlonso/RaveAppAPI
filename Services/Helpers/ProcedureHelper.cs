@@ -646,6 +646,8 @@ namespace RaveAppAPI.Services.Helpers
         public const string PendienteCompra = "PCD_COMPRA_SetCompraPendiente";
         public const string AnularCompra = "PCD_COMPRA_AnularCompra";
         public const string RefreshTimerReserva = "PCD_COMPRA_RefreshTimerReserva";
+        public const string GetDatosReembolso = "PCD_COMPRA_GetDatosReembolso";
+        public const string Reembolso = "PCD_COMPRA_Reembolso";
         #endregion
 
         #region Compra/Pago Parameters
@@ -673,6 +675,14 @@ namespace RaveAppAPI.Services.Helpers
         public static MySqlParameter RefreshTimerReservaParameters(string idCompra)
         {
             return new MySqlParameter("p_idCompra", idCompra);
+        }
+        public static MySqlParameter ReembolsoParameters(string idEntrada)
+        {
+            return new MySqlParameter("p_idEntrada", idEntrada);
+        }
+        public static MySqlParameter GetDatosReembolsoParameters(string idEntrada)
+        {
+            return new MySqlParameter("p_idEntrada", idEntrada);
         }
         #endregion
 

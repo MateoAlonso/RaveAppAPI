@@ -35,7 +35,56 @@ namespace RaveAppAPI.Controllers
                 pago => Ok(pago),
                 errors => Problem(errors));
         }
+        [HttpPost("Reembolso"), Authorize]
+        public IActionResult Reembolso(string idEntrada)
+        {
+            var getDatosResult = _pagoService.GetDatosReembolso(idEntrada);
 
+            if (getDatosResult.IsError)
+            {
+                return Problem(getDatosResult.Errors);
+            }
+            var datos = getDatosResult.Value.FirstOrDefault();
+
+            var createRefundResult = CreateRefund(datos.IdMP, datos.Monto);
+
+            if (!createRefundResult.IsError)
+            {
+                _pagoService.Reembolso(idEntrada);
+            }
+
+            return createRefundResult.Match(
+                response => Ok(response),
+                errors => Problem(errors));
+        }
+        private ErrorOr<RefundResponse> CreateRefund(long idMP, decimal monto)
+        {
+            var refundReqBody = new RefundRequest
+            {
+                Amount = monto
+            };
+            Dictionary<string, string?> headers = new Dictionary<string, string?> { };
+            headers.Add("X-Idempotency-Key", Guid.NewGuid().ToString());
+            HttpRequestMessage MPRequest = MpApiHelper.BuildRequest(
+                HttpMethod.Post,
+                _BaseUrlMPApi,
+                string.Format(MpApiHelper.RefundPayment, idMP),
+                refundReqBody,
+                new AuthenticationHeaderValue("Bearer", EnvHelper.GetTokenMP()),
+                headers
+            );
+            using (var client = new HttpClient())
+            {
+                var response = client.SendAsync(MPRequest);
+                response.Wait();
+                if (!response.Result.IsSuccessStatusCode)
+                {
+                    return Error.Failure();
+                }
+                var refundResponse = MpApiHelper.MapResponse<RefundResponse>(response.Result);
+                return refundResponse;
+            }
+        }
         private ErrorOr<CreatePagoResponse> CreatePreference(CreatePagoRequest request)
         {
             var prefReqBody = new PreferenceRequest

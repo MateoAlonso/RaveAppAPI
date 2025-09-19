@@ -1,6 +1,7 @@
 ﻿using ErrorOr;
 using MySql.Data.MySqlClient;
 using RaveAppAPI.Services.Helpers;
+using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
 
 namespace RaveAppAPI.Services.Repository
@@ -61,6 +62,37 @@ namespace RaveAppAPI.Services.Repository
             }
         }
 
+        public ErrorOr<List<DatosReembolsoDTO>> GetDatosReembolso(string idEntrada)
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.GetDatosReembolso, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(ProcedureHelper.GetDatosReembolsoParameters(idEntrada));
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            List<DatosReembolsoDTO> datos = ReaderMaper.ReaderToObjectRecursive<DatosReembolsoDTO>(reader).ToList();
+                            return datos;
+                        }
+                        else
+                        {
+                            return Error.NotFound();
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
+        }
+
         public ErrorOr<Updated> PendienteCompra(string idCompra, decimal subTotal, decimal cargoServicio)
         {
             try
@@ -79,6 +111,25 @@ namespace RaveAppAPI.Services.Repository
             {
                 Logger.LogError(e.Message);
                 return Error.Unexpected();
+            }
+        }
+
+        public void Reembolso(string idEntrada)
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.Reembolso, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(ProcedureHelper.ReembolsoParameters(idEntrada));
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
             }
         }
 
