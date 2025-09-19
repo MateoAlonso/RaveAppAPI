@@ -32,6 +32,27 @@ namespace RaveAppAPI.Services.Repository
             }
         }
 
+        public ErrorOr<bool> ControlarEntrada(ControlarEntradaRequest request)
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDControlarEntrada, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddRange(ProcedureHelper.ControlarEntradaParameters(request));
+                    cmd.ExecuteNonQuery();
+                    return Convert.ToInt32(cmd.Parameters["p_ok"].Value) > 0;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
+        }
+
         public ErrorOr<Created> CreateEntrada(Entrada entrada)
         {
             try
