@@ -705,5 +705,21 @@ namespace RaveAppAPI.Services.Helpers
             return new MySqlParameter("p_idEvento", idEvento);
         }
         #endregion
+
+        #region Sistema PCDS
+        public const string PCDGetParametro = "PCD_PARAM_GetParametro";
+        #endregion
+
+        #region Sistema Parameters
+        public static MySqlParameter[] GetParametroParameters(string parametro)
+        {
+            return new MySqlParameter[]
+            {
+                new ("p_cdsistema", string.Empty),
+                new ("p_cdparametro", parametro),
+                new ("p_result", MySqlDbType.VarChar) { Direction = System.Data.ParameterDirection.Output }
+            };
+        }
+        #endregion
     }
 }
