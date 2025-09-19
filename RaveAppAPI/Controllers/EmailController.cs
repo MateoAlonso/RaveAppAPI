@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RaveAppAPI.Services.Helpers;
-using RaveAppAPI.Services.Repository;
 using RaveAppAPI.Services.Repository.Contracts;
 using RaveAppAPI.Services.RequestModel.Mail;
 using System.Net.Http.Headers;

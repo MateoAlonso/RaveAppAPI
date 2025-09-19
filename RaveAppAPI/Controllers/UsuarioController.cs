@@ -35,6 +35,9 @@ namespace RaveAppAPI.Controllers
             }
 
             var usuario = requestToUsuarioResult.Value;
+
+            usuario.Pass = Hasher.HashPassword(request.Correo, request.Password);
+
             ErrorOr<Created> createUsuarioResult = _usuarioService.CreateUsuario(usuario);
 
             return createUsuarioResult.Match(
@@ -64,16 +67,37 @@ namespace RaveAppAPI.Controllers
         [HttpGet("Login")]
         public IActionResult Login([FromQuery] LoginUsuarioRequest request)
         {
-            ErrorOr<bool> loginResult = _usuarioService.Login(request);
+            ErrorOr<string> loginResult = _usuarioService.Login(request.Correo);
 
-            return loginResult.Match(
-                result => Ok(result),
-                errors => Problem(errors));
+            if (loginResult.IsError)
+            {
+                return Problem(loginResult.Errors);
+            }
+
+            if (!Hasher.VerifyHashedPassword(request.Correo, loginResult.Value, request.Password))
+            {
+                return Problem("Contraseña incorrecta");
+            }
+
+            return Ok(true);
         }
         [HttpPut("ResetPass")]
         public IActionResult ResetPass([FromQuery] ResetPassUsuarioRequest request)
         {
-            ErrorOr<Updated> resetPassResult = _usuarioService.ResetPass(request);
+            ErrorOr<string> loginResult = _usuarioService.Login(request.Correo);
+
+            if (loginResult.IsError)
+            {
+                return Problem();
+            }
+
+            if (!Hasher.VerifyHashedPassword(request.Correo, loginResult.Value, request.Pass))
+            {
+                return Problem("Contraseña incorrecta");
+            }
+
+            string hashedNewPass = Hasher.HashPassword(request.Correo, request.NewPass);
+            ErrorOr<Updated> resetPassResult = _usuarioService.ResetPass(request.Correo, hashedNewPass);
 
             return resetPassResult.Match(
                 updated => NoContent(),
@@ -86,11 +110,12 @@ namespace RaveAppAPI.Controllers
 
             if (JwtHelper.ValidateToken(request.Token, _jwtKey, _jwtIssuer))
             {
-                recoverPassResult = _usuarioService.RecoverPass(request);
+                string hashedNewPass = Hasher.HashPassword(request.Correo, request.NewPass);
+                recoverPassResult = _usuarioService.ResetPass(request.Correo, hashedNewPass);
             }
             else
             {
-                recoverPassResult = Error.Validation("Token inválido o expirado");
+                recoverPassResult = Error.Validation("Token invalido o expirado");
             }
 
             return recoverPassResult.Match(
@@ -108,7 +133,7 @@ namespace RaveAppAPI.Controllers
             }
             else
             {
-                confirmarCuentaResult = Error.Validation("Token inválido o expirado");
+                confirmarCuentaResult = Error.Validation("Token invalido o expirado");
             }
 
             return confirmarCuentaResult.Match(

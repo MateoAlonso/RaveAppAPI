@@ -1,6 +1,5 @@
 ﻿using ErrorOr;
 using MySql.Data.MySqlClient;
-using Org.BouncyCastle.Asn1.Ocsp;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
@@ -165,7 +164,7 @@ namespace RaveAppAPI.Services.Repository
 
         }
 
-        public ErrorOr<bool> Login(LoginUsuarioRequest request)
+        public ErrorOr<string> Login(string correo)
         {
             try
             {
@@ -174,17 +173,9 @@ namespace RaveAppAPI.Services.Repository
                     dbcon.Open();
                     MySqlCommand cmd = new(ProcedureHelper.PCDLoginUsuario, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddRange(ProcedureHelper.GetLoginUsuarioParameters(request));
+                    cmd.Parameters.AddRange(ProcedureHelper.GetLoginUsuarioParameters(correo));
                     cmd.ExecuteNonQuery();
-                    int ok = Convert.ToInt32(cmd.Parameters["p_ok"].Value);
-                    if (ok == 1)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return cmd.Parameters["p_dsPass"].Value.ToString() ?? string.Empty;
                 }
             }
             catch (Exception e)
@@ -194,7 +185,7 @@ namespace RaveAppAPI.Services.Repository
             }
         }
 
-        public ErrorOr<Updated> ResetPass(ResetPassUsuarioRequest request)
+        public ErrorOr<Updated> ResetPass(string correo, string pass)
         {
             try
             {
@@ -203,36 +194,7 @@ namespace RaveAppAPI.Services.Repository
                     dbcon.Open();
                     MySqlCommand cmd = new(ProcedureHelper.PCDResetPassUsuario, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddRange(ProcedureHelper.ResetPassUsuarioParameters(request));
-                    cmd.ExecuteNonQuery();
-                    int ok = Convert.ToInt32(cmd.Parameters["p_ok"].Value);
-                    if (ok == 1)
-                    {
-                        return Result.Updated;
-                    }
-                    else
-                    {
-                        return Error.Failure("Usuario o contraseña incorrecta");
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.LogError(e.Message);
-                return Error.Unexpected();
-            }
-        }
-
-        public ErrorOr<Updated> RecoverPass(RecoverPassUsuarioRequest request)
-        {
-            try
-            {
-                using (MySqlConnection dbcon = new(connectionString))
-                {
-                    dbcon.Open();
-                    MySqlCommand cmd = new(ProcedureHelper.PCDRecoverPassUsuario, dbcon);
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddRange(ProcedureHelper.RecoverPassUsuarioParameters(request));
+                    cmd.Parameters.AddRange(ProcedureHelper.ResetPassUsuarioParameters(correo, pass));
                     cmd.ExecuteNonQuery();
                     return Result.Updated;
                 }
