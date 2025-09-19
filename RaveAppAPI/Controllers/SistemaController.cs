@@ -5,11 +5,11 @@ namespace RaveAppAPI.Controllers
 {
     public class SistemaController : ApiController
     {
-        private readonly ISistemaService _healthService;
+        private readonly ISistemaService _sistemaService;
 
-        public SistemaController(ISistemaService healthService)
+        public SistemaController(ISistemaService sistemaService)
         {
-            _healthService = healthService;
+            _sistemaService = sistemaService;
         }
         [HttpGet("APIHealth")]
         public IActionResult GetAPIHealth()
@@ -20,7 +20,7 @@ namespace RaveAppAPI.Controllers
         [HttpGet("DBHealth")]
         public IActionResult GetDBHealth()
         {
-            return _healthService.GetDBHealth().Match(
+            return _sistemaService.GetDBHealth().Match(
                             health => Ok(health),
                             errors => Problem(errors));
         }
