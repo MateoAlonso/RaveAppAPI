@@ -5,7 +5,7 @@ using RaveAppAPI.Services.Repository.Contracts;
 
 namespace RaveAppAPI.Services.Repository
 {
-    public class HealthService : IHealthService
+    public class SistemaService : ISistemaService
     {
         private readonly string connectionString = EnvHelper.GetConnectionString();
         public ErrorOr<string> GetDBHealth()

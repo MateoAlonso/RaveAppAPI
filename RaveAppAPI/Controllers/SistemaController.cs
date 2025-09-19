@@ -3,21 +3,21 @@ using RaveAppAPI.Services.Repository.Contracts;
 
 namespace RaveAppAPI.Controllers
 {
-    public class HealthController : ApiController
+    public class SistemaController : ApiController
     {
-        private readonly IHealthService _healthService;
+        private readonly ISistemaService _healthService;
 
-        public HealthController(IHealthService healthService)
+        public SistemaController(ISistemaService healthService)
         {
             _healthService = healthService;
         }
-        [HttpGet("API")]
+        [HttpGet("APIHealth")]
         public IActionResult GetAPIHealth()
         {
             return Ok();
         }
 
-        [HttpGet("DB")]
+        [HttpGet("DBHealth")]
         public IActionResult GetDBHealth()
         {
             return _healthService.GetDBHealth().Match(
