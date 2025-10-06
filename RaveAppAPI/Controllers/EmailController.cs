@@ -30,7 +30,7 @@ namespace RaveAppAPI.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    request.TemplateData.ConfirmationUrl = $"{request.TemplateData.ConfirmationUrl}?token={JwtHelper.GenerateToken(_jwtKey, _jwtIssuer, 15)}";
+                    request.TemplateData.ConfirmationUrl = $"{request.TemplateData.ConfirmationUrl}?token={JwtHelper.GenerateToken(_jwtKey, _jwtIssuer, 15)}&correo={request.To}";
 
                     string templateData = JsonConvert.SerializeObject(request.TemplateData);
 
@@ -71,7 +71,7 @@ namespace RaveAppAPI.Controllers
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    request.TemplateData.RecoveryUrl = $"{request.TemplateData.RecoveryUrl}?token={JwtHelper.GenerateToken(_jwtKey, _jwtIssuer, 15)}";
+                    request.TemplateData.RecoveryUrl = $"{request.TemplateData.RecoveryUrl}?token={JwtHelper.GenerateToken(_jwtKey, _jwtIssuer, 15)}&correo={request.To}";
 
                     string templateData = JsonConvert.SerializeObject(request.TemplateData);
 
