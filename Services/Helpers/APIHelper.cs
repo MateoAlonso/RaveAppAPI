@@ -14,6 +14,7 @@ namespace RaveAppAPI.Services.Helpers
                 StringContent content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
                 request.Content = content;
             }
+            var json = JsonConvert.SerializeObject(payload);
             request.Headers.Authorization = auth;
             if (headers != null)
             {

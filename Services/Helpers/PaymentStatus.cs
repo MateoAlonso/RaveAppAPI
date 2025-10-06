@@ -5,6 +5,7 @@
         //Confirmar compra
         public const string Approved = "approved";
         public const string Authorized = "authorized";
+        public const string Accredited = "accredited";
         //Esperar confirmacion
         public const string Pending = "pending";
         public const string InProcess = "in_process";
@@ -13,6 +14,7 @@
         public const string Rejected = "rejected";
         public const string Cancelled = "cancelled";
         public const string Refunded = "refunded";
+        public const string PartiallyRefunded = "partially_refunded";
         public const string ChargedBack = "charged_back";
     }
 }
