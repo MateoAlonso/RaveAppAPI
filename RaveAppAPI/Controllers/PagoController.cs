@@ -36,9 +36,9 @@ namespace RaveAppAPI.Controllers
                 errors => Problem(errors));
         }
         [HttpPost("Reembolso"), Authorize]
-        public IActionResult Reembolso(string idEntrada)
+        public IActionResult Reembolso(string idCompra)
         {
-            var getDatosResult = _pagoService.GetDatosReembolso(idEntrada);
+            var getDatosResult = _pagoService.GetDatosReembolso(idCompra);
 
             if (getDatosResult.IsError)
             {
@@ -50,7 +50,7 @@ namespace RaveAppAPI.Controllers
 
             if (!createRefundResult.IsError)
             {
-                _pagoService.Reembolso(idEntrada);
+                _pagoService.Reembolso(idCompra);
             }
 
             return createRefundResult.Match(
@@ -142,7 +142,7 @@ namespace RaveAppAPI.Controllers
                 ExpirationDateFrom = DateTime.UtcNow,
                 ExpirationDateTo = DateTime.UtcNow.AddMinutes(5),
                 StatementDescriptor = "RaveApp",
-                AutoReturn = "approved"
+                AutoReturn = PaymentStatus.Approved
             };
             HttpRequestMessage MPRequest = MpApiHelper.BuildRequest(
                 HttpMethod.Post,
@@ -175,7 +175,7 @@ namespace RaveAppAPI.Controllers
             }
             var payment = getPaymentResult.Value;
             _logService.LogWebhookMP(payment.Metadata.IdCompra, payment.Status, payment.StatusDetail, payment.TransactionAmount, payment.Id);
-            if (!ProcessPayment(payment.Status, payment.Metadata.IdCompra))
+            if (!ProcessPayment(payment.StatusDetail, payment.Metadata.IdCompra))
             {
                 return Problem();
             }
@@ -188,6 +188,7 @@ namespace RaveAppAPI.Controllers
             {
                 case PaymentStatus.Approved:
                 case PaymentStatus.Authorized:
+                case PaymentStatus.Accredited:
                     var finalizarCompraResult = _pagoService.FinalizarCompra(idCompra, (int)MediosPagoEnum.MercadoPago);
                     if (finalizarCompraResult.IsError)
                     {
@@ -202,6 +203,7 @@ namespace RaveAppAPI.Controllers
                 case PaymentStatus.Cancelled:
                 case PaymentStatus.Refunded:
                 case PaymentStatus.ChargedBack:
+                case PaymentStatus.PartiallyRefunded:
                     return !_pagoService.AnularCompra(idCompra).IsError;
                 case PaymentStatus.Pending:
                     return true; // La compra ya esta pendiente, no se hace nada

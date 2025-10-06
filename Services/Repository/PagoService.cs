@@ -62,7 +62,7 @@ namespace RaveAppAPI.Services.Repository
             }
         }
 
-        public ErrorOr<List<DatosReembolsoDTO>> GetDatosReembolso(string idEntrada)
+        public ErrorOr<List<DatosReembolsoDTO>> GetDatosReembolso(string idCompra)
         {
             try
             {
@@ -71,7 +71,7 @@ namespace RaveAppAPI.Services.Repository
                     dbcon.Open();
                     MySqlCommand cmd = new(ProcedureHelper.GetDatosReembolso, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.Add(ProcedureHelper.GetDatosReembolsoParameters(idEntrada));
+                    cmd.Parameters.Add(ProcedureHelper.GetDatosReembolsoParameters(idCompra));
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)
@@ -114,7 +114,7 @@ namespace RaveAppAPI.Services.Repository
             }
         }
 
-        public void Reembolso(string idEntrada)
+        public void Reembolso(string idCompra)
         {
             try
             {
@@ -123,7 +123,7 @@ namespace RaveAppAPI.Services.Repository
                     dbcon.Open();
                     MySqlCommand cmd = new(ProcedureHelper.Reembolso, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.Add(ProcedureHelper.ReembolsoParameters(idEntrada));
+                    cmd.Parameters.Add(ProcedureHelper.ReembolsoParameters(idCompra));
                     cmd.ExecuteNonQuery();
                 }
             }

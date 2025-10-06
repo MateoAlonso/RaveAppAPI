@@ -7,9 +7,9 @@ namespace RaveAppAPI.Services.Repository.Contracts
     {
         ErrorOr<Updated> AnularCompra(string idCompra);
         ErrorOr<List<string>> FinalizarCompra(string idCompra, int cdMedioPago);
-        ErrorOr<List<DatosReembolsoDTO>> GetDatosReembolso(string idEntrada);
+        ErrorOr<List<DatosReembolsoDTO>> GetDatosReembolso(string idCompra);
         ErrorOr<Updated> PendienteCompra(string idCompra, decimal subTotal, decimal cargoServicio);
-        void Reembolso(string idEntrada);
+        void Reembolso(string idCompra);
         void RefrescarTimerReserva(string idCompra);
     }
 }

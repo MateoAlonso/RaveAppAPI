@@ -676,13 +676,13 @@ namespace RaveAppAPI.Services.Helpers
         {
             return new MySqlParameter("p_idCompra", idCompra);
         }
-        public static MySqlParameter ReembolsoParameters(string idEntrada)
+        public static MySqlParameter ReembolsoParameters(string idCompra)
         {
-            return new MySqlParameter("p_idEntrada", idEntrada);
+            return new MySqlParameter("p_idCompra", idCompra);
         }
-        public static MySqlParameter GetDatosReembolsoParameters(string idEntrada)
+        public static MySqlParameter GetDatosReembolsoParameters(string idCompra)
         {
-            return new MySqlParameter("p_idEntrada", idEntrada);
+            return new MySqlParameter("p_idCompra", idCompra);
         }
         #endregion
 

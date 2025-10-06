@@ -5,7 +5,7 @@ namespace RaveAppAPI.Services.RequestModel.Pago
     public class RefundResponse
     {
         [JsonProperty("id")]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         [JsonProperty("payment_id")]
         public long PaymentId { get; set; }
@@ -14,10 +14,10 @@ namespace RaveAppAPI.Services.RequestModel.Pago
         public int Amount { get; set; }
 
         [JsonProperty("metadata")]
-        public List<Metadata> Metadata { get; set; }
+        public Metadata Metadata { get; set; }
 
         [JsonProperty("source")]
-        public List<Source> Source { get; set; }
+        public Source Source { get; set; }
 
         [JsonProperty("date_created")]
         public DateTime DateCreated { get; set; }
@@ -41,18 +41,6 @@ namespace RaveAppAPI.Services.RequestModel.Pago
         public List<PartitionDetail> PartitionDetails { get; set; }
     }
 
-    public class Name
-    {
-        [JsonProperty("en")]
-        public string En { get; set; }
-
-        [JsonProperty("pt")]
-        public string Pt { get; set; }
-
-        [JsonProperty("es")]
-        public string Es { get; set; }
-    }
-
     public class PartitionDetail
     {
     }
@@ -60,7 +48,7 @@ namespace RaveAppAPI.Services.RequestModel.Pago
     public class Source
     {
         [JsonProperty("name")]
-        public Name Name { get; set; }
+        public string Name { get; set; }
 
         [JsonProperty("id")]
         public string Id { get; set; }

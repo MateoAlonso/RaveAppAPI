@@ -1,9 +1,4 @@
 ﻿using RaveAppAPI.Services.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RaveAppAPI.Services.Models
 {
@@ -11,7 +6,7 @@ namespace RaveAppAPI.Services.Models
     {
         [ColumnName("idpagomp")]
         public long IdMP { get; set; }
-        [ColumnName("ammonto")]
+        [ColumnName("amsubtotal")]
         public decimal Monto { get; set; }
     }
 }
