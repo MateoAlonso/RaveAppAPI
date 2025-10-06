@@ -35,7 +35,56 @@ namespace RaveAppAPI.Controllers
                 pago => Ok(pago),
                 errors => Problem(errors));
         }
+        [HttpPost("Reembolso"), Authorize]
+        public IActionResult Reembolso(string idCompra)
+        {
+            var getDatosResult = _pagoService.GetDatosReembolso(idCompra);
 
+            if (getDatosResult.IsError)
+            {
+                return Problem(getDatosResult.Errors);
+            }
+            var datos = getDatosResult.Value.FirstOrDefault();
+
+            var createRefundResult = CreateRefund(datos.IdMP, datos.Monto);
+
+            if (!createRefundResult.IsError)
+            {
+                _pagoService.Reembolso(idCompra);
+            }
+
+            return createRefundResult.Match(
+                response => Ok(response),
+                errors => Problem(errors));
+        }
+        private ErrorOr<RefundResponse> CreateRefund(long idMP, decimal monto)
+        {
+            var refundReqBody = new RefundRequest
+            {
+                Amount = monto
+            };
+            Dictionary<string, string?> headers = new Dictionary<string, string?> { };
+            headers.Add("X-Idempotency-Key", Guid.NewGuid().ToString());
+            HttpRequestMessage MPRequest = MpApiHelper.BuildRequest(
+                HttpMethod.Post,
+                _BaseUrlMPApi,
+                string.Format(MpApiHelper.RefundPayment, idMP),
+                refundReqBody,
+                new AuthenticationHeaderValue("Bearer", EnvHelper.GetTokenMP()),
+                headers
+            );
+            using (var client = new HttpClient())
+            {
+                var response = client.SendAsync(MPRequest);
+                response.Wait();
+                if (!response.Result.IsSuccessStatusCode)
+                {
+                    return Error.Failure();
+                }
+                var refundResponse = MpApiHelper.MapResponse<RefundResponse>(response.Result);
+                return refundResponse;
+            }
+        }
         private ErrorOr<CreatePagoResponse> CreatePreference(CreatePagoRequest request)
         {
             var prefReqBody = new PreferenceRequest
@@ -93,7 +142,7 @@ namespace RaveAppAPI.Controllers
                 ExpirationDateFrom = DateTime.UtcNow,
                 ExpirationDateTo = DateTime.UtcNow.AddMinutes(5),
                 StatementDescriptor = "RaveApp",
-                AutoReturn = "approved"
+                AutoReturn = PaymentStatus.Approved
             };
             HttpRequestMessage MPRequest = MpApiHelper.BuildRequest(
                 HttpMethod.Post,
@@ -126,7 +175,7 @@ namespace RaveAppAPI.Controllers
             }
             var payment = getPaymentResult.Value;
             _logService.LogWebhookMP(payment.Metadata.IdCompra, payment.Status, payment.StatusDetail, payment.TransactionAmount, payment.Id);
-            if (!ProcessPayment(payment.Status, payment.Metadata.IdCompra))
+            if (!ProcessPayment(payment.StatusDetail, payment.Metadata.IdCompra))
             {
                 return Problem();
             }
@@ -139,6 +188,7 @@ namespace RaveAppAPI.Controllers
             {
                 case PaymentStatus.Approved:
                 case PaymentStatus.Authorized:
+                case PaymentStatus.Accredited:
                     var finalizarCompraResult = _pagoService.FinalizarCompra(idCompra, (int)MediosPagoEnum.MercadoPago);
                     if (finalizarCompraResult.IsError)
                     {
@@ -153,6 +203,7 @@ namespace RaveAppAPI.Controllers
                 case PaymentStatus.Cancelled:
                 case PaymentStatus.Refunded:
                 case PaymentStatus.ChargedBack:
+                case PaymentStatus.PartiallyRefunded:
                     return !_pagoService.AnularCompra(idCompra).IsError;
                 case PaymentStatus.Pending:
                     return true; // La compra ya esta pendiente, no se hace nada
