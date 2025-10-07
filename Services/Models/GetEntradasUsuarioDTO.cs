@@ -20,5 +20,10 @@ namespace RaveAppAPI.Services.Models
         public decimal Precio { get; set; }
         [ColumnName("idevento")]
         public string IdEvento { get; set; }
+        [ColumnName("idcompra")]
+        public string IdCompra { get; set; }
+        [ColumnName("num_compra")]
+        public UInt64 NumCompra { get; set; }
+
     }
 }
