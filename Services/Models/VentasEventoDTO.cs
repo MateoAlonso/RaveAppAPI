@@ -5,7 +5,9 @@ namespace RaveAppAPI.Services.Models
     public class VentasEventoDTO
     {
         [ColumnName("idFecha")]
-        public int IdFecha { get; set; }
+        public string IdFecha { get; set; }
+        [ColumnName("num_fecha")]
+        public int NumFecha { get; set; }
         [ColumnName("dsTipoEntrada")]
         public string Entrada { get; set; }
         [ColumnName("vlStockInicial")]
