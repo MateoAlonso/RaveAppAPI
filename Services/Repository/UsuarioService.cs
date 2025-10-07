@@ -292,8 +292,8 @@ namespace RaveAppAPI.Services.Repository
                     {
                         if (reader.HasRows)
                         {
-                            List<GetEntradasUsuarioDTO> roles = ReaderMaper.ReaderToObject<GetEntradasUsuarioDTO>(reader).ToList();
-                            return roles;
+                            List<GetEntradasUsuarioDTO> entradas = ReaderMaper.ReaderToObject<GetEntradasUsuarioDTO>(reader).ToList();
+                            return entradas;
                         }
                         else
                         {
