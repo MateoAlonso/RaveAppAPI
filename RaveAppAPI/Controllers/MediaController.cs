@@ -206,7 +206,7 @@ namespace RaveAppAPI.Controllers
                 var putRequest = new PutObjectRequest
                 {
                     BucketName = _bucketName,
-                    Key = idEntrada,
+                    Key = media.IdMedia,
                     InputStream = stream,
                     ContentType = "image/png",
                     DisablePayloadSigning = true,
