@@ -84,7 +84,7 @@ namespace RaveAppAPI.Services.Repository
             }
         }
 
-        public ErrorOr<List<Resenia>> GetResenias(GetReseniaRequest request)
+        public ErrorOr<List<GetReseniaDTO>> GetResenias(GetReseniaRequest request)
         {
             try
             {
@@ -98,7 +98,7 @@ namespace RaveAppAPI.Services.Repository
                     {
                         if (reader.HasRows)
                         {
-                            List<Resenia> resenias = ReaderMaper.ReaderToObject<Resenia>(reader).ToList();
+                            List<GetReseniaDTO> resenias = ReaderMaper.ReaderToObject<GetReseniaDTO>(reader).ToList();
                             return resenias;
                         }
                         else
