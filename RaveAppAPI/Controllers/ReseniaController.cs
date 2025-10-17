@@ -35,7 +35,7 @@ namespace RaveAppAPI.Controllers
         [HttpGet("GetResenias")]
         public IActionResult GetResenias([FromQuery] GetReseniaRequest request)
         {
-            ErrorOr<List<Resenia>> getReseniaResult = _reseniaService.GetResenias(request);
+            ErrorOr<List<GetReseniaDTO>> getReseniaResult = _reseniaService.GetResenias(request);
 
             return getReseniaResult.Match(
                 resenias => Ok(MapReseniaResponse(resenias)),
@@ -77,7 +77,7 @@ namespace RaveAppAPI.Controllers
                     deleted => Ok(),
                     errors => Problem(errors));
         }
-        private ReseniaResponse MapReseniaResponse(List<Resenia> resenias)
+        private ReseniaResponse MapReseniaResponse(List<GetReseniaDTO> resenias)
         {
             return new ReseniaResponse(resenias);
         }
