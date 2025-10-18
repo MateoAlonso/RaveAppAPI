@@ -13,7 +13,14 @@ namespace RaveAppAPI.Services.Models
         [ColumnName("dscomentario")]
         public string Comentario { get; set; }
         [ColumnName("idfiesta")]
-        public string IdFecha { get; set; }
+        public string IdFiesta { get; set; }
+        [ColumnName("idusuario")]
+        public string IdUsuario { get; set; }
+        [ColumnName("dtinsert")]
+        public DateTime DtInsert { get; set; }
+        [ColumnName("idresenia")]
+        public string IdResenia { get; set; }
+
 
     }
 }
