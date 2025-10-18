@@ -8,5 +8,7 @@ namespace RaveAppAPI.Services.Models
         public decimal AvgEstrellas { get; set; }
         [ColumnName("idfiesta")]
         public string IdFiesta { get; set; }
+        [ColumnName("cantresenias")]
+        public long CantResenias { get; set; }
     }
 }
