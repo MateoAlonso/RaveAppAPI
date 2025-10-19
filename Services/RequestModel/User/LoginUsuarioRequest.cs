@@ -1,4 +1,4 @@
 ﻿namespace RaveAppAPI.Services.RequestModel.User
 {
-    public record LoginUsuarioRequest(string Correo, string Password);
+    public record LoginUsuarioRequest(string Correo, string Password, bool IsControl);
 }

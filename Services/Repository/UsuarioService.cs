@@ -330,5 +330,101 @@ namespace RaveAppAPI.Services.Repository
                 return Error.Unexpected();
             }
         }
+
+        public ErrorOr<string> LoginControl(string correo)
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDLoginUsuarioControl, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddRange(ProcedureHelper.GetLoginUsuarioControlParameters(correo));
+                    cmd.ExecuteNonQuery();
+                    return cmd.Parameters["p_dsPass"].Value.ToString() ?? string.Empty;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
+        }
+
+        public ErrorOr<Created> CrearUsuarioControl(UsuarioControl usuario)
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDSetUsuarioControl, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddRange(ProcedureHelper.CreateUsuarioControlParameters(usuario));
+                    cmd.ExecuteNonQuery();
+                    usuario.IdUsuarioControl = cmd.Parameters["p_idUsuarioControl"].Value.ToString();
+                    return Result.Created;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
+        }
+
+        public ErrorOr<Deleted> DeleteUsuarioControl(DeleteUsuarioControlRequest request)
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDDeleteUsuarioControl, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddRange(ProcedureHelper.DeleteUsuarioControlParameters(request));
+                    cmd.ExecuteNonQuery();
+                    return Result.Deleted;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
+        }
+
+        public ErrorOr<List<GetUsuariosControlDTO>> GetUsuariosControl(string idUsuarioOrg)
+        {
+            try
+            {
+                using (MySqlConnection dbcon = new(connectionString))
+                {
+                    dbcon.Open();
+                    MySqlCommand cmd = new(ProcedureHelper.PCDGetUsuariosControl, dbcon);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(ProcedureHelper.GetUsuariosControlParameters(idUsuarioOrg));
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            var usuarios = ReaderMaper.ReaderToObject<GetUsuariosControlDTO>(reader).ToList();
+                            return usuarios;
+                        }
+                        else
+                        {
+                            return Error.NotFound();
+                        }
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return Error.Unexpected();
+            }
+        }
     }
 }
