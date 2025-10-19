@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RaveAppAPI.Services.Repository.Contracts;
+using RaveAppAPI.Services.RequestModel.Reporte;
 
 namespace RaveAppAPI.Controllers
 {
@@ -15,9 +16,9 @@ namespace RaveAppAPI.Controllers
         }
 
         [HttpGet("ReporteVentasEvento")]
-        public IActionResult ReporteVentasEvento(string idEvento)
+        public IActionResult ReporteVentasEvento(ReporteVentasEventoRequest request)
         {
-            var reporteResult = _reporteService.GetReporteVentasEvento(idEvento);
+            var reporteResult = _reporteService.GetReporteVentasEvento(request);
 
             return reporteResult.Match(
                 reporte => Ok(reporte),

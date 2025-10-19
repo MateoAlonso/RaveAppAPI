@@ -6,6 +6,7 @@ using RaveAppAPI.Services.RequestModel.Artista;
 using RaveAppAPI.Services.RequestModel.Entrada;
 using RaveAppAPI.Services.RequestModel.Evento;
 using RaveAppAPI.Services.RequestModel.Fiesta;
+using RaveAppAPI.Services.RequestModel.Reporte;
 using RaveAppAPI.Services.RequestModel.Resenia;
 using RaveAppAPI.Services.RequestModel.User;
 
@@ -729,9 +730,13 @@ namespace RaveAppAPI.Services.Helpers
         #endregion
 
         #region Reporte Parameters
-        public static MySqlParameter GetVentasEventoParameters(string idEvento)
+        public static MySqlParameter[] GetVentasEventoParameters(ReporteVentasEventoRequest request)
         {
-            return new MySqlParameter("p_idEvento", idEvento);
+            return new MySqlParameter[]
+            {
+                new ("p_idEvento", request.IdEvento),
+                new ("p_idUsuarioOrg", request.IdUsuarioOrg)
+            };
         }
         #endregion
 

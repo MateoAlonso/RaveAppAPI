@@ -3,13 +3,14 @@ using MySql.Data.MySqlClient;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Models;
 using RaveAppAPI.Services.Repository.Contracts;
+using RaveAppAPI.Services.RequestModel.Reporte;
 
 namespace RaveAppAPI.Services.Repository
 {
     public class ReporteService : IReporteService
     {
         private readonly string connectionString = EnvHelper.GetConnectionString();
-        public ErrorOr<List<VentasEventoDTO>> GetReporteVentasEvento(string idEvento)
+        public ErrorOr<List<VentasEventoDTO>> GetReporteVentasEvento(ReporteVentasEventoRequest request)
         {
             try
             {
@@ -18,7 +19,7 @@ namespace RaveAppAPI.Services.Repository
                     dbcon.Open();
                     MySqlCommand cmd = new(ProcedureHelper.GetVentasEvento, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.Add(ProcedureHelper.GetVentasEventoParameters(idEvento));
+                    cmd.Parameters.AddRange(ProcedureHelper.GetVentasEventoParameters(request));
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)
