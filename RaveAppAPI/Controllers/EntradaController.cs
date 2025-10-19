@@ -111,6 +111,14 @@ namespace RaveAppAPI.Controllers
                 control => Ok(control),
                 errors => Problem(errors));
         }
+        [HttpPut("UpdateEstadoEntrada")]
+        public IActionResult UpdateEstadoEntrada(UpdateEstadoEntradaRequest request)
+        {
+            ErrorOr<Updated> updateEstadoEntradaResult = _entradaService.UpdateEstadoEntrada(request);
+            return updateEstadoEntradaResult.Match(
+                updated => NoContent(),
+                errors => Problem(errors));
+        }
         [ApiExplorerSettings(IgnoreApi = true)]
         public async void GenerarQrEntradas(List<string> entradas)
         {
