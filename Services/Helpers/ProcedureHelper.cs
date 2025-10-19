@@ -28,6 +28,10 @@ namespace RaveAppAPI.Services.Helpers
         public const string PCDGetEventosFavoritos = "PCD_USUARIOS_GetEventosFavoritos";
         public const string PCDGetEntradas = "PCD_USUARIOS_GetEntradas";
         public const string PCDConfirmarCuenta = "PCD_USUARIOS_ConfirmarCuenta";
+        public const string PCDSetUsuarioControl = "PCD_USUARIOS_SetUsuarioControl";
+        public const string PCDLoginUsuarioControl = "PCD_USUARIOS_LoginUsuarioControl";
+        public const string PCDDeleteUsuarioControl = "PCD_USUARIOS_DeleteUsuarioControl";
+        public const string PCDGetUsuariosControl = "PCD_USUARIOS_GetUsuariosControl";
         #endregion
 
         #region Usuario Parameters
@@ -138,6 +142,36 @@ namespace RaveAppAPI.Services.Helpers
                 new ("p_dsCorreo", correo),
                 new ("p_dsPass", MySqlDbType.VarChar) { Direction = System.Data.ParameterDirection.Output }
             };
+        }
+        public static MySqlParameter[] GetLoginUsuarioControlParameters(string nombreUsuario)
+        {
+            return new MySqlParameter[]
+            {
+                new ("p_dsNombreUsuario", nombreUsuario),
+                new ("p_dsPass", MySqlDbType.VarChar) { Direction = System.Data.ParameterDirection.Output }
+            };
+        }
+        public static MySqlParameter[] CreateUsuarioControlParameters(UsuarioControl usuario)
+        {
+            return new MySqlParameter[]
+            {
+                new ("p_idUsuarioOrg", usuario.IdUsuarioOrg),
+                new ("p_dsNombreUsuario", usuario.NombreUsuario),
+                new ("p_dsPass", usuario.Password),
+                new ("p_idUsuarioControl", MySqlDbType.VarChar, 36) { Direction = System.Data.ParameterDirection.Output }
+            };
+        }
+        public static MySqlParameter[] DeleteUsuarioControlParameters(DeleteUsuarioControlRequest request)
+        {
+            return new MySqlParameter[]
+            {
+                new ("p_idUsuarioOrg", request.IdUsuarioOrg),
+                new ("p_idUsuarioControl", request.IdUsuarioControl)
+            };
+        }
+        public static MySqlParameter GetUsuariosControlParameters(string idUsuarioOrg)
+        {
+            return new MySqlParameter("p_idUsuarioOrg", idUsuarioOrg);
         }
         public static MySqlParameter[] ResetPassUsuarioParameters(string correo, string pass)
         {

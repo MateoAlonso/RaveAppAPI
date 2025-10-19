@@ -44,6 +44,26 @@ namespace RaveAppAPI.Controllers
                 created => CreatedAtCreateUsuario(usuario),
                 errors => Problem(errors));
         }
+        [HttpPost("CreateUsuarioControl")]
+        public IActionResult CreateUsuarioControl(CreateUsuarioControlRequest request)
+        {
+            ErrorOr<UsuarioControl> requestToUsuarioResult = UsuarioControl.From(request);
+
+            if (requestToUsuarioResult.IsError)
+            {
+                return Problem(requestToUsuarioResult.Errors);
+            }
+
+            var usuario = requestToUsuarioResult.Value;
+
+            usuario.Password = Hasher.HashPassword(request.NombreUsuario, request.Password);
+
+            ErrorOr<Created> createUsuarioResult = _usuarioService.CrearUsuarioControl(usuario);
+
+            return createUsuarioResult.Match(
+                created => CreatedAtCreateUsuarioContol(usuario),
+                errors => Problem(errors));
+        }
 
         [HttpGet("GetUsuario")]
         public IActionResult GetUsuario([FromQuery] GetUsuarioRequest request)
@@ -64,10 +84,19 @@ namespace RaveAppAPI.Controllers
                 usuario => Ok(MapUsuarioResponse(usuario)),
                 errors => Problem(errors));
         }
+        [HttpGet("GetUsuariosControl")]
+        public IActionResult GetUsuariosControl([FromQuery] string idUsuarioOrg)
+        {
+            ErrorOr<List<GetUsuariosControlDTO>> getUsuariosControlResult = _usuarioService.GetUsuariosControl(idUsuarioOrg);
+
+            return getUsuariosControlResult.Match(
+                usuarios => Ok(usuarios),
+                errors => Problem(errors));
+        }
         [HttpGet("Login")]
         public IActionResult Login([FromQuery] LoginUsuarioRequest request)
         {
-            ErrorOr<string> loginResult = _usuarioService.Login(request.Correo);
+            ErrorOr<string> loginResult = request.IsControl ? _usuarioService.LoginControl(request.Correo) : _usuarioService.Login(request.Correo);
 
             if (loginResult.IsError)
             {
@@ -76,7 +105,7 @@ namespace RaveAppAPI.Controllers
 
             if (!Hasher.VerifyHashedPassword(request.Correo, loginResult.Value, request.Password))
             {
-                return Problem("Contraseña incorrecta");
+                return Forbid();
             }
 
             return Ok(true);
@@ -93,7 +122,7 @@ namespace RaveAppAPI.Controllers
 
             if (!Hasher.VerifyHashedPassword(request.Correo, loginResult.Value, request.Pass))
             {
-                return Problem("Contraseña incorrecta");
+                return Forbid();
             }
 
             string hashedNewPass = Hasher.HashPassword(request.Correo, request.NewPass);
@@ -167,6 +196,15 @@ namespace RaveAppAPI.Controllers
                 deleted => NoContent(),
                 errors => Problem(errors));
         }
+        [HttpDelete("DeleteUsuarioControl")]
+        public IActionResult DeleteUsuarioControl(DeleteUsuarioControlRequest request)
+        {
+            ErrorOr<Deleted> deleteUsuarioResult = _usuarioService.DeleteUsuarioControl(request);
+
+            return deleteUsuarioResult.Match(
+                deleted => NoContent(),
+                errors => Problem(errors));
+        }
         [HttpGet("GetRoles")]
         public IActionResult GetRoles(string? idUsuario)
         {
@@ -223,6 +261,10 @@ namespace RaveAppAPI.Controllers
                 usuarios
                 );
         }
+        private static UsuarioControlResponse MapUsuarioControlResponse(UsuarioControl usuario)
+        {
+            return new UsuarioControlResponse(usuario.IdUsuarioControl, usuario.IdUsuarioOrg, usuario.NombreUsuario);
+        }
         private static RolesUsuarioResponse MapRolesUsuarioResponse(List<RolesUsuario> rolesUsuario)
         {
             return new RolesUsuarioResponse(rolesUsuario);
@@ -233,6 +275,13 @@ namespace RaveAppAPI.Controllers
                 actionName: nameof(CreateUsuario),
                 routeValues: new { id = usuario.IdUsuario },
                 value: MapUsuarioResponse(new List<Usuario> { usuario }));
+        }
+        private CreatedAtActionResult CreatedAtCreateUsuarioContol(UsuarioControl usuario)
+        {
+            return CreatedAtAction(
+                actionName: nameof(CreateUsuario),
+                routeValues: new { id = usuario.IdUsuarioControl },
+                value: MapUsuarioControlResponse(usuario));
         }
     }
 }
