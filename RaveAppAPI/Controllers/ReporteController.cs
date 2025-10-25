@@ -16,7 +16,7 @@ namespace RaveAppAPI.Controllers
         }
 
         [HttpGet("ReporteVentasEvento")]
-        public IActionResult ReporteVentasEvento(ReporteVentasEventoRequest request)
+        public IActionResult ReporteVentasEvento([FromQuery] ReporteVentasEventoRequest request)
         {
             var reporteResult = _reporteService.GetReporteVentasEvento(request);
 
