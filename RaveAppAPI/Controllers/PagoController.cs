@@ -181,6 +181,22 @@ namespace RaveAppAPI.Controllers
             }
             return Ok();
         }
+        [HttpPost("PagoMP")]
+        public IActionResult PagoMP(string idPagoMP)
+        {
+            var getPaymentResult = GetPayment(idPagoMP);
+            if (getPaymentResult.IsError)
+            {
+                return Problem(getPaymentResult.Errors);
+            }
+            var payment = getPaymentResult.Value;
+            _logService.LogWebhookMP(payment.Metadata.IdCompra, payment.Status, payment.StatusDetail, payment.TransactionAmount, payment.Id);
+            if (!ProcessPayment(payment.StatusDetail, payment.Metadata.IdCompra))
+            {
+                return Problem();
+            }
+            return Ok();
+        }
 
         private bool ProcessPayment(string status, string idCompra)
         {
