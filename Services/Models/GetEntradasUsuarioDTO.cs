@@ -22,6 +22,8 @@ namespace RaveAppAPI.Services.Models
         public string IdEvento { get; set; }
         [ColumnName("idcompra")]
         public string IdCompra { get; set; }
+        [ColumnName("dtinsert")]
+        public DateTime DtInsert { get; set; }
         [ColumnName("num_compra")]
         public UInt64 NumCompra { get; set; }
 
