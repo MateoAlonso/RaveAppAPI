@@ -8,5 +8,9 @@ namespace RaveAppAPI.Services.Models
         public long IdMP { get; set; }
         [ColumnName("amsubtotal")]
         public decimal Monto { get; set; }
+        [ColumnName("idcompra")]
+        public string IdCompra { get; set; }
+        [ColumnName("dsnombre")]
+        public string NombreEvento { get; set; }
     }
 }
