@@ -12,5 +12,7 @@ namespace RaveAppAPI.Services.Models
         public string IdCompra { get; set; }
         [ColumnName("dsnombre")]
         public string NombreEvento { get; set; }
+        [ColumnName("dscorreo")]
+        public string CorreoComprador { get; set; }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Asn1.Ocsp;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Repository.Contracts;
 using RaveAppAPI.Services.RequestModel.Mail;
+using RaveAppAPI.Services.RequestModel.Pago;
 using System.Net.Http.Headers;
 using System.Text;
 using static RaveAppAPI.Services.Helpers.ApiMailHelper;
@@ -198,51 +200,35 @@ namespace RaveAppAPI.Controllers
             }
         }
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async void EnviarMailReembolsoMasivo(string idCompra, string nombreEvento)
+        public async void EnviarMailReembolsoMasivo(string nombreEvento, decimal monto, string correo)
         {
             try
             {
-                var emailData = _emailService.GetEmailQrData(idCompra);
-                if (emailData.IsError)
-                {
-                    return;
-                }
-                var emailDataResult = emailData.Value;
-
-                string nombreEvento = emailDataResult.First().NombreEvento;
-                string fechaEvento = emailDataResult.First().DtInicioFecha.ToString("f");
-                string To = emailDataResult.First().To;
-                string qrHtmlSection = string.Empty;
-                MultipartFormDataContent formData = new MultipartFormDataContent
-                {
-                    { new StringContent(FromEmail), "from" },
-                    { new StringContent(To), "to" },
-                    { new StringContent($"Entradas - {nombreEvento}"), "subject" }
-                };
-                foreach (var qrEmail in emailDataResult)
-                {
-                    qrHtmlSection += ApiMailHelper.BuildQrSection($"QR_{qrEmail.IdEntrada}", qrEmail.TipoEntrada);
-                    string qrContent = $"{qrEmail.IdEntrada},{qrEmail.MdQr}";
-                    var qrCode = QRHelper.GenerateQRCode(qrContent);
-                    formData.Add(new ByteArrayContent(qrCode), "inline", $"QR_{qrEmail.IdEntrada}");
-                }
-                string html = ApiMailHelper.BuildQrEmail(nombreEvento, fechaEvento, qrHtmlSection);
-                formData.Add(new StringContent(html), "html");
-
                 using (HttpClient client = new HttpClient())
                 {
+                    string templateData = JsonConvert.SerializeObject(
+                        new { amount = monto, event_name = nombreEvento}
+                        );
+
+                    MultipartFormDataContent formData = new MultipartFormDataContent
+                    {
+                        { new StringContent(FromEmail), "from" },
+                        { new StringContent(correo), "to" },
+                        { new StringContent(ReembolsoMasivoTemplate), "template" },
+                        { new StringContent(templateData), "t:variables" }
+                    };
+
                     var sendRequest = ApiMailHelper.BuildRequest(
                         HttpMethod.Post,
                         BaseUrl,
                         String.Format(MessagesEndpoint, DomainName),
                         formData,
-                            new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"api:{_MailgunToken}"))));
+                         new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"api:{_MailgunToken}"))));
 
                     var response = await client.SendAsync(sendRequest);
                     if (!response.IsSuccessStatusCode)
                     {
-                        string content = await response.Content.ReadAsStringAsync();
-                        Logger.LogError($"Error enviando mails QR: {(int)response.StatusCode} - {content}");
+                        Logger.LogError($"Error enviando correo devolucion masiva: {correo}");
                     }
                 }
             }

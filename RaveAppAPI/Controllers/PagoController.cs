@@ -58,7 +58,7 @@ namespace RaveAppAPI.Controllers
                 response => Ok(response),
                 errors => Problem(errors));
         }
-        [HttpPost("Reembolso"), Authorize]
+        [HttpPost("ReembolsoMasivo"), Authorize]
         public IActionResult ReembolsoMasivo(string idEvento)
         {
             var getDatosResult = _pagoService.GetDatosReembolsoMasivo(idEvento);
@@ -77,7 +77,7 @@ namespace RaveAppAPI.Controllers
                 if (!createRefundResult.IsError)
                 {
                     _pagoService.Reembolso(item.IdCompra);
-                    emailController.e(idCompra);
+                    emailController.EnviarMailReembolsoMasivo(item.NombreEvento, item.Monto, item.CorreoComprador);
                 }
                 else
                 {
