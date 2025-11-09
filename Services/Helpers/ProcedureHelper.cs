@@ -691,6 +691,7 @@ namespace RaveAppAPI.Services.Helpers
         public const string AnularCompra = "PCD_COMPRA_AnularCompra";
         public const string RefreshTimerReserva = "PCD_COMPRA_RefreshTimerReserva";
         public const string GetDatosReembolso = "PCD_COMPRA_GetDatosReembolso";
+        public const string GetDatosReembolsoMasivo = "PCD_COMPRA_GetDatosReembolsoMasivo";
         public const string Reembolso = "PCD_COMPRA_Reembolso";
         #endregion
 
@@ -727,6 +728,10 @@ namespace RaveAppAPI.Services.Helpers
         public static MySqlParameter GetDatosReembolsoParameters(string idCompra)
         {
             return new MySqlParameter("p_idCompra", idCompra);
+        }
+        public static MySqlParameter GetDatosReembolsoMasivoParameters(string idEvento)
+        {
+            return new MySqlParameter("p_idEvento", idEvento);
         }
         #endregion
 

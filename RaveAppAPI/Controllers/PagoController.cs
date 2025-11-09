@@ -1,6 +1,7 @@
 ﻿using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Asn1.Sec;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Repository;
 using RaveAppAPI.Services.Repository.Contracts;
@@ -56,6 +57,35 @@ namespace RaveAppAPI.Controllers
             return createRefundResult.Match(
                 response => Ok(response),
                 errors => Problem(errors));
+        }
+        [HttpPost("ReembolsoMasivo"), Authorize]
+        public IActionResult ReembolsoMasivo(string idEvento)
+        {
+            var getDatosResult = _pagoService.GetDatosReembolsoMasivo(idEvento);
+
+            if (getDatosResult.IsError)
+            {
+                return Problem(getDatosResult.Errors);
+            }
+            var datos = getDatosResult.Value;
+
+            List<string> comprasError = new List<string>();
+            EmailController emailController = new EmailController(new EmailService());
+            foreach (var item in datos)
+            {
+                var createRefundResult = CreateRefund(item.IdMP, item.Monto);
+                if (!createRefundResult.IsError)
+                {
+                    _pagoService.Reembolso(item.IdCompra);
+                    emailController.EnviarMailReembolsoMasivo(item.NombreEvento, item.Monto, item.CorreoComprador);
+                }
+                else
+                {
+                    comprasError.Add(item.IdCompra);
+                }
+            }
+
+            return Ok(new { ComprasError = comprasError } );
         }
         private ErrorOr<RefundResponse> CreateRefund(long idMP, decimal monto)
         {
@@ -232,28 +262,28 @@ namespace RaveAppAPI.Controllers
         {
             try
             {
-
+                HttpRequestMessage MPRequest = MpApiHelper.BuildRequest(
+                    HttpMethod.Get,
+                    _BaseUrlMPApi,
+                    string.Format(MpApiHelper.GetPayment, paymentId),
+                    auth: new AuthenticationHeaderValue("Bearer", EnvHelper.GetTokenMP()));
+                using (var client = new HttpClient())
+                {
+                    var response = client.SendAsync(MPRequest);
+                    response.Wait();
+                    if (!response.Result.IsSuccessStatusCode)
+                    {
+                        Logger.LogError($"Error recuperando pago para ID {paymentId}: {response.Result.ReasonPhrase}");
+                        return Error.Failure();
+                    }
+                    var paymentResponse = MpApiHelper.MapResponse<GetPaymentResponse>(response.Result);
+                    return paymentResponse;
+                }
             }
             catch (Exception e)
             {
                 Logger.LogError(e.Message);
-            }
-            HttpRequestMessage MPRequest = MpApiHelper.BuildRequest(
-                HttpMethod.Get,
-                _BaseUrlMPApi,
-                string.Format(MpApiHelper.GetPayment, paymentId),
-                auth: new AuthenticationHeaderValue("Bearer", EnvHelper.GetTokenMP()));
-            using (var client = new HttpClient())
-            {
-                var response = client.SendAsync(MPRequest);
-                response.Wait();
-                if (!response.Result.IsSuccessStatusCode)
-                {
-                    Logger.LogError($"Error recuperando pago para ID {paymentId}: {response.Result.ReasonPhrase}");
-                    return Error.Failure();
-                }
-                var paymentResponse = MpApiHelper.MapResponse<GetPaymentResponse>(response.Result);
-                return paymentResponse;
+                return Error.Failure();
             }
         }
     }
