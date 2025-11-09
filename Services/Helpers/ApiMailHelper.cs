@@ -7,6 +7,7 @@
         public const string ConfirmarMailTemplate = "EmailConfirmationTemplate";
         public const string PassRecoveryTemplate = "PassRecoveryTemplate";
         public const string EntradaQrTemplate = "EntradaQrTemplate";
+        public const string ReembolsoMasivoTemplate = "ReembolsoMasivo";
         public const string BaseUrl = "https://api.mailgun.net";
         public const string MessagesEndpoint = "/v3/{0}/messages";
         public static string BuildQrEmail(string nombreEvento, string fecha, string qrHtml)
