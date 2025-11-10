@@ -120,7 +120,7 @@ namespace RaveAppAPI.Controllers
                 errors => Problem(errors));
         }
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async void GenerarQrEntradas(List<string> entradas)
+        public async Task GenerarQrEntradas(List<string> entradas)
         {
             foreach (var entrada in entradas)
             {

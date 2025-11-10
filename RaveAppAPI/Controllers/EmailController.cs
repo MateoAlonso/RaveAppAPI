@@ -146,7 +146,7 @@ namespace RaveAppAPI.Controllers
             }
         }
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async void EnviarMailsQR(string idCompra)
+        public async Task EnviarMailsQR(string idCompra)
         {
             try
             {
