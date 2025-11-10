@@ -1,0 +1,264 @@
+@startuml RaveAppAPI Component Diagram
+
+' ==================== Styling ====================
+skinparam componentStyle rectangle
+skinparam linetype ortho
+skinparam nodesep 80
+skinparam ranksep 80
+hide stereotype
+
+' Color coding:
+' - Blue: HTTP/API communication
+' - Green: Internal component dependencies
+' - Orange: Data flow
+' - Purple: External service calls
+
+' ==================== External Actors ====================
+
+actor "Web Client" as WebClient
+actor "Mobile Client" as MobileClient
+
+' ==================== API Layer ====================
+
+package "API Layer" <<Rectangle>> {
+    component [APIController] as APICtrl #LightBlue
+    
+    package "Controllers" {
+        component [ArtistaController] as ArtistaCtrl
+        component [EventoController] as EventoCtrl
+        component [UsuarioController] as UsuarioCtrl
+        component [EntradaController] as EntradaCtrl
+        component [FiestaController] as FiestaCtrl
+        component [NoticiaController] as NoticiaCtrl
+        component [ReseniaController] as ReseniaCtrl
+        component [MediaController] as MediaCtrl
+        component [PagoController] as PagoCtrl
+        component [ReporteController] as ReporteCtrl
+        component [SecurityController] as SecurityCtrl
+        component [EmailController] as EmailCtrl
+        component [SistemaController] as SistemaCtrl
+    }
+    
+    interface "REST API" as RestAPI
+    interface "Authentication" as Auth
+}
+
+' ==================== Service Layer ====================
+
+package "Service Layer (Business Logic)" <<Rectangle>> {
+    
+    package "Service Interfaces" {
+        interface "IArtistaService" as IArtistaService
+        interface "IEventoService" as IEventoService
+        interface "IUsuarioService" as IUsuarioService
+        interface "IEntradaService" as IEntradaService
+        interface "IFiestaService" as IFiestaService
+        interface "INoticiaService" as INoticiaService
+        interface "IReseniaService" as IReseniaService
+        interface "IMediaService" as IMediaService
+        interface "IPagoService" as IPagoService
+        interface "IReporteService" as IReporteService
+        interface "IEmailService" as IEmailService
+        interface "ISistemaService" as ISistemaService
+        interface "ILogService" as ILogService
+    }
+    
+    package "Service Implementations" {
+        component [ArtistaService] as ArtistaService
+        component [EventoService] as EventoService
+        component [UsuarioService] as UsuarioService
+        component [EntradaService] as EntradaService
+        component [FiestaService] as FiestaService
+        component [NoticiaService] as NoticiaService
+        component [ReseniaService] as ReseniaService
+        component [MediaService] as MediaService
+        component [PagoService] as PagoService
+        component [ReporteService] as ReporteService
+        component [EmailService] as EmailService
+        component [SistemaService] as SistemaService
+        component [LogService] as LogService
+    }
+}
+
+' ==================== Domain Model Layer ====================
+
+package "Domain Model" <<Rectangle>> {
+    component [Artista] as ArtistaModel
+    component [Evento] as EventoModel
+    component [Usuario] as UsuarioModel
+    component [Entrada] as EntradaModel
+    component [Fiesta] as FiestaModel
+    component [Noticia] as NoticiaModel
+    component [Resenia] as ReseniaModel
+    component [Media] as MediaModel
+    component [Domicilio] as DomicilioModel
+    component [DTOs] as DTOs #LightYellow
+}
+
+' ==================== Helper/Utility Layer ====================
+
+package "Helpers & Utilities" <<Rectangle>> {
+    component [JwtHelper] as JwtHelper
+    component [Hasher] as Hasher
+    component [QRHelper] as QRHelper
+    component [ReaderMapper] as ReaderMapper
+    component [ProcedureHelper] as ProcedureHelper
+    component [APIHelper] as APIHelper
+    component [Logger] as Logger
+}
+
+' ==================== Data Access Layer ====================
+
+package "Data Access Layer" <<Database>> {
+    component [ProcedureHelper\n(Database Connector)] as DBConnector #LightCoral
+    database "MySQL\nDatabase" as DB
+}
+
+' ==================== External Services ====================
+
+cloud "External Services" {
+    component [MercadoPago API] as MercadoPago #LightGreen
+    component [Email Service\n(Mailgun)] as MailService #LightGreen
+    component [S3 Storage\n(Cloudflare)] as S3Storage #LightGreen
+}
+
+' ==================== Relationships ====================
+
+' Clients to API
+WebClient -[#0066CC]-> RestAPI : HTTP/HTTPS
+MobileClient -[#0066CC]-> RestAPI : HTTP/HTTPS
+RestAPI -[#0066CC]-> APICtrl
+
+' Controllers inherit from APIController
+ArtistaCtrl -[#0066CC]-|> APICtrl
+EventoCtrl -[#0066CC]-|> APICtrl
+UsuarioCtrl -[#0066CC]-|> APICtrl
+EntradaCtrl -[#0066CC]-|> APICtrl
+FiestaCtrl -[#0066CC]-|> APICtrl
+NoticiaCtrl -[#0066CC]-|> APICtrl
+ReseniaCtrl -[#0066CC]-|> APICtrl
+MediaCtrl -[#0066CC]-|> APICtrl
+PagoCtrl -[#0066CC]-|> APICtrl
+ReporteCtrl -[#0066CC]-|> APICtrl
+SecurityCtrl -[#0066CC]-|> APICtrl
+EmailCtrl -[#0066CC]-|> APICtrl
+SistemaCtrl -[#0066CC]-|> APICtrl
+
+' Controllers to Service Interfaces (GREEN)
+ArtistaCtrl -[#00AA00]-> IArtistaService
+EventoCtrl -[#00AA00]-> IEventoService
+UsuarioCtrl -[#00AA00]-> IUsuarioService
+EntradaCtrl -[#00AA00]-> IEntradaService
+FiestaCtrl -[#00AA00]-> IFiestaService
+NoticiaCtrl -[#00AA00]-> INoticiaService
+ReseniaCtrl -[#00AA00]-> IReseniaService
+MediaCtrl -[#00AA00]-> IMediaService
+PagoCtrl -[#00AA00]-> IPagoService
+ReporteCtrl -[#00AA00]-> IReporteService
+EmailCtrl -[#00AA00]-> IEmailService
+SistemaCtrl -[#00AA00]-> ISistemaService
+
+' Service Interfaces to Implementations (GREEN)
+IArtistaService -[#00AA00]- ArtistaService
+IEventoService -[#00AA00]- EventoService
+IUsuarioService -[#00AA00]- UsuarioService
+IEntradaService -[#00AA00]- EntradaService
+IFiestaService -[#00AA00]- FiestaService
+INoticiaService -[#00AA00]- NoticiaService
+IReseniaService -[#00AA00]- ReseniaService
+IMediaService -[#00AA00]- MediaService
+IPagoService -[#00AA00]- PagoService
+IReporteService -[#00AA00]- ReporteService
+IEmailService -[#00AA00]- EmailService
+ISistemaService -[#00AA00]- SistemaService
+ILogService -[#00AA00]- LogService
+
+' Services to Domain Models (ORANGE - Data Flow)
+ArtistaService -[#FF8800]-> ArtistaModel
+EventoService -[#FF8800]-> EventoModel
+UsuarioService -[#FF8800]-> UsuarioModel
+EntradaService -[#FF8800]-> EntradaModel
+FiestaService -[#FF8800]-> FiestaModel
+NoticiaService -[#FF8800]-> NoticiaModel
+ReseniaService -[#FF8800]-> ReseniaModel
+MediaService -[#FF8800]-> MediaModel
+ReporteService -[#FF8800]-> DTOs
+
+' Domain Models relationships
+EventoModel -[#FF8800]-> UsuarioModel
+EventoModel -[#FF8800]-> ArtistaModel
+EventoModel -[#FF8800]-> DomicilioModel
+EventoModel -[#FF8800]-> MediaModel
+UsuarioModel -[#FF8800]-> DomicilioModel
+ArtistaModel -[#FF8800]-> MediaModel
+NoticiaModel -[#FF8800]-> MediaModel
+
+' Services to Helpers (DARK GREEN)
+UsuarioService -[#C30010]-> JwtHelper : "Generate Token"
+UsuarioService -[#C30010]-> Hasher : "Hash Password"
+EntradaService -[#C30010]-> QRHelper : "Generate QR"
+ArtistaService -[#C30010]-> ReaderMapper : "Map Data"
+EventoService -[#C30010]-> ReaderMapper : "Map Data"
+UsuarioService -[#C30010]-> ReaderMapper : "Map Data"
+LogService -[#C30010]-> Logger : "Write Logs"
+SecurityCtrl -[#C30010]-> JwtHelper : "Validate Token"
+SecurityCtrl -[#C30010]-> Hasher : "Verify Password"
+
+' Services to Data Access (ORANGE)
+ArtistaService -[#FF8800]-> DBConnector
+EventoService -[#FF8800]-> DBConnector
+UsuarioService -[#FF8800]-> DBConnector
+EntradaService -[#FF8800]-> DBConnector
+FiestaService -[#FF8800]-> DBConnector
+NoticiaService -[#FF8800]-> DBConnector
+ReseniaService -[#FF8800]-> DBConnector
+MediaService -[#FF8800]-> DBConnector
+PagoService -[#FF8800]-> DBConnector
+ReporteService -[#FF8800]-> DBConnector
+SistemaService -[#FF8800]-> DBConnector
+
+' Data Access to Database
+DBConnector -[#FF8800]-> DB : "SQL/Stored Procedures"
+ProcedureHelper -[#FF8800]-> DBConnector
+
+' Services to External Services (PURPLE)
+PagoService -[#9933CC]-> MercadoPago : "Process Payments"
+EmailService -[#9933CC]-> MailService : "Send Emails"
+MediaService -[#9933CC]-> S3Storage : "Store/Retrieve Media"
+
+' Notes
+note left of RestAPI
+  All controllers expose
+  REST endpoints with
+  JWT authentication
+end note
+
+note right of "Service Layer (Business Logic)"
+  Business logic layer
+  implements SOLID principles
+  with dependency injection
+end note
+
+note bottom of DBConnector
+  Uses stored procedures
+  and ReaderMapper for
+  data transformation
+end note
+
+note bottom of "External Services"
+  Integration with
+  third-party services
+  for payments, email,
+  and storage
+end note
+
+legend right
+  |<#0066CC>  | HTTP/API Communication |
+  |<#00AA00>  | Internal Dependencies |
+  |<#FF8800>  | Data Flow |
+  |<#9933CC>  | External Service Calls |
+  |<#C30010>  | Utility/Helper Usage |
+endlegend
+
+@enduml
+
