@@ -1,0 +1,631 @@
+@startuml RaveAppAPI Class Diagram
+
+' ==================== Styling ====================
+skinparam linetype ortho
+
+' Color legend for relationship types:
+' - Blue (#0066CC): Inheritance
+' - Green (#00AA00): Service Dependencies
+' - Orange (#FF8800): Composition (has-a)
+' - Purple (#9933CC): Usage (uses)
+
+' ==================== Controllers ====================
+
+package "Controllers" {
+    class APIController {
+        # Problem(errors: List<Error>): IActionResult
+    }
+    
+    class ArtistaController {
+        - _artistaService: IArtistaService
+        - _mediaService: IMediaService
+        + CreateArtista(request: CreateArtistaRequest): IActionResult
+        + GetArtista(request: GetArtistaRequest): IActionResult
+        + UpdateArtista(request: UpdateArtistaRequest): IActionResult
+        + DeleteArtista(id: string): IActionResult
+    }
+    
+    class EventoController {
+        - _eventoService: IEventoService
+        - _mediaService: IMediaService
+        + CreateEvento(request: CreateEventoRequest): IActionResult
+        + GetEvento(request: GetEventoRequest): IActionResult
+        + UpdateEvento(request: UpdateEventoRequest): IActionResult
+        + DeleteEvento(id: string): IActionResult
+        + GetGeneros(): IActionResult
+    }
+    
+    class UsuarioController {
+        - _usuarioService: IUsuarioService
+        - _mediaService: IMediaService
+        + CreateUsuario(request: CreateUsuarioRequest): IActionResult
+        + GetUsuario(request: GetUsuarioRequest): IActionResult
+        + UpdateUsuario(request: UpdateUsuarioRequest): IActionResult
+        + DeleteUsuario(id: string): IActionResult
+        + Login(request: LoginRequest): IActionResult
+    }
+    
+    class EntradaController {
+        - _entradaService: IEntradaService
+        + CreateEntrada(request: CreateEntradaRequest): IActionResult
+        + GetEntrada(request: GetEntradaRequest): IActionResult
+    }
+    
+    class FiestaController {
+        - _fiestaService: IFiestaService
+        + CreateFiesta(request: CreateFiestaRequest): IActionResult
+        + UpdateFiesta(request: UpdateFiestaRequest): IActionResult
+        + GetFiesta(request: GetFiestaRequest): IActionResult
+    }
+    
+    class NoticiaController {
+        - _noticiaService: INoticiaService
+        - _mediaService: IMediaService
+        + CreateNoticia(request: CreateNoticiaRequest): IActionResult
+        + GetNoticia(request: GetNoticiaRequest): IActionResult
+        + UpdateNoticia(request: UpdateNoticiaRequest): IActionResult
+    }
+    
+    class ReseniaController {
+        - _reseniaService: IReseniaService
+        + CreateResenia(request: CreateReseniaRequest): IActionResult
+        + GetResenia(request: GetReseniaRequest): IActionResult
+        + DeleteResenia(id: string): IActionResult
+    }
+    
+    class MediaController {
+        - _mediaService: IMediaService
+        + CreateMedia(request: CreateMediaRequest): IActionResult
+        + DeleteMedia(id: string): IActionResult
+    }
+    
+    class PagoController {
+        - _pagoService: IPagoService
+        + CreatePago(request: CreatePagoRequest): IActionResult
+        + GetPago(request: GetPagoRequest): IActionResult
+    }
+    
+    class ReporteController {
+        - _reporteService: IReporteService
+        + GetReporte(request: GetReporteRequest): IActionResult
+    }
+    
+    class EmailController {
+        - _emailService: IEmailService
+        + SendEmail(request: SendEmailRequest): IActionResult
+    }
+    
+    class SecurityController {
+        + Login(request: LoginRequest): IActionResult
+        + ResetPassword(request: ResetPasswordRequest): IActionResult
+    }
+    
+    class SistemaController {
+        - _sistemaService: ISistemaService
+        + GetEstados(): IActionResult
+        + GetProvincias(): IActionResult
+    }
+}
+
+' ==================== Service Interfaces ====================
+
+package "Services.Repository.Contracts" {
+    interface IArtistaService {
+        + CreateArtista(artista: Artista): ErrorOr<Created>
+        + UpdateArtista(artista: Artista): ErrorOr<Updated>
+        + DeleteArtista(idArtista: string): ErrorOr<Deleted>
+        + GetArtistas(request: GetArtistaRequest): ErrorOr<List<Artista>>
+        + GetCantLikesArtista(id: string): int
+        + GetImgLikesArtistas(id: string): ErrorOr<List<string>>
+    }
+    
+    interface IEventoService {
+        + CreateEvento(evento: Evento): ErrorOr<Created>
+        + GetEventos(request: GetEventoRequest): ErrorOr<List<Evento>>
+        + UpdateEvento(evento: Evento): ErrorOr<Updated>
+        + DeleteEvento(id: string): ErrorOr<Deleted>
+        + SetFechas(evento: Evento): ErrorOr<Created>
+        + UpdateFechas(evento: Evento): ErrorOr<Updated>
+        + GetGeneros(): ErrorOr<List<GeneroEvento>>
+        + GetEstadosEvento(): ErrorOr<List<Estado>>
+        + GetEstadosFecha(): ErrorOr<List<Estado>>
+        + GetArtistasEvento(id: string): ErrorOr<List<Artista>>
+    }
+    
+    interface IUsuarioService {
+        + CreateUsuario(usuario: Usuario): ErrorOr<Created>
+        + GetUsuario(request: GetUsuarioRequest): ErrorOr<List<Usuario>>
+        + UpdateUsuario(usuario: Usuario): ErrorOr<Updated>
+        + DeleteUsuario(id: string): ErrorOr<Deleted>
+        + GetRolesUsuario(idusuario: string): ErrorOr<List<RolesUsuario>>
+        + Login(correo: string): ErrorOr<string>
+        + ResetPass(correo: string, pass: string): ErrorOr<Updated>
+        + ConfirmarCuenta(correo: string): ErrorOr<Updated>
+        + EventoFavorito(request: EventoFavoritoRequest): ErrorOr<Updated>
+        + ArtistaFavorito(request: ArtistaFavoritoRequest): ErrorOr<Updated>
+        + GetEventosFavoritos(idUsuario: string): ErrorOr<List<string>>
+        + GetEntradas(idUsuario: string): ErrorOr<List<GetEntradasUsuarioDTO>>
+        + LoginControl(correo: string): ErrorOr<string>
+        + CrearUsuarioControl(usuario: UsuarioControl): ErrorOr<Created>
+        + DeleteUsuarioControl(request: DeleteUsuarioControlRequest): ErrorOr<Deleted>
+        + GetUsuariosControl(idUsuarioOrg: string): ErrorOr<List<GetUsuariosControlDTO>>
+    }
+    
+    interface IEntradaService {
+        + CreateEntrada(entrada: Entrada): ErrorOr<Created>
+        + GetEntrada(request: GetEntradaRequest): ErrorOr<List<Entrada>>
+    }
+    
+    interface IFiestaService {
+        + CreateFiesta(fiesta: Fiesta): ErrorOr<Created>
+        + UpdateFiesta(fiesta: Fiesta): ErrorOr<Updated>
+        + GetFiesta(request: GetFiestaRequest): ErrorOr<List<Fiesta>>
+    }
+    
+    interface INoticiaService {
+        + CreateNoticia(noticia: Noticia): ErrorOr<Created>
+        + GetNoticia(request: GetNoticiaRequest): ErrorOr<List<Noticia>>
+        + UpdateNoticia(noticia: Noticia): ErrorOr<Updated>
+    }
+    
+    interface IReseniaService {
+        + CreateResenia(resenia: Resenia): ErrorOr<Created>
+        + GetResenia(request: GetReseniaRequest): ErrorOr<List<GetReseniaDTO>>
+        + DeleteResenia(id: string): ErrorOr<Deleted>
+        + GetAvgResenia(idFiesta: string): ErrorOr<AvgReseniaDTO>
+    }
+    
+    interface IMediaService {
+        + CreateMedia(media: Media): ErrorOr<Created>
+        + DeleteMedia(id: string): ErrorOr<Deleted>
+        + GetMedia(idEntidad: string): ErrorOr<List<Media>>
+    }
+    
+    interface IPagoService {
+        + CreatePago(request: CreatePagoRequest): ErrorOr<Created>
+        + GetPago(request: GetPagoRequest): ErrorOr<List<Pago>>
+    }
+    
+    interface IReporteService {
+        + GetReporte(request: GetReporteRequest): ErrorOr<List<VentasEventoDTO>>
+    }
+    
+    interface IEmailService {
+        + SendEmail(request: SendEmailRequest): ErrorOr<Success>
+    }
+    
+    interface ILogService {
+        + Log(message: string, level: string): void
+    }
+    
+    interface ISistemaService {
+        + GetEstados(): ErrorOr<List<Estado>>
+        + GetProvincias(): ErrorOr<List<Provincia>>
+        + GetMunicipios(cdProvincia: string): ErrorOr<List<Municipio>>
+        + GetLocalidades(cdMunicipio: string): ErrorOr<List<Localidad>>
+    }
+}
+
+' ==================== Service Implementations ====================
+
+package "Services.Repository" {
+    class ArtistaService implements IArtistaService
+    class EventoService implements IEventoService
+    class UsuarioService implements IUsuarioService
+    class EntradaService implements IEntradaService
+    class FiestaService implements IFiestaService
+    class NoticiaService implements INoticiaService
+    class ReseniaService implements IReseniaService
+    class MediaService implements IMediaService
+    class PagoService implements IPagoService
+    class ReporteService implements IReporteService
+    class EmailService implements IEmailService
+    class LogService implements ILogService
+    class SistemaService implements ISistemaService
+}
+
+' ==================== Domain Models ====================
+
+package "Services.Models" {
+    class Artista {
+        + IdArtista: string
+        + Nombre: string
+        + Bio: string
+        + DtAlta: DateTime?
+        + IsActivo: sbyte?
+        + Media: List<Media>
+        + Socials: Socials
+        + IsFavorito: int
+        + Likes: int
+        + Crear(idArtista, nombre, bio, dtAlta, isActivo, media, socials): ErrorOr<Artista>
+        + From(request: CreateArtistaRequest): ErrorOr<Artista>
+    }
+    
+    class Usuario {
+        + IdUsuario: string
+        + Domicilio: Domicilio
+        + Nombre: string
+        + Apellido: string
+        + Correo: string
+        + CBU: string
+        + Dni: string
+        + Telefono: string
+        + IsActivo: int
+        + DtAlta: DateTime?
+        + DtBaja: DateTime?
+        + Bio: string
+        + Pass: string
+        + Roles: List<RolesUsuario>
+        + Media: List<Media>
+        + Socials: Socials
+        + DtNacimiento: DateTime?
+        + Crear(...): ErrorOr<Usuario>
+        + From(request: CreateUsuarioRequest): ErrorOr<Usuario>
+    }
+    
+    class Evento {
+        + IdEvento: string
+        + IdFiesta: string
+        + Usuario: Usuario
+        + Artistas: List<Artista>
+        + Domicilio: Domicilio
+        + Nombre: string
+        + Descripcion: string
+        + Genero: List<int>
+        + IsAfter: bool
+        + IsLgbt: bool
+        + InicioEvento: DateTime
+        + FinEvento: DateTime
+        + CdEstado: int
+        + Fechas: List<Fecha>
+        + Media: List<Media>
+        + SoundCloud: string
+        + IsFavorito: int
+        + Crear(...): ErrorOr<Evento>
+        + From(request: CreateEventoRequest): ErrorOr<Evento>
+    }
+    
+    class Entrada {
+        + IdEntrada: string
+        + Fecha: Fecha
+        + MdQR: string
+        + Estado: Estado
+        + Precio: decimal
+        + Cantidad: int
+        + Tipo: Tipo
+        + Crear(...): ErrorOr<Entrada>
+        + From(request: CreateEntradaRequest): ErrorOr<Entrada>
+    }
+    
+    class Fiesta {
+        + IdFiesta: string
+        + IdUsuario: string
+        + DsNombre: string
+        + IsActivo: bool
+        + Crear(...): ErrorOr<Fiesta>
+        + From(request: CreateFiestaRequest): ErrorOr<Fiesta>
+    }
+    
+    class Noticia {
+        + IdNoticia: string
+        + Titulo: string
+        + Contenido: string
+        + Media: List<Media>
+        + DtPublicado: DateTime
+        + UrlEvento: string?
+        + Crear(...): ErrorOr<Noticia>
+        + From(request: CreateNoticiaRequest): ErrorOr<Noticia>
+    }
+    
+    class Resenia {
+        + IdResenia: string
+        + IdUsuario: string
+        + Correo: string
+        + Estrellas: int
+        + Comentario: string
+        + DtInsert: DateTime
+        + IdFiesta: string
+        + Crear(...): ErrorOr<Resenia>
+        + From(request: CreateReseniaRequest): ErrorOr<Resenia>
+    }
+    
+    class Domicilio {
+        + Localidad: Localidad
+        + Municipio: Municipio
+        + Provincia: Provincia
+        + Direccion: string
+        + Latitud: decimal
+        + Longitud: decimal
+        + Crear(...): ErrorOr<Domicilio>
+    }
+    
+    class Media {
+        + IdMedia: string
+        + IdEntidadMedia: string
+        + Url: string
+        + MdVideo: string
+        + Crear(...): ErrorOr<Media>
+        + From(request: CreateMediaRequest): ErrorOr<Media>
+    }
+    
+    class Socials {
+        + IdSocial: string
+        + MdInstagram: string
+        + MdSpotify: string
+        + MdSoundcloud: string
+    }
+    
+    class Fecha {
+        + IdFecha: string
+        + Inicio: DateTime
+        + Fin: DateTime
+        + InicioVenta: DateTime
+        + FinVenta: DateTime
+        + Estado: int
+        + Crear(...): ErrorOr<Fecha>
+    }
+    
+    class Estado {
+        + CdEstado: int
+        + DsEstado: string
+    }
+    
+    class Tipo {
+        + CdTipo: int
+        + DsTipo: string
+    }
+    
+    class RolesUsuario {
+        + CdRol: int
+        + DsRol: string
+    }
+    
+    class Provincia {
+        + Nombre: string
+        + Codigo: string
+        + Crear(...): ErrorOr<Provincia>
+    }
+    
+    class Municipio {
+        + Nombre: string
+        + Codigo: string
+        + Crear(...): ErrorOr<Municipio>
+    }
+    
+    class Localidad {
+        + Nombre: string
+        + Codigo: string
+        + Create(...): ErrorOr<Localidad>
+    }
+    
+    class GeneroEvento {
+        + CdGenero: int
+        + DsGenero: string
+    }
+    
+    class UsuarioControl {
+        + IdUsuarioControl: string
+        + Password: string
+        + NombreUsuario: string
+        + IdUsuarioOrg: string
+        + Crear(...): ErrorOr<UsuarioControl>
+    }
+}
+
+' ==================== DTOs ====================
+
+package "Services.Models (DTOs)" {
+    class AvgReseniaDTO {
+        + AvgEstrellas: decimal
+        + IdFiesta: string
+        + CantResenias: long
+    }
+    
+    class DatosReembolsoDTO {
+        + IdMP: long
+        + Monto: decimal
+        + IdCompra: string
+        + NombreEvento: string
+        + CorreoComprador: string
+    }
+    
+    class GetEntradasUsuarioDTO {
+        + IdEntrada: string
+        + CdEstado: int
+        + DsEstado: string
+        + CdTipo: int
+        + DsTipo: string
+        + IdFecha: string
+        + Precio: decimal
+        + IdEvento: string
+        + IdCompra: string
+        + DtInsert: DateTime
+        + NumCompra: UInt64
+    }
+    
+    class GetReseniaDTO {
+        + NombreUsuario: string
+        + ApellidoUsuario: string
+        + Estrellas: int
+        + Comentario: string
+        + IdFiesta: string
+        + IdUsuario: string
+        + DtInsert: DateTime
+        + IdResenia: string
+    }
+    
+    class GetReservaActivaDTO {
+        + Cantidad: long
+        + TipoEntrada: int
+        + IdCompra: string
+        + IdEvento: string
+        + IdFecha: string
+    }
+    
+    class GetUsuariosControlDTO {
+        + IdUsuarioControl: string
+        + NombreUsuario: string
+    }
+    
+    class VentasEventoDTO {
+        + IdFecha: string
+        + NumFecha: int
+        + Entrada: string
+        + StockInicial: int
+        + CantidadVendida: int
+        + PrecioEntrada: decimal
+        + MontoVenta: decimal
+        + MontoSubTotal: decimal
+        + MontoCostoServicio: decimal
+        + StockActual: int
+    }
+}
+
+' ==================== Helpers ====================
+
+package "Services.Helpers" {
+    class APIHelper {
+        {static} + MakeRequest(url, method, body): Task<string>
+    }
+    
+    class ApiMailHelper {
+        {static} + SendEmail(to, subject, body): Task
+    }
+    
+    class Hasher {
+        {static} + HashPassword(password): string
+        {static} + VerifyPassword(password, hash): bool
+    }
+    
+    class JwtHelper {
+        {static} + GenerateToken(user): string
+        {static} + ValidateToken(token): ClaimsPrincipal
+    }
+    
+    class Logger {
+        {static} + Log(message, level): void
+    }
+    
+    class MpApiHelper {
+        {static} + CreatePayment(data): Task<PaymentResponse>
+    }
+    
+    class QRHelper {
+        {static} + GenerateQR(data): string
+    }
+    
+    class ReaderMaper {
+        {static} + MapToObject<T>(reader): T
+        {static} + MapToList<T>(reader): List<T>
+    }
+    
+    class ProcedureHelper {
+        {static} + ExecuteProcedure(name, parameters): void
+    }
+    
+    class EnvHelper {
+        {static} + GetEnvironmentVariable(key): string
+    }
+    
+    class ColumnNameAttribute {
+        + Name: string
+    }
+    
+    enum MediosPagoEnum {
+        Efectivo
+        Tarjeta
+        MercadoPago
+    }
+    
+    enum PaymentStatus {
+        Pending
+        Approved
+        Rejected
+    }
+    
+    enum PaymentTypes {
+        Ticket
+        Subscription
+    }
+}
+
+' ==================== Relationships ====================
+
+' Controller inheritance (BLUE)
+ArtistaController -[#0066CC]-|> APIController
+EventoController -[#0066CC]-|> APIController
+UsuarioController -[#0066CC]-|> APIController
+EntradaController -[#0066CC]-|> APIController
+FiestaController -[#0066CC]-|> APIController
+NoticiaController -[#0066CC]-|> APIController
+ReseniaController -[#0066CC]-|> APIController
+MediaController -[#0066CC]-|> APIController
+PagoController -[#0066CC]-|> APIController
+ReporteController -[#0066CC]-|> APIController
+EmailController -[#0066CC]-|> APIController
+SecurityController -[#0066CC]-|> APIController
+SistemaController -[#0066CC]-|> APIController
+
+' Controller dependencies on services (GREEN)
+ArtistaController -[#00AA00]-> IArtistaService
+ArtistaController -[#00AA00]-> IMediaService
+EventoController -[#00AA00]-> IEventoService
+EventoController -[#00AA00]-> IMediaService
+UsuarioController -[#00AA00]-> IUsuarioService
+UsuarioController -[#00AA00]-> IMediaService
+EntradaController -[#00AA00]-> IEntradaService
+FiestaController -[#00AA00]-> IFiestaService
+NoticiaController -[#00AA00]-> INoticiaService
+NoticiaController -[#00AA00]-> IMediaService
+ReseniaController -[#00AA00]-> IReseniaService
+MediaController -[#00AA00]-> IMediaService
+PagoController -[#00AA00]-> IPagoService
+ReporteController -[#00AA00]-> IReporteService
+EmailController -[#00AA00]-> IEmailService
+SistemaController -[#00AA00]-> ISistemaService
+
+' Model compositions (ORANGE)
+Artista "1" *-[#FF8800]- "0..*" Media
+Artista "1" *-[#FF8800]- "0..1" Socials
+Usuario "1" *-[#FF8800]- "1" Domicilio
+Usuario "1" *-[#FF8800]- "0..*" RolesUsuario
+Usuario "1" *-[#FF8800]- "0..*" Media
+Usuario "1" *-[#FF8800]- "0..1" Socials
+Evento "1" *-[#FF8800]- "1" Usuario
+Evento "1" *-[#FF8800]- "0..*" Artista
+Evento "1" *-[#FF8800]- "1" Domicilio
+Evento "1" *-[#FF8800]- "0..*" Fecha
+Evento "1" *-[#FF8800]- "0..*" Media
+Entrada "1" *-[#FF8800]- "1" Fecha
+Entrada "1" *-[#FF8800]- "1" Estado
+Entrada "1" *-[#FF8800]- "1" Tipo
+Domicilio "1" *-[#FF8800]- "1" Provincia
+Domicilio "1" *-[#FF8800]- "1" Municipio
+Domicilio "1" *-[#FF8800]- "1" Localidad
+Noticia "1" *-[#FF8800]- "0..*" Media
+
+' Service operations return domain models (PURPLE)
+IArtistaService .[#9933CC].> Artista : <<uses>>
+IEventoService .[#9933CC].> Evento : <<uses>>
+IEventoService .[#9933CC].> GeneroEvento : <<uses>>
+IEventoService .[#9933CC].> Estado : <<uses>>
+IEventoService .[#9933CC].> Artista : <<uses>>
+IUsuarioService .[#9933CC].> Usuario : <<uses>>
+IUsuarioService .[#9933CC].> RolesUsuario : <<uses>>
+IUsuarioService .[#9933CC].> GetEntradasUsuarioDTO : <<uses>>
+IUsuarioService .[#9933CC].> UsuarioControl : <<uses>>
+IUsuarioService .[#9933CC].> GetUsuariosControlDTO : <<uses>>
+IEntradaService .[#9933CC].> Entrada : <<uses>>
+IFiestaService .[#9933CC].> Fiesta : <<uses>>
+INoticiaService .[#9933CC].> Noticia : <<uses>>
+IReseniaService .[#9933CC].> Resenia : <<uses>>
+IReseniaService .[#9933CC].> GetReseniaDTO : <<uses>>
+IReseniaService .[#9933CC].> AvgReseniaDTO : <<uses>>
+IMediaService .[#9933CC].> Media : <<uses>>
+IReporteService .[#9933CC].> VentasEventoDTO : <<uses>>
+ISistemaService .[#9933CC].> Estado : <<uses>>
+ISistemaService .[#9933CC].> Provincia : <<uses>>
+ISistemaService .[#9933CC].> Municipio : <<uses>>
+ISistemaService .[#9933CC].> Localidad : <<uses>>
+
+@enduml
