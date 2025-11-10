@@ -196,7 +196,7 @@ namespace RaveAppAPI.Controllers
 
         [HttpPost("NotificacionHook")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult NotificacionHook(NotificacionRequest request)
+        public async Task<IActionResult> NotificacionHook(NotificacionRequest request)
         {
             var getPaymentResult = GetPayment(request.Data.Id);
             if (getPaymentResult.IsError)
@@ -205,14 +205,14 @@ namespace RaveAppAPI.Controllers
             }
             var payment = getPaymentResult.Value;
             _logService.LogWebhookMP(payment.Metadata.IdCompra, payment.Status, payment.StatusDetail, payment.TransactionAmount, payment.Id);
-            if (!ProcessPayment(payment.StatusDetail, payment.Metadata.IdCompra))
+            if (!await ProcessPayment(payment.StatusDetail, payment.Metadata.IdCompra))
             {
                 return Problem();
             }
             return Ok();
         }
         [HttpPost("PagoMP")]
-        public IActionResult PagoMP(string idPagoMP)
+        public async Task<IActionResult> PagoMP(string idPagoMP)
         {
             var getPaymentResult = GetPayment(idPagoMP);
             if (getPaymentResult.IsError)
@@ -221,14 +221,13 @@ namespace RaveAppAPI.Controllers
             }
             var payment = getPaymentResult.Value;
             _logService.LogWebhookMP(payment.Metadata.IdCompra, payment.Status, payment.StatusDetail, payment.TransactionAmount, payment.Id);
-            if (!ProcessPayment(payment.StatusDetail, payment.Metadata.IdCompra))
+            if (!await ProcessPayment(payment.StatusDetail, payment.Metadata.IdCompra))
             {
                 return Problem();
             }
             return Ok();
         }
-
-        private bool ProcessPayment(string status, string idCompra)
+        private async Task<bool> ProcessPayment(string status, string idCompra)
         {
             switch (status)
             {
@@ -241,9 +240,9 @@ namespace RaveAppAPI.Controllers
                         return false;
                     }
                     EntradaController entradaController = new EntradaController(new EntradaService());
-                    entradaController.GenerarQrEntradas(finalizarCompraResult.Value);
+                    await entradaController.GenerarQrEntradas(finalizarCompraResult.Value);
                     EmailController emailController = new EmailController(new EmailService());
-                    emailController.EnviarMailsQR(idCompra);
+                    await emailController.EnviarMailsQR(idCompra);
                     return true;
                 case PaymentStatus.Rejected:
                 case PaymentStatus.Cancelled:
