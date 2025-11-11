@@ -70,14 +70,13 @@ namespace RaveAppAPI.Controllers
             var datos = getDatosResult.Value;
 
             List<string> comprasError = new List<string>();
-            EmailController emailController = new EmailController(new EmailService());
+
             foreach (var item in datos)
             {
                 var createRefundResult = CreateRefund(item.IdMP, item.Monto);
                 if (!createRefundResult.IsError)
                 {
                     _pagoService.Reembolso(item.IdCompra);
-                    emailController.EnviarMailReembolsoMasivo(item.NombreEvento, item.Monto, item.CorreoComprador);
                 }
                 else
                 {
