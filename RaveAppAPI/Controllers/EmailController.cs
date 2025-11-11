@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Org.BouncyCastle.Asn1.Ocsp;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Repository.Contracts;
 using RaveAppAPI.Services.RequestModel.Mail;
-using RaveAppAPI.Services.RequestModel.Pago;
 using System.Net.Http.Headers;
 using System.Text;
 using static RaveAppAPI.Services.Helpers.ApiMailHelper;
@@ -199,42 +197,53 @@ namespace RaveAppAPI.Controllers
                 Logger.LogError(e.Message);
             }
         }
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public async void EnviarMailReembolsoMasivo(string nombreEvento, decimal monto, string correo)
+        [HttpPost("EnvioMailGenericoMasivo")]
+        public async Task<IActionResult> EnvioMailGenericoMasivo(EnvioMailGenericoMasivoRequest request)
         {
             try
             {
+
+                var emailData = _emailService.GetCorreosByIdEvento(request.IdEvento);
+
+                if (emailData.IsError)
+                {
+                    return Problem();
+                }
+
+                string to = string.Join(",", emailData.Value);
+
+                string html = ApiMailHelper.BuildEmailGenerico(request.Titulo, request.Cuerpo, request.BotonUrl, request.BotonTexto);
+                MultipartFormDataContent formData = new MultipartFormDataContent
+                {
+                    { new StringContent(FromEmail), "from" },
+                    { new StringContent(to), "to" },
+                    { new StringContent($"{request.Titulo}"), "subject" },
+                    { new StringContent(html), "html" },
+                    { new StringContent("{}"), "recipient-variables" }
+                };
                 using (HttpClient client = new HttpClient())
                 {
-                    string templateData = JsonConvert.SerializeObject(
-                        new { amount = monto, event_name = nombreEvento}
-                        );
-
-                    MultipartFormDataContent formData = new MultipartFormDataContent
-                    {
-                        { new StringContent(FromEmail), "from" },
-                        { new StringContent(correo), "to" },
-                        { new StringContent(ReembolsoMasivoTemplate), "template" },
-                        { new StringContent(templateData), "t:variables" }
-                    };
-
                     var sendRequest = ApiMailHelper.BuildRequest(
                         HttpMethod.Post,
                         BaseUrl,
                         String.Format(MessagesEndpoint, DomainName),
                         formData,
-                         new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"api:{_MailgunToken}"))));
+                            new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"api:{_MailgunToken}"))));
 
                     var response = await client.SendAsync(sendRequest);
                     if (!response.IsSuccessStatusCode)
                     {
-                        Logger.LogError($"Error enviando correo devolucion masiva: {correo}");
+                        string content = await response.Content.ReadAsStringAsync();
+                        Logger.LogError($"Error enviando mail generico: {(int)response.StatusCode} - {content}");
+                        return Problem();
                     }
+                    return Ok();
                 }
             }
             catch (Exception e)
             {
                 Logger.LogError(e.Message);
+                return Problem();
             }
         }
     }
