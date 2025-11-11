@@ -1,7 +1,6 @@
 ﻿using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Org.BouncyCastle.Asn1.Sec;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Repository;
 using RaveAppAPI.Services.Repository.Contracts;
@@ -84,7 +83,7 @@ namespace RaveAppAPI.Controllers
                 }
             }
 
-            return Ok(new { ComprasError = comprasError } );
+            return Ok(new { ComprasError = comprasError });
         }
         private ErrorOr<RefundResponse> CreateRefund(long idMP, decimal monto)
         {

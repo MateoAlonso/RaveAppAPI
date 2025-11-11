@@ -1,12 +1,9 @@
-﻿using Amazon.Runtime.Internal;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Org.BouncyCastle.Asn1.Ocsp;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Repository.Contracts;
 using RaveAppAPI.Services.RequestModel.Mail;
-using RaveAppAPI.Services.RequestModel.Pago;
 using System.Net.Http.Headers;
 using System.Text;
 using static RaveAppAPI.Services.Helpers.ApiMailHelper;
