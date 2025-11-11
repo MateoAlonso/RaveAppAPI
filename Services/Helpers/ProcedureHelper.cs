@@ -755,12 +755,17 @@ namespace RaveAppAPI.Services.Helpers
 
         #region Email PCDS
         public const string PCDEmailQr = "PCD_EMAIL_GetQrEntradas";
+        public const string PCDGetCorreosEvento = "PCD_EMAIL_GetCorreosEvento";
         #endregion
 
         #region Email Parameters
         public static MySqlParameter EmailQrParameters(string idCompra)
         {
             return new MySqlParameter("p_idCompra", idCompra);
+        }
+        public static MySqlParameter GetCorreosEventoParameters(string idEvento)
+        {
+            return new MySqlParameter("p_idEvento", idEvento);
         }
         #endregion
 

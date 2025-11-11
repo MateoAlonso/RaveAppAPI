@@ -1,7 +1,6 @@
 ﻿using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Org.BouncyCastle.Asn1.Sec;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Repository;
 using RaveAppAPI.Services.Repository.Contracts;
@@ -70,14 +69,13 @@ namespace RaveAppAPI.Controllers
             var datos = getDatosResult.Value;
 
             List<string> comprasError = new List<string>();
-            EmailController emailController = new EmailController(new EmailService());
+
             foreach (var item in datos)
             {
                 var createRefundResult = CreateRefund(item.IdMP, item.Monto);
                 if (!createRefundResult.IsError)
                 {
                     _pagoService.Reembolso(item.IdCompra);
-                    emailController.EnviarMailReembolsoMasivo(item.NombreEvento, item.Monto, item.CorreoComprador);
                 }
                 else
                 {
@@ -85,7 +83,7 @@ namespace RaveAppAPI.Controllers
                 }
             }
 
-            return Ok(new { ComprasError = comprasError } );
+            return Ok(new { ComprasError = comprasError });
         }
         private ErrorOr<RefundResponse> CreateRefund(long idMP, decimal monto)
         {
