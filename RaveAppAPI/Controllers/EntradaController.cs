@@ -106,7 +106,7 @@ namespace RaveAppAPI.Controllers
         [HttpPut("ControlarEntrada")]
         public IActionResult ControlarEntrada(ControlarEntradaRequest request)
         {
-            ErrorOr<bool> reservarEntradasResult = _entradaService.ControlarEntrada(request);
+            ErrorOr<ControlarEntradaResponse> reservarEntradasResult = _entradaService.ControlarEntrada(request);
             return reservarEntradasResult.Match(
                 control => Ok(control),
                 errors => Problem(errors));
