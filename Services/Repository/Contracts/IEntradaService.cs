@@ -15,7 +15,7 @@ namespace RaveAppAPI.Services.Repository.Contracts
         ErrorOr<Updated> UpdateEntrada(Entrada request);
         ErrorOr<List<GetReservaActivaDTO>> GetReservaActiva(string idUsuario);
         void SetQrEntrada(string entrada, string qrUuid);
-        ErrorOr<bool> ControlarEntrada(ControlarEntradaRequest request);
+        ErrorOr<ControlarEntradaResponse> ControlarEntrada(ControlarEntradaRequest request);
         ErrorOr<Updated> UpdateEstadoEntrada(UpdateEstadoEntradaRequest idEntrada);
     }
 }

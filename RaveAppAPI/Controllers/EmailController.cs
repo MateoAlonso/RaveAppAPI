@@ -207,7 +207,7 @@ namespace RaveAppAPI.Controllers
 
                 if (emailData.IsError)
                 {
-                    return Problem();
+                    return Problem(emailData.Errors);
                 }
 
                 string to = string.Join(",", emailData.Value);

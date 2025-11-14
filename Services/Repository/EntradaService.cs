@@ -32,7 +32,7 @@ namespace RaveAppAPI.Services.Repository
             }
         }
 
-        public ErrorOr<bool> ControlarEntrada(ControlarEntradaRequest request)
+        public ErrorOr<ControlarEntradaResponse> ControlarEntrada(ControlarEntradaRequest request)
         {
             try
             {
@@ -42,8 +42,17 @@ namespace RaveAppAPI.Services.Repository
                     MySqlCommand cmd = new(ProcedureHelper.PCDControlarEntrada, dbcon);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.Parameters.AddRange(ProcedureHelper.ControlarEntradaParameters(request));
-                    cmd.ExecuteNonQuery();
-                    return Convert.ToInt32(cmd.Parameters["p_ok"].Value) > 0;
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            return ReaderMaper.ReaderToObjectRecursive<ControlarEntradaResponse>(reader).ToList().FirstOrDefault();
+                        }
+                        else
+                        {
+                            return Error.NotFound();
+                        }
+                    }
                 }
             }
             catch (Exception e)

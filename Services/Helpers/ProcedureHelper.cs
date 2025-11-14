@@ -533,8 +533,7 @@ namespace RaveAppAPI.Services.Helpers
             return new MySqlParameter[]
             {
                 new MySqlParameter ("p_idEntrada", request.idEntrada),
-                new MySqlParameter ("p_mdQr", request.mdQr),
-                new MySqlParameter ("p_ok", MySqlDbType.Int32, 36) { Direction = System.Data.ParameterDirection.Output }
+                new MySqlParameter ("p_mdQr", request.mdQr)
             };
         }
         public static MySqlParameter[] UpdateEstadoEntradaParameters(UpdateEstadoEntradaRequest request)
