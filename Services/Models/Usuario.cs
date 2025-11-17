@@ -36,7 +36,9 @@ namespace RaveAppAPI.Services.Models
         public Socials Socials { get; set; }
         [ColumnName("dtnacimiento")]
         public DateTime? DtNacimiento { get; set; }
-        public Usuario(Domicilio domicilio, string nombre, string apellido, string correo, string cbu, string dni, string tel, int isActivo, DateTime? dtAlta, DateTime? dtBaja, string idUsuario, string bio, List<RolesUsuario> roles, string? pass, List<Media> media, Socials socials, DateTime? dtNacimiento)
+        [ColumnName("isverificado")]
+        public int IsVerificado { get; set; }
+        public Usuario(Domicilio domicilio, string nombre, string apellido, string correo, string cbu, string dni, string tel, int isActivo, DateTime? dtAlta, DateTime? dtBaja, string idUsuario, string bio, List<RolesUsuario> roles, string? pass, List<Media> media, Socials socials, DateTime? dtNacimiento, int isVerificado)
         {
             IdUsuario = idUsuario;
             Domicilio = domicilio;
@@ -55,13 +57,14 @@ namespace RaveAppAPI.Services.Models
             Media = media;
             Socials = socials;
             DtNacimiento = dtNacimiento;
+            IsVerificado = isVerificado;
         }
         public Usuario()
         {
 
         }
 
-        public static ErrorOr<Usuario> Crear(Domicilio domicilio, string nombre, string apellido, string correo, string cbu, string dni, string tel, string bio, string pass, List<Media> media, Socials socials, DateTime? dtNacimiento, int isActivo = 1, DateTime? dtAlta = null, DateTime? dtBaja = null, string? idUsuario = null, List<RolesUsuario>? roles = null)
+        public static ErrorOr<Usuario> Crear(Domicilio domicilio, string nombre, string apellido, string correo, string cbu, string dni, string tel, string bio, string pass, List<Media> media, Socials socials, DateTime? dtNacimiento, int isActivo = 1, DateTime? dtAlta = null, DateTime? dtBaja = null, string? idUsuario = null, List<RolesUsuario>? roles = null, int isVerificado = 1)
         {
             List<Error> errors = new();
 
@@ -72,7 +75,7 @@ namespace RaveAppAPI.Services.Models
                 return errors;
             }
 
-            return new Usuario(domicilio, nombre, apellido, correo, cbu, dni, tel, isActivo, dtAlta, dtBaja, idUsuario, bio, roles, pass, media, socials, dtNacimiento);
+            return new Usuario(domicilio, nombre, apellido, correo, cbu, dni, tel, isActivo, dtAlta, dtBaja, idUsuario, bio, roles, pass, media, socials, dtNacimiento, isVerificado);
         }
 
 
