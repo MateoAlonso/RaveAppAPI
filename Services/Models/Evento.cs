@@ -35,7 +35,9 @@ namespace RaveAppAPI.Services.Models
         public string SoundCloud { get; set; }
         [ColumnName("isfavorito")]
         public int IsFavorito { get; set; }
-        public Evento(string idEvento, Usuario usuario, List<Artista> artistas, Domicilio domicilio, string nombre, string descripcion, List<int> genero, bool isAfter, bool isLgbt, DateTime inicioEvento, DateTime finEvento, int estado, List<Fecha> fechas, string idFiesta, List<Media> media, string soundCloud)
+        [ColumnName("dtupdate")]
+        public DateTime DtUpdate { get; set; }
+        public Evento(string idEvento, Usuario usuario, List<Artista> artistas, Domicilio domicilio, string nombre, string descripcion, List<int> genero, bool isAfter, bool isLgbt, DateTime inicioEvento, DateTime finEvento, int estado, List<Fecha> fechas, string idFiesta, List<Media> media, string soundCloud, DateTime dtUpdate)
         {
             IdEvento = idEvento;
             Usuario = usuario;
@@ -53,11 +55,12 @@ namespace RaveAppAPI.Services.Models
             IdFiesta = idFiesta;
             Media = media;
             SoundCloud = soundCloud;
+            DtUpdate = dtUpdate;
         }
         public Evento()
         {
         }
-        public static ErrorOr<Evento> Crear(string idEvento, Usuario usuario, List<Artista> artistas, Domicilio domicilio, string nombre, string descripcion, List<int> genero, bool isAfter, bool isLgbt, DateTime inicioEvento, DateTime finEvento, int estado, List<Fecha> fechas, string idFiesta, List<Media> media, string soundCloud)
+        public static ErrorOr<Evento> Crear(string idEvento, Usuario usuario, List<Artista> artistas, Domicilio domicilio, string nombre, string descripcion, List<int> genero, bool isAfter, bool isLgbt, DateTime inicioEvento, DateTime finEvento, int estado, List<Fecha> fechas, string idFiesta, List<Media> media, string soundCloud, DateTime dtUpdate)
         {
             List<Error> errors = new();
 
@@ -68,7 +71,7 @@ namespace RaveAppAPI.Services.Models
                 return errors;
             }
 
-            return new Evento(idEvento, usuario, artistas, domicilio, nombre, descripcion, genero, isAfter, isLgbt, inicioEvento, finEvento, estado, fechas, idFiesta, media, soundCloud);
+            return new Evento(idEvento, usuario, artistas, domicilio, nombre, descripcion, genero, isAfter, isLgbt, inicioEvento, finEvento, estado, fechas, idFiesta, media, soundCloud, dtUpdate);
         }
         public static ErrorOr<Evento> From(CreateEventoRequest request)
         {
@@ -86,7 +89,7 @@ namespace RaveAppAPI.Services.Models
             {
                 fechas.Add(Fecha.From(req).Value);
             }
-            return Crear(null, usr, artistas, request.domicilio, request.nombre, request.descripcion, request.genero, request.isAfter, request.isLgbt, request.inicioEvento, request.finEvento, request.estado, fechas, request.idFiesta, null, request.SoundCloud);
+            return Crear(null, usr, artistas, request.domicilio, request.nombre, request.descripcion, request.genero, request.isAfter, request.isLgbt, request.inicioEvento, request.finEvento, request.estado, fechas, request.idFiesta, null, request.SoundCloud, DateTime.Now);
         }
         public static ErrorOr<Evento> From(UpdateEventoRequest request)
         {
@@ -97,7 +100,7 @@ namespace RaveAppAPI.Services.Models
                 artista.IdArtista = idArtista;
                 artistas.Add(artista);
             }
-            return Crear(request.idEvento, null, artistas, request.domicilio, request.nombre, request.descripcion, request.genero, request.isAfter, request.isLgbt, request.inicioEvento, request.finEvento, request.estado, request.fechas, request.idFiesta, null, request.SoundCloud);
+            return Crear(request.idEvento, null, artistas, request.domicilio, request.nombre, request.descripcion, request.genero, request.isAfter, request.isLgbt, request.inicioEvento, request.finEvento, request.estado, request.fechas, request.idFiesta, null, request.SoundCloud, DateTime.Now);
         }
     }
 
