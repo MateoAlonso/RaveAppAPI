@@ -64,7 +64,7 @@ namespace RaveAppAPI.Services.Models
 
         }
 
-        public static ErrorOr<Usuario> Crear(Domicilio domicilio, string nombre, string apellido, string correo, string cbu, string dni, string tel, string bio, string pass, List<Media> media, Socials socials, DateTime? dtNacimiento, int isActivo = 1, DateTime? dtAlta = null, DateTime? dtBaja = null, string? idUsuario = null, List<RolesUsuario>? roles = null, int isVerificado = 1)
+        public static ErrorOr<Usuario> Crear(Domicilio domicilio, string nombre, string apellido, string correo, string cbu, string dni, string tel, string bio, string pass, List<Media> media, Socials socials, DateTime? dtNacimiento, int isVerificado, int isActivo = 1, DateTime? dtAlta = null, DateTime? dtBaja = null, string? idUsuario = null, List<RolesUsuario>? roles = null)
         {
             List<Error> errors = new();
 
