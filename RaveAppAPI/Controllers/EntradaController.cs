@@ -127,11 +127,10 @@ namespace RaveAppAPI.Controllers
                 string uuid = Guid.NewGuid().ToString();
                 string QrContent = $"{entrada},{uuid}";
                 var qrCode = QRHelper.GenerateQRCode(QrContent);
-                MediaController media = new MediaController(new MediaService());
-                var res = await media.CrearMediaQrEntrada(qrCode, entrada);
-                if (!res.IsError)
+                if (_entradaService.SetQrEntrada(entrada, uuid))
                 {
-                    _entradaService.SetQrEntrada(entrada, uuid);
+                    MediaController media = new MediaController(new MediaService());
+                    await media.CrearMediaQrEntrada(qrCode, entrada);
                 }
             }
         }

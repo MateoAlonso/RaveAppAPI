@@ -1,4 +1,5 @@
-﻿using ErrorOr;
+﻿using Amazon.S3.Transfer;
+using ErrorOr;
 using MySql.Data.MySqlClient;
 using RaveAppAPI.Services.Helpers;
 using RaveAppAPI.Services.Models;
@@ -226,7 +227,7 @@ namespace RaveAppAPI.Services.Repository
             }
         }
 
-        public void SetQrEntrada(string entrada, string qrUuid)
+        public bool SetQrEntrada(string entrada, string qrUuid)
         {
             try
             {
@@ -237,11 +238,13 @@ namespace RaveAppAPI.Services.Repository
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.Parameters.AddRange(ProcedureHelper.SetQrEntradaParameters(entrada, qrUuid));
                     cmd.ExecuteNonQuery();
+                    return Convert.ToInt32(cmd.Parameters["p_ok"].Value.ToString()) > 0 ? true : false;
                 }
             }
             catch (Exception e)
             {
                 Logger.LogError(e.Message);
+                return false;
             }
         }
 

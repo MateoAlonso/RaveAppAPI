@@ -527,7 +527,8 @@ namespace RaveAppAPI.Services.Helpers
             return new MySqlParameter[]
             {
                 new MySqlParameter ("p_idEntrada", idEntrada),
-                new MySqlParameter ("p_mdQr", qrUuid)
+                new MySqlParameter ("p_mdQr", qrUuid),
+                new MySqlParameter ("p_ok", MySqlDbType.Int32, 100) { Direction = System.Data.ParameterDirection.Output }
             };
         }
         public static MySqlParameter[] ControlarEntradaParameters(ControlarEntradaRequest request)
